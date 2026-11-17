@@ -27,7 +27,8 @@ const CONTACT = {
   tin: '121718400',
 };
 
-const HERO_IMAGE = 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1400&q=80';
+const LEADER_IMAGE = 'https://workforceafrica.com/wp-content/uploads/2025/02/Jean-Willy-ULIHO-Monitoring-Evaluation-and-Learing-Mgr-Agahozo-Shalom-Youth-Village.webp';
+const HERO_IMAGE = LEADER_IMAGE;
 const ABOUT_IMAGE_MAIN = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80';
 const ABOUT_IMAGE_INSET = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80';
 
@@ -231,7 +232,7 @@ const Heading = ({ title, accent, text, light }) => {
   return (
     <Reveal className="mx-auto mb-14 max-w-2xl text-center">
       <h2 className={`text-3xl font-extrabold sm:text-4xl ${light ? 'text-white' : 'text-[var(--gd)]'}`}>
-        {language === 'rw' ? tr(fullTitle) : <>{title}{accent && <> <span className="text-[var(--o)]">{accent}</span></>}</>}
+        {language !== 'en' ? tr(fullTitle) : <>{title}{accent && <> <span className="text-[var(--o)]">{accent}</span></>}</>}
       </h2>
       <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-[var(--o)]" />
       {text && <p className={`mt-5 ${light ? 'text-white/80' : 'text-black/65'}`}>{tr(text)}</p>}
@@ -469,7 +470,7 @@ function Hero() {
           <div className="absolute -left-5 top-12 h-20 w-20 rounded-full border border-[var(--g)]/25 sm:-left-10 sm:h-28 sm:w-28" />
           <div className="relative aspect-[.94/1] rotate-2 rounded-[46%] bg-white p-2 shadow-2xl shadow-emerald-950/20 ring-1 ring-[var(--gd)]/10 sm:aspect-square">
             <div className="h-full w-full -rotate-2 overflow-hidden rounded-[46%] border-[6px] border-white">
-              <img src={HERO_IMAGE} alt={tr('Team discussing research findings')} className="h-full w-full object-cover transition duration-700 hover:scale-105" />
+              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full object-cover object-[center_28%] transition duration-700 hover:scale-105" />
             </div>
           </div>
           <div className="r4d-float absolute -left-3 bottom-10 flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 text-[var(--gd)] shadow-xl sm:-left-8">
@@ -776,7 +777,7 @@ function Team() {
   const [photoBad, setPhotoBad] = useState(false);
   const members = [
     { name: 'Jean Willy ULIHO', role: 'Managing Director',
-      photo: 'https://workforceafrica.com/wp-content/uploads/2025/02/Jean-Willy-ULIHO-Monitoring-Evaluation-and-Learing-Mgr-Agahozo-Shalom-Youth-Village.webp',
+      photo: LEADER_IMAGE,
       bio: 'Data scientist and MERL specialist with more than 10 years of experience across education, early childhood, youth, OVC and health systems programmes. MSc Financial Engineering (in progress), Postgraduate in Public Health Research (James Lind Institute) and BSc Clinical Psychology (University of Rwanda). Fluent in English, French and Kinyarwanda.' },
     { name: 'Research Team', role: 'Technical experts',
       bio: 'Specialists in survey design, field data collection, analysis and distilling insights across development sectors.' },
@@ -824,8 +825,10 @@ function Contact({ t }) {
     e.preventDefault();
     const body = language === 'rw'
       ? `Amazina: ${form.name}\nImeyili: ${form.email}\nIkigo: ${form.organization || 'Ntabwo cyatanzwe'}\nSerivisi: ${form.service || 'Ikibazo rusange'}\n\n${form.message}`
-      : `Name: ${form.name}\nEmail: ${form.email}\nOrganization: ${form.organization || 'Not provided'}\nService: ${form.service || 'General inquiry'}\n\n${form.message}`;
-    const subject = language === 'rw' ? 'Ubusabe bwa serivisi REL4D' : 'Proposal request: ' + (form.service || 'General inquiry');
+      : language === 'fr'
+        ? `Nom : ${form.name}\nE-mail : ${form.email}\nOrganisation : ${form.organization || 'Non précisée'}\nService : ${form.service || 'Demande générale'}\n\n${form.message}`
+        : `Name: ${form.name}\nEmail: ${form.email}\nOrganization: ${form.organization || 'Not provided'}\nService: ${form.service || 'General inquiry'}\n\n${form.message}`;
+    const subject = language === 'rw' ? 'Ubusabe bwa serivisi REL4D' : language === 'fr' ? 'Demande de proposition REL4D' : 'Proposal request: ' + (form.service || 'General inquiry');
     window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
@@ -919,6 +922,10 @@ body{background:var(--paper)}
 .r4d-app{min-height:100vh;background:var(--paper);color:#24372c;transition:background-color .25s ease,color .25s ease}
 .r4d-app[data-theme="dark"]{--paper:#14231c;--gs:#20362a;--os:#3a3123;--g:#75ad83;--gd:#285640;--o:#f3a044;--od:#f3a044;color:#e6eee7;color-scheme:dark}
 .r4d-app[data-theme="dark"] #home{background-color:#14231c!important;color:#edf4ee}
+.r4d-app[data-theme="dark"] #home .bg-white,
+.r4d-app[data-theme="dark"] #home [class*="bg-white/"]{background-color:#20362a!important}
+.r4d-app[data-theme="dark"] #home [class*="border-emerald-800"]{border-color:rgba(167,208,177,.35)!important}
+.r4d-app[data-theme="dark"] #home .text-emerald-900{color:#dcebdd!important}
 .r4d-app[data-theme="dark"] #home [class*="text-emerald-900"]{color:#dcebdd!important}
 .r4d-app[data-theme="dark"] .bg-white,
 .r4d-app[data-theme="dark"] [class*="bg-white/"],
@@ -979,7 +986,7 @@ export default function Home() {
   useEffect(() => { const t = setTimeout(() => setLoading(false), 1900); return () => clearTimeout(t); }, []);
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = language === 'rw' ? 'REL4D Ltd | Ubushakashatsi no kwigira ku iterambere' : 'REL4D Ltd | Research and Learning for Development';
+    document.title = language === 'rw' ? 'REL4D Ltd | Ubushakashatsi no kwigira ku iterambere' : language === 'fr' ? 'REL4D Ltd | Recherche et apprentissage au service du développement' : 'REL4D Ltd | Research and Learning for Development';
     const description = document.querySelector('meta[name="description"]');
     if (description) description.content = translate('REL4D is a registered consultancy in Kigali that conducts research and evaluations and supports learning for international development programmes, using data analytics, machine learning and AI to get the most from evidence.', language);
     try {
