@@ -1,17 +1,22 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import logo from './assets/logo.PNG';
 import { translate } from './translations.js';
 import {
   Menu, X, ChevronDown, Layers, Cpu, BarChart3, GraduationCap, Mail, Phone, MapPin, Moon, Sun, Leaf,
   ArrowUpRight, Send, CheckCircle2, Award, Briefcase, BadgeCheck, Star, LockKeyhole,
+  LayoutDashboard, MessageSquare, FolderKanban, Users, Settings, Trash2, Pencil, Eye, EyeOff, Search,
+  Reply, Download, RefreshCw, LogOut, Plus, ShieldCheck, Inbox, Check, KeyRound, Bell, FileText, ImagePlus,
 } from 'lucide-react';
 
 /* =====================================================================
    EDIT YOUR CONTENT HERE. Everything on the page reads from these lists.
    Colours: green #15803D and orange-red #FF4500 (see CSS block at bottom).
-   Layout and style inspired by the Ingazi landing page: floating pill
-   navbar, circular hero photo, curved section edges, overlapping images.
+
+   The ADMIN console now lives in this file (search for "ADMIN CONSOLE").
+   It opens as a pop-up: click the "Admin" button beside the logo.
    ===================================================================== */
+const API = import.meta.env.VITE_API_URL || '';
 const LOGO = logo;
 const LanguageContext = createContext('en');
 
@@ -214,6 +219,26 @@ function CountUp({ to, suffix = '' }) {
   return <span ref={ref}>{n}{suffix}</span>;
 }
 
+/* Circle that spins while something is loading (used inside every button) */
+function Spinner({ size = 18, className = '' }) {
+  return (
+    <svg className={`r4d-spinner shrink-0 ${className}`} width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity=".25" strokeWidth="3" />
+      <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* Button that shows the spinning circle and blocks double clicks while loading */
+function Btn({ loading = false, disabled = false, className = '', children, ...rest }) {
+  return (
+    <button {...rest} disabled={loading || disabled} aria-busy={loading} className={className}>
+      {loading && <Spinner size={16} />}
+      {children}
+    </button>
+  );
+}
+
 /* Logo image with a text fallback if the file is missing */
 function Logo({ className = '', ring = '' }) {
   const tr = useTranslate();
@@ -328,7 +353,7 @@ function LangTab({ language, setLanguage, t }) {
 }
 
 /* ------------------------------ Navbar -------------------------------- */
-function Navbar({ theme, setTheme, t }) {
+function Navbar({ theme, setTheme, t, onAdmin }) {
   const tr = useTranslate();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState(null);
@@ -349,10 +374,17 @@ function Navbar({ theme, setTheme, t }) {
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <nav aria-label={tr('Main')}
         className={`mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-2xl transition-all duration-300 ${scrolled ? 'bg-white/85 px-3 py-1.5 shadow-lg backdrop-blur-xl ring-1 ring-black/5' : 'px-0 py-0'}`}>
-        <a href="#home" className="flex shrink-0 items-center gap-3 px-2 py-2" onClick={close}>
-          <img src={logo} alt="" className={`object-contain transition-all duration-300 ${scrolled ? 'h-12 w-12 sm:h-14 sm:w-14' : 'h-14 w-14 sm:h-16 sm:w-16'}`} />
-          <span className="text-lg font-bold tracking-tight text-[var(--gd)] sm:text-xl">REL4D<span aria-hidden="true">.</span></span>
-        </a>
+        {/* Logo + the admin login button that sits right beside it */}
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <a href="#home" className="flex shrink-0 items-center gap-3 px-2 py-2" onClick={close}>
+            <img src={logo} alt="" className={`object-contain transition-all duration-300 ${scrolled ? 'h-12 w-12 sm:h-14 sm:w-14' : 'h-14 w-14 sm:h-16 sm:w-16'}`} />
+            <span className="text-lg font-bold tracking-tight text-[var(--gd)] sm:text-xl">REL4D<span aria-hidden="true">.</span></span>
+          </a>
+          <button type="button" onClick={onAdmin} aria-label="Admin login" title="Admin login"
+            className="group inline-flex items-center gap-1.5 rounded-full border border-[var(--gd)]/15 bg-white/85 px-3 py-2 text-xs font-bold text-[var(--gd)] shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-[var(--gd)] hover:text-white hover:shadow-lg">
+            <LockKeyhole size={14} className="transition group-hover:rotate-[-12deg]" /><span className="hidden sm:inline">Admin</span>
+          </button>
+        </div>
         <div className={`flex items-center gap-2 rounded-2xl border border-white/70 bg-white/90 px-3 backdrop-blur-xl ring-1 ring-black/5 transition-all duration-300 ${scrolled ? 'py-1.5 shadow-md' : 'py-2.5 shadow-lg'}`}>
         <ul className="hidden items-center gap-1 lg:flex">
           {NAV.map((item) => (
@@ -388,7 +420,6 @@ function Navbar({ theme, setTheme, t }) {
           <button type="button" className="grid h-11 w-11 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)]" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? t.themeLight : t.themeDark} title={theme === 'dark' ? t.themeLight : t.themeDark}>
             {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
           </button>
-          <a href="#admin" onClick={(event) => { event.preventDefault(); window.location.hash = 'admin'; window.location.reload(); }} className="hidden h-11 w-11 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)] sm:grid" aria-label="Admin login" title="Admin login"><LockKeyhole size={18} /></a>
           <a href="#contact" className="hidden items-center gap-1.5 rounded-full bg-[var(--gd)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--o)] sm:inline-flex">{t.talk} <ArrowUpRight size={16} /></a>
           <button className="grid h-11 w-11 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>
             {open ? <X /> : <Menu />}
@@ -416,6 +447,7 @@ function Navbar({ theme, setTheme, t }) {
             </div>
           ))}
           <a href="#contact" onClick={close} className="mt-4 block rounded-xl bg-[var(--o)] py-3 text-center font-semibold text-white">{t.join}</a>
+          <button type="button" onClick={() => { close(); onAdmin(); }} className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gd)]/20 py-3 font-semibold text-[var(--gd)]"><LockKeyhole size={16} /> Admin login</button>
         </div>
       )}
     </header>
@@ -720,8 +752,9 @@ function Projects() {
   const tr = useTranslate();
   const [databaseProjects, setDatabaseProjects] = useState([]);
 
+  // Projects added in the admin console come from the database.
   useEffect(() => {
-    fetch('/api/projects')
+    fetch(`${API}/api/projects`)
       .then((response) => response.ok ? response.json() : [])
       .then((items) => setDatabaseProjects(Array.isArray(items) ? items : []))
       .catch(() => setDatabaseProjects([]));
@@ -737,8 +770,8 @@ function Projects() {
             <Reveal key={p.id} delay={i * 100}>
               <article className="group h-full overflow-hidden rounded-[2rem] rounded-tr-xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[var(--g)] to-[var(--gd)]">
-                  <img src={p.image_url || p.image} alt={p.title} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                  <span className="absolute right-4 top-4 rounded-full bg-[var(--o)] px-3 py-1 text-xs font-semibold text-white">{tr(p.category)}</span>
+                  {(p.image_url || p.image) && <img src={p.image_url || p.image} alt={p.title} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />}
+                  {p.category && <span className="absolute right-4 top-4 rounded-full bg-[var(--o)] px-3 py-1 text-xs font-semibold text-white">{tr(p.category)}</span>}
                 </div>
                 <div className="p-6">
                   <h3 className="text-lg font-bold text-[var(--gd)]">{p.title}</h3>
@@ -836,16 +869,18 @@ function Contact({ t }) {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (status === 'sending') return;
     setStatus('sending');
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/contact`, {
+      // The server saves it; the admin console shows it under "Messages".
+      const response = await fetch(`${API}/api/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
           organization: form.organization,
-          subject: form.service,
+          service: form.service,
           message: form.message,
         }),
       });
@@ -905,12 +940,12 @@ function Contact({ t }) {
                   <option>{t.multipleServices}</option>
                 </select></label>
               </div>
-              <label className="block space-y-1.5 text-sm font-medium text-[var(--gd)]"><span>{t.details} *</span><textarea className={`${input} resize-y`} rows={5} placeholder={t.details} value={form.message} onChange={set('message')} required /></label>
+              <label className="block space-y-1.5 text-sm font-medium text-[var(--gd)]"><span>{t.details} *</span><textarea className={`${input} resize-y`} rows={5} placeholder={t.details} value={form.message} onChange={set('message')} required minLength={5} /></label>
               {status === 'sent' && <p role="status" className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm text-[var(--g)]"><CheckCircle2 size={18} /> {t.sent}</p>}
               {status === 'error' && <p role="alert" className="rounded-xl bg-white px-4 py-2.5 text-sm text-red-700">{t.sendError}</p>}
-              <button disabled={status === 'sending'} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:cursor-wait disabled:opacity-70">
-                <Send size={17} />{status === 'sending' ? t.sending : t.send}
-              </button>
+              <Btn type="submit" loading={status === 'sending'} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:cursor-wait disabled:opacity-70">
+                {status !== 'sending' && <Send size={17} />}{status === 'sending' ? t.sending : t.send}
+              </Btn>
             </form>
           </Reveal>
         </div>
@@ -919,7 +954,7 @@ function Contact({ t }) {
   );
 }
 
-function Footer() {
+function Footer({ onAdmin }) {
   const tr = useTranslate();
   return (
     <footer className="bg-[var(--gd)] text-white">
@@ -929,9 +964,905 @@ function Footer() {
           <Logo className="h-10 w-10" />
           <span>{tr('REL4D Ltd · Research and Learning for Development · TIN {tin}', { tin: CONTACT.tin })}</span>
         </div>
-        <p>{tr('© {year} REL4D Ltd. All rights reserved.', { year: new Date().getFullYear() })}</p>
+        <div className="flex items-center gap-4">
+          <p>{tr('© {year} REL4D Ltd. All rights reserved.', { year: new Date().getFullYear() })}</p>
+          <button type="button" onClick={onAdmin} className="inline-flex items-center gap-1 text-white/50 transition hover:text-white" aria-label="Admin login"><LockKeyhole size={14} /></button>
+        </div>
       </div>
     </footer>
+  );
+}
+
+/* =====================================================================
+   ADMIN CONSOLE  (pop-up: login first, then the full dashboard)
+   Talks to server.js:  /api/admin/login, /api/admin/stats, /messages,
+   /content, /applications, /users, /password
+   ===================================================================== */
+const TOKEN_KEY = 'rel4d-admin-token';
+const readToken = () => { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } };
+const saveToken = (value) => {
+  try { if (value) localStorage.setItem(TOKEN_KEY, value); else localStorage.removeItem(TOKEN_KEY); } catch { /* storage unavailable */ }
+};
+
+async function apiRequest(path, { token, method = 'GET', body, raw = false } = {}) {
+  let res;
+  try {
+    res = await fetch(`${API}${path}`, {
+      method,
+      headers: { ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw new Error('Cannot reach the server. Check that the API is running and your connection is on.');
+  }
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    const err = new Error(data.error || 'Request failed');
+    err.status = res.status;
+    throw err;
+  }
+  return raw ? res : res.json().catch(() => ({}));
+}
+
+const fmtDate = (d) => (d ? new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '—');
+const initials = (name = '') => (name.trim()[0] || '?').toUpperCase();
+
+function downloadCsv(filename, rows, columns) {
+  const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const csv = [columns.map((c) => esc(c.label)).join(','), ...rows.map((r) => columns.map((c) => esc(r[c.key])).join(','))].join('\n');
+  const url = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* Shrinks a chosen picture to a small JPEG so it fits in the database */
+function fileToDataUrl(file, maxW = 1000, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read that image.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('That file is not a valid image.'));
+      img.onload = () => {
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+const PROJECT_FIELDS = [
+  { name: 'title', label: 'Project title', required: true },
+  { name: 'category', label: 'Category', type: 'combo', options: ['Health', 'Education', 'Economic', 'Agriculture', 'Youth', 'Governance', 'Other'] },
+  { name: 'image', label: 'Cover image', type: 'image' },
+  { name: 'description', label: 'Description', type: 'textarea', required: true },
+];
+const OPENING_FIELDS = [
+  { name: 'title', label: 'Job title', required: true },
+  { name: 'type', label: 'Contract type', type: 'combo', options: ['Full-time', 'Part-time', 'Consultancy', 'Internship'] },
+  { name: 'location', label: 'Location' },
+  { name: 'deadline', label: 'Deadline' },
+  { name: 'description', label: 'Description', type: 'textarea', required: true },
+];
+
+const APP_STATUS_STYLE = {
+  new: 'bg-orange-400/15 text-orange-200 ring-orange-300/30',
+  reviewing: 'bg-sky-400/15 text-sky-200 ring-sky-300/30',
+  shortlisted: 'bg-emerald-400/15 text-emerald-200 ring-emerald-300/30',
+  rejected: 'bg-red-400/15 text-red-200 ring-red-300/30',
+  hired: 'bg-violet-400/15 text-violet-200 ring-violet-300/30',
+};
+const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'rejected', 'hired'];
+
+const ADMIN_TABS = [
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'messages', label: 'Messages', icon: MessageSquare },
+  { id: 'projects', label: 'Projects', icon: FolderKanban },
+  { id: 'openings', label: 'Careers', icon: Briefcase },
+  { id: 'applications', label: 'Applications', icon: FileText },
+  { id: 'users', label: 'Users', icon: Users },
+  { id: 'settings', label: 'Settings', icon: Settings },
+];
+
+const ADMIN_CSS = `
+.adm{color:#e8f1ea;background:#06100a;font-feature-settings:"ss01"}
+.adm *{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
+.adm-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.adm-blob{position:absolute;border-radius:9999px;filter:blur(95px);opacity:.5;animation:adm-float 16s ease-in-out infinite}
+.adm-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 25%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 30%,#000 25%,transparent 75%)}
+.adm-glass{background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.1);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 24px 60px -28px rgba(0,0,0,.75)}
+.adm-in{animation:adm-in .5s cubic-bezier(.2,.8,.2,1) both}
+.adm-input{width:100%;border-radius:.85rem;border:1px solid rgba(255,255,255,.12);background:rgba(3,10,6,.6);padding:.7rem .95rem;font-size:.875rem;color:#f1f7f2;outline:none;transition:border-color .2s,box-shadow .2s}
+.adm-input:focus{border-color:#4ade80;box-shadow:0 0 0 4px rgba(74,222,128,.14)}
+.adm-input::placeholder{color:rgba(232,241,234,.35)}
+select.adm-input option{background:#0d1d15;color:#f1f7f2}
+.adm-label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(232,241,234,.55);margin-bottom:.4rem}
+.adm-btn,.adm-btn-ghost,.adm-btn-danger{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border-radius:.85rem;padding:.62rem 1.05rem;font-size:.82rem;font-weight:700;transition:all .25s;white-space:nowrap}
+.adm-btn{color:#fff;background:linear-gradient(120deg,#16a34a,#f3a044,#16a34a);background-size:220% auto;box-shadow:0 12px 26px -12px rgba(243,160,68,.7)}
+.adm-btn:hover:not(:disabled){background-position:right center;transform:translateY(-1px)}
+.adm-btn-ghost{color:#e8f1ea;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05)}
+.adm-btn-ghost:hover:not(:disabled){background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.adm-btn-danger{color:#fecaca;border:1px solid rgba(248,113,113,.35);background:rgba(239,68,68,.1)}
+.adm-btn-danger:hover:not(:disabled){background:rgba(239,68,68,.25)}
+.adm-btn:disabled,.adm-btn-ghost:disabled,.adm-btn-danger:disabled{opacity:.65;cursor:not-allowed}
+.adm-chip{display:inline-flex;align-items:center;gap:.35rem;border-radius:9999px;padding:.22rem .7rem;font-size:.7rem;font-weight:700}
+.adm-nav{display:flex;align-items:center;gap:.7rem;width:100%;border-radius:.9rem;padding:.72rem .9rem;font-size:.875rem;font-weight:600;color:rgba(232,241,234,.65);transition:all .2s;text-align:left}
+.adm-nav:hover{background:rgba(255,255,255,.06);color:#fff}
+.adm-nav[data-active="true"]{background:linear-gradient(120deg,rgba(74,222,128,.22),rgba(243,160,68,.2));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.adm-title{background:linear-gradient(90deg,#fff,#a7f3d0,#fdba74,#fff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:adm-shine 7s linear infinite}
+.adm-pulse{animation:adm-ring 1.9s infinite}
+.adm-row:hover{background:rgba(255,255,255,.045)}
+.adm-toast{animation:adm-toast .35s cubic-bezier(.2,.8,.2,1) both}
+@keyframes adm-float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(46px,-34px) scale(1.18)}}
+@keyframes adm-in{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes adm-toast{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:none}}
+@keyframes adm-shine{to{background-position:200% center}}
+@keyframes adm-ring{0%{box-shadow:0 0 0 0 rgba(243,160,68,.55)}100%{box-shadow:0 0 0 16px rgba(243,160,68,0)}}
+@keyframes adm-draw{from{stroke-dashoffset:1200}to{stroke-dashoffset:0}}
+.adm-line{stroke-dasharray:1200;animation:adm-draw 1.6s ease forwards}
+@media (prefers-reduced-motion:reduce){.adm-blob,.adm-title,.adm-pulse,.adm-line{animation:none}}
+`;
+
+function AdminBackdrop() {
+  return (
+    <div className="adm-bg" aria-hidden="true">
+      <div className="adm-blob -left-24 -top-24 h-96 w-96 bg-emerald-500/50" />
+      <div className="adm-blob -right-20 top-1/3 h-[26rem] w-[26rem] bg-orange-500/35" style={{ animationDelay: '-5s' }} />
+      <div className="adm-blob bottom-[-8rem] left-1/3 h-96 w-96 bg-teal-500/30" style={{ animationDelay: '-9s' }} />
+      <div className="adm-grid" />
+    </div>
+  );
+}
+
+/* ----- the pop-up that appears when you press the Admin button ----- */
+function AdminLogin({ onLoggedIn, onClose }) {
+  const [creds, setCreds] = useState({ email: '', password: '' });
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setError('');
+    setLoading(true);
+    try {
+      const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds });
+      onLoggedIn(data.token, data.user);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="absolute inset-0 grid place-items-center overflow-y-auto p-4"
+      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="adm-in w-full max-w-md rounded-[1.75rem] bg-gradient-to-br from-emerald-400 via-orange-300 to-emerald-600 p-[1.5px] shadow-[0_30px_90px_-20px_rgba(0,0,0,.9)]">
+        <div className="relative overflow-hidden rounded-[1.7rem] bg-[#07140d]/95 p-8 backdrop-blur-xl">
+          <button type="button" onClick={onClose} aria-label="Close" className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white"><X size={18} /></button>
+          <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-white p-2 adm-pulse"><img src={logo} alt="REL4D" className="h-full w-full object-contain" /></div>
+          <p className="mt-5 text-center text-[.7rem] font-bold uppercase tracking-[.25em] text-orange-300">REL4D administration</p>
+          <h2 className="adm-title mt-1 text-center text-3xl font-extrabold">Admin sign in</h2>
+          <p className="mt-2 text-center text-sm text-white/55">Manage messages, projects, careers and applications.</p>
+          <form onSubmit={submit} className="mt-7 space-y-4">
+            <div>
+              <label className="adm-label" htmlFor="adm-email">Email</label>
+              <input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com" />
+            </div>
+            <div>
+              <label className="adm-label" htmlFor="adm-pass">Password</label>
+              <div className="relative">
+                <input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="••••••••" />
+                <button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-white/55 hover:text-white">{show ? <EyeOff size={17} /> : <Eye size={17} />}</button>
+              </div>
+            </div>
+            {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">{error}</p>}
+            <Btn type="submit" loading={loading} className="adm-btn w-full !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''} />{loading ? 'Signing in…' : 'Sign in securely'}</Btn>
+          </form>
+          <button type="button" onClick={onClose} className="mx-auto mt-5 block text-sm font-semibold text-white/55 transition hover:text-white">← Back to website</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Panel({ title, subtitle, actions, children }) {
+  return (
+    <section className="adm-in">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="adm-title text-2xl font-extrabold sm:text-3xl">{title}</h2>
+          {subtitle && <p className="mt-1 text-sm text-white/55">{subtitle}</p>}
+        </div>
+        {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function Empty({ icon: Icon, text }) {
+  return (
+    <div className="grid place-items-center gap-3 px-6 py-14 text-center text-white/45">
+      <span className="grid h-14 w-14 place-items-center rounded-full bg-white/5"><Icon size={24} /></span>
+      <p className="text-sm">{text}</p>
+    </div>
+  );
+}
+
+/* ----- Overview: stats, 14-day chart, quick actions ----- */
+function Sparkline({ values }) {
+  const w = 640, h = 170, pad = 14;
+  const max = Math.max(1, ...values);
+  const pts = values.map((v, i) => [pad + (i * (w - pad * 2)) / Math.max(1, values.length - 1), h - pad - (v / max) * (h - pad * 2)]);
+  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const area = `${line} L${pts[pts.length - 1][0]},${h - pad} L${pts[0][0]},${h - pad} Z`;
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="h-44 w-full" preserveAspectRatio="none" role="img" aria-label="Messages received in the last 14 days">
+      <defs>
+        <linearGradient id="adm-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#4ade80" stopOpacity=".45" /><stop offset="1" stopColor="#4ade80" stopOpacity="0" /></linearGradient>
+        <linearGradient id="adm-stroke" x1="0" x2="1"><stop offset="0" stopColor="#4ade80" /><stop offset="1" stopColor="#f3a044" /></linearGradient>
+      </defs>
+      {[0.25, 0.5, 0.75].map((f) => <line key={f} x1={pad} x2={w - pad} y1={pad + f * (h - pad * 2)} y2={pad + f * (h - pad * 2)} stroke="rgba(255,255,255,.07)" />)}
+      <path d={area} fill="url(#adm-fill)" />
+      <path d={line} fill="none" stroke="url(#adm-stroke)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="adm-line" />
+      {pts.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={values[i] ? 4 : 2.2} fill={values[i] ? '#f3a044' : 'rgba(255,255,255,.3)'} />)}
+    </svg>
+  );
+}
+
+const STAT_CARDS = [
+  { key: 'unread_messages', label: 'Unread messages', icon: Inbox, tone: 'from-orange-500 to-amber-400', tab: 'messages' },
+  { key: 'messages', label: 'Total messages', icon: MessageSquare, tone: 'from-emerald-500 to-teal-400', tab: 'messages' },
+  { key: 'new_applications', label: 'New applications', icon: Bell, tone: 'from-fuchsia-500 to-pink-400', tab: 'applications' },
+  { key: 'applications', label: 'All applications', icon: FileText, tone: 'from-sky-500 to-cyan-400', tab: 'applications' },
+  { key: 'users', label: 'Registered users', icon: Users, tone: 'from-violet-500 to-indigo-400', tab: 'users' },
+  { key: 'projects', label: 'Projects', icon: FolderKanban, tone: 'from-lime-500 to-emerald-400', tab: 'projects' },
+  { key: 'openings', label: 'Open positions', icon: Briefcase, tone: 'from-rose-500 to-orange-400', tab: 'openings' },
+];
+
+function Overview({ stats, messages, applications, goto, user }) {
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - i)); return d; });
+  const counts = days.map((d) => messages.filter((m) => { const t = new Date(m.created_at).getTime(); return t >= d.getTime() && t < d.getTime() + 86400000; }).length);
+  const byStatus = APP_STATUSES.map((s) => ({ s, n: applications.filter((a) => a.status === s).length }));
+  const totalApps = Math.max(1, applications.length);
+  return (
+    <Panel title={`${greeting}, ${(user?.name || 'Admin').split(' ')[0]}`} subtitle="Here is what is happening on your website today.">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+        {STAT_CARDS.map((c, i) => (
+          <button key={c.key} type="button" onClick={() => goto(c.tab)} style={{ animationDelay: `${i * 60}ms` }}
+            className="adm-glass adm-in group relative overflow-hidden rounded-2xl p-5 text-left transition hover:-translate-y-1 hover:border-white/25">
+            <span className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${c.tone} opacity-30 blur-xl transition group-hover:opacity-60`} />
+            <span className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${c.tone} text-white shadow-lg`}><c.icon size={20} /></span>
+            <p className="mt-4 text-3xl font-extrabold tracking-tight text-white"><CountUp to={Number(stats?.[c.key] || 0)} /></p>
+            <p className="mt-0.5 text-xs font-bold uppercase tracking-wider text-white/50">{c.label}</p>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-6 grid gap-5 xl:grid-cols-[1.6fr_1fr]">
+        <div className="adm-glass rounded-2xl p-6">
+          <div className="flex items-center justify-between"><h3 className="font-bold">Messages · last 14 days</h3><span className="adm-chip bg-emerald-400/15 text-emerald-200">{counts.reduce((a, b) => a + b, 0)} received</span></div>
+          <div className="mt-4"><Sparkline values={counts} /></div>
+          <div className="mt-1 flex justify-between text-[.7rem] text-white/40"><span>{days[0].toLocaleDateString([], { month: 'short', day: 'numeric' })}</span><span>Today</span></div>
+        </div>
+        <div className="adm-glass rounded-2xl p-6">
+          <h3 className="font-bold">Applications pipeline</h3>
+          <div className="mt-5 space-y-3.5">
+            {byStatus.map(({ s, n }) => (
+              <div key={s}>
+                <div className="mb-1 flex justify-between text-xs"><span className="font-semibold capitalize text-white/75">{s}</span><span className="text-white/50">{n}</span></div>
+                <div className="h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300 transition-all duration-700" style={{ width: `${(n / totalApps) * 100}%` }} /></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+        <div className="adm-glass rounded-2xl p-6">
+          <div className="mb-3 flex items-center justify-between"><h3 className="font-bold">Latest messages</h3><button type="button" onClick={() => goto('messages')} className="text-xs font-bold text-orange-300 hover:underline">View all</button></div>
+          {messages.length === 0 ? <Empty icon={Inbox} text="No messages yet." /> : messages.slice(0, 5).map((m) => (
+            <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 text-sm font-semibold">{m.name}{!m.is_read && <i className="h-2 w-2 rounded-full bg-orange-400" />}</span><span className="block truncate text-xs text-white/50">{m.message}</span></span>
+            </button>
+          ))}
+        </div>
+        <div className="adm-glass rounded-2xl p-6">
+          <h3 className="mb-3 font-bold">Quick actions</h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[['Add a project', FolderKanban, 'projects'], ['Post a job opening', Briefcase, 'openings'], ['Review applications', FileText, 'applications'], ['Change password', KeyRound, 'settings']].map(([label, Icon, tab]) => (
+              <button key={label} type="button" onClick={() => goto(tab)} className="adm-btn-ghost !justify-start !py-4"><Icon size={17} className="text-orange-300" />{label}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Messages: inbox, read/unread, star, bulk actions, reply ----- */
+function MessagesPanel({ items, setItems, ctx, focusId }) {
+  const { call, run, busy, search } = ctx;
+  const [filter, setFilter] = useState('all');
+  const [selectedId, setSelectedId] = useState(focusId || null);
+  const [checked, setChecked] = useState([]);
+  const [reply, setReply] = useState('');
+  const q = search.trim().toLowerCase();
+  const matches = (m) => !q || [m.name, m.email, m.organization, m.service, m.message].some((v) => (v || '').toLowerCase().includes(q));
+  const counts = { all: items.length, unread: items.filter((m) => !m.is_read).length, starred: items.filter((m) => m.starred).length };
+  const shown = items.filter((m) => matches(m) && (filter === 'all' || (filter === 'unread' && !m.is_read) || (filter === 'starred' && m.starred)));
+  const current = items.find((m) => m.id === selectedId) || null;
+  const patch = (id, changes) => setItems((list) => list.map((m) => (m.id === id ? { ...m, ...changes } : m)));
+
+  useEffect(() => { // open the message that was clicked from the Overview
+    if (!focusId) return;
+    const m = items.find((x) => x.id === focusId);
+    if (m) { setSelectedId(m.id); setReply(m.reply_text || ''); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusId]);
+
+  const setRead = (m, value, quiet) => run(`read-${m.id}`, async () => {
+    await call(`/api/admin/messages/${m.id}`, { method: 'PATCH', body: { is_read: value } });
+    patch(m.id, { is_read: value });
+  }, quiet ? null : value ? 'Marked as read' : 'Marked as unread');
+
+  const open = (m) => { setSelectedId(m.id); setReply(m.reply_text || ''); if (!m.is_read) setRead(m, true, true); };
+  const toggleStar = (m) => run(`star-${m.id}`, async () => {
+    await call(`/api/admin/messages/${m.id}`, { method: 'PATCH', body: { starred: !m.starred } });
+    patch(m.id, { starred: !m.starred });
+  });
+  const remove = (m) => {
+    if (!window.confirm(`Delete the message from ${m.name}?`)) return;
+    run(`del-${m.id}`, async () => {
+      await call(`/api/admin/messages/${m.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== m.id));
+      if (selectedId === m.id) setSelectedId(null);
+    }, 'Message deleted');
+  };
+  const sendReply = (m) => run(`reply-${m.id}`, async () => {
+    const r = await call(`/api/admin/messages/${m.id}/reply`, { method: 'POST', body: { reply } });
+    patch(m.id, { reply_text: reply, replied_at: new Date().toISOString(), is_read: true });
+    if (!r.emailed) { // server has no SMTP: open the admin's own mail app with the text filled in
+      window.location.href = `mailto:${m.email}?subject=${encodeURIComponent('Re: your message to REL4D Ltd')}&body=${encodeURIComponent(reply)}`;
+    }
+    return r;
+  }, 'Reply saved');
+  const bulk = (action) => run(`bulk-${action}`, async () => {
+    if (action === 'delete' && !window.confirm(`Delete ${checked.length} message(s)?`)) return;
+    await call('/api/admin/messages/bulk', { method: 'POST', body: { ids: checked, action } });
+    if (action === 'delete') setItems((l) => l.filter((m) => !checked.includes(m.id)));
+    else setItems((l) => l.map((m) => (checked.includes(m.id) ? { ...m, is_read: action === 'read' } : m)));
+    setChecked([]);
+  }, 'Done');
+
+  return (
+    <Panel title="Messages" subtitle="Everything visitors send through the contact form lands here."
+      actions={<button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-messages.csv', items, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'organization', label: 'Organization' }, { key: 'service', label: 'Service' }, { key: 'message', label: 'Message' }, { key: 'is_read', label: 'Read' }])}><Download size={15} />Export CSV</button>}>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {['all', 'unread', 'starred'].map((f) => (
+          <button key={f} type="button" onClick={() => setFilter(f)} className={`adm-chip capitalize transition ${filter === f ? 'bg-emerald-400/20 text-emerald-100 ring-1 ring-emerald-300/40' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}>{f} · {counts[f]}</button>
+        ))}
+        {checked.length > 0 && (
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            <span className="text-xs text-white/55">{checked.length} selected</span>
+            <Btn type="button" loading={busy === 'bulk-read'} onClick={() => bulk('read')} className="adm-btn-ghost !py-1.5"><Check size={14} />Mark read</Btn>
+            <Btn type="button" loading={busy === 'bulk-unread'} onClick={() => bulk('unread')} className="adm-btn-ghost !py-1.5">Unread</Btn>
+            <Btn type="button" loading={busy === 'bulk-delete'} onClick={() => bulk('delete')} className="adm-btn-danger !py-1.5"><Trash2 size={14} />Delete</Btn>
+          </div>
+        )}
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[390px_1fr]">
+        <div className="adm-glass max-h-[68vh] overflow-y-auto rounded-2xl">
+          {shown.length === 0 ? <Empty icon={Inbox} text="Nothing here." /> : (
+            <>
+              <label className="flex items-center gap-3 border-b border-white/10 px-4 py-2.5 text-xs font-semibold text-white/55">
+                <input type="checkbox" checked={checked.length === shown.length && shown.length > 0} onChange={(e) => setChecked(e.target.checked ? shown.map((m) => m.id) : [])} className="h-4 w-4 accent-emerald-400" />Select all
+              </label>
+              {shown.map((m) => (
+                <div key={m.id} onClick={() => open(m)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') open(m); }}
+                  className={`adm-row flex cursor-pointer items-start gap-3 border-b border-white/5 px-4 py-3.5 ${selectedId === m.id ? 'bg-white/[.07]' : ''}`}>
+                  <input type="checkbox" checked={checked.includes(m.id)} onClick={(e) => e.stopPropagation()} onChange={(e) => setChecked((c) => (e.target.checked ? [...c, m.id] : c.filter((id) => id !== m.id)))} className="mt-2 h-4 w-4 accent-emerald-400" aria-label={`Select ${m.name}`} />
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2"><span className={`truncate text-sm ${m.is_read ? 'font-medium text-white/80' : 'font-bold text-white'}`}>{m.name}</span>{!m.is_read && <i className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}{m.starred && <Star size={13} className="shrink-0 text-amber-300" fill="currentColor" />}{m.replied_at && <Reply size={13} className="shrink-0 text-emerald-300" />}</span>
+                    <span className="block truncate text-xs text-white/50">{m.service || 'General enquiry'} · {fmtDate(m.created_at)}</span>
+                    <span className="mt-1 block truncate text-xs text-white/60">{m.message}</span>
+                  </span>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+
+        <div className="adm-glass rounded-2xl p-6">
+          {!current ? <Empty icon={MessageSquare} text="Select a message to read it and reply." /> : (
+            <div key={current.id} className="adm-in">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-lg font-bold">{initials(current.name)}</span>
+                  <div><p className="text-lg font-bold">{current.name}</p><a href={`mailto:${current.email}`} className="text-sm text-emerald-300 hover:underline">{current.email}</a>{current.organization && <p className="text-xs text-white/50">{current.organization}</p>}</div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Btn type="button" loading={busy === `star-${current.id}`} onClick={() => toggleStar(current)} className="adm-btn-ghost !py-2"><Star size={15} fill={current.starred ? 'currentColor' : 'none'} className={current.starred ? 'text-amber-300' : ''} />{current.starred ? 'Starred' : 'Star'}</Btn>
+                  <Btn type="button" loading={busy === `read-${current.id}`} onClick={() => setRead(current, !current.is_read)} className="adm-btn-ghost !py-2">{current.is_read ? 'Mark unread' : 'Mark read'}</Btn>
+                  <Btn type="button" loading={busy === `del-${current.id}`} onClick={() => remove(current)} className="adm-btn-danger !py-2"><Trash2 size={15} />Delete</Btn>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {current.service && <span className="adm-chip bg-orange-400/15 text-orange-200">{current.service}</span>}
+                <span className="adm-chip bg-white/5 text-white/55">{fmtDate(current.created_at)}</span>
+                {current.replied_at && <span className="adm-chip bg-emerald-400/15 text-emerald-200"><Reply size={12} />Replied {fmtDate(current.replied_at)}</span>}
+              </div>
+              <p className="mt-5 whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/25 p-5 text-sm leading-relaxed text-white/85">{current.message}</p>
+
+              <div className="mt-6">
+                <label className="adm-label" htmlFor="adm-reply">Your reply</label>
+                <textarea id="adm-reply" rows={5} value={reply} onChange={(e) => setReply(e.target.value)} className="adm-input resize-y" placeholder={`Write a reply to ${current.name}…`} />
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-xs text-white/45">Sent by e-mail when SMTP is set up; otherwise your mail app opens with the text ready.</p>
+                  <Btn type="button" loading={busy === `reply-${current.id}`} disabled={reply.trim().length < 2} onClick={() => sendReply(current)} className="adm-btn"><Send size={15} className={busy === `reply-${current.id}` ? 'hidden' : ''} />Send reply</Btn>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Projects & Careers: one reusable create / edit / hide / delete manager ----- */
+function ContentManager({ kind, title, singular, subtitle, items, setItems, fields, meta, ctx }) {
+  const { call, run, busy, toast, search } = ctx;
+  const empty = Object.fromEntries(fields.map((f) => [f.name, '']));
+  const [form, setForm] = useState(empty);
+  const [published, setPublished] = useState(true);
+  const [order, setOrder] = useState('');
+  const [editing, setEditing] = useState(null); // null | 'new' | item id
+  const q = search.trim().toLowerCase();
+  const shown = items.filter((it) => !q || JSON.stringify(it.data).toLowerCase().includes(q));
+
+  const startNew = () => { setForm(empty); setPublished(true); setOrder(''); setEditing('new'); };
+  const startEdit = (it) => { setForm({ ...empty, ...it.data }); setPublished(it.published); setOrder(String(it.sort_order)); setEditing(it.id); };
+  const set = (name) => (e) => setForm((f) => ({ ...f, [name]: e.target.value }));
+
+  const pickImage = async (e, name) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try { setForm((f) => ({ ...f, [name]: '' })); const url = await fileToDataUrl(file); setForm((f) => ({ ...f, [name]: url })); }
+    catch (err) { toast(err.message, 'err'); }
+  };
+
+  const save = (e) => {
+    e.preventDefault();
+    run(`save-${kind}`, async () => {
+      const body = { data: form, published, sort_order: order === '' ? undefined : Number(order) };
+      if (editing === 'new') {
+        const r = await call('/api/admin/content', { method: 'POST', body: { kind, ...body } });
+        setItems((l) => [...l, r.item]);
+      } else {
+        const r = await call(`/api/admin/content/${editing}`, { method: 'PUT', body });
+        setItems((l) => l.map((x) => (x.id === editing ? r.item : x)));
+      }
+      setEditing(null);
+    }, `${singular} saved`);
+  };
+  const togglePublish = (it) => run(`pub-${it.id}`, async () => {
+    const r = await call(`/api/admin/content/${it.id}`, { method: 'PUT', body: { published: !it.published } });
+    setItems((l) => l.map((x) => (x.id === it.id ? r.item : x)));
+  }, it.published ? 'Hidden from the website' : 'Now visible on the website');
+  const remove = (it) => {
+    if (!window.confirm(`Delete "${it.data.title || singular}"? This cannot be undone.`)) return;
+    run(`del-${it.id}`, async () => {
+      await call(`/api/admin/content/${it.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== it.id));
+    }, `${singular} deleted`);
+  };
+
+  return (
+    <Panel title={title} subtitle={subtitle} actions={<button type="button" className="adm-btn" onClick={startNew}><Plus size={16} />Add {singular.toLowerCase()}</button>}>
+      {editing !== null && (
+        <form onSubmit={save} className="adm-glass adm-in mb-6 rounded-2xl p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-bold">{editing === 'new' ? `New ${singular.toLowerCase()}` : `Edit ${singular.toLowerCase()}`}</h3>
+            <button type="button" onClick={() => setEditing(null)} aria-label="Close form" className="grid h-9 w-9 place-items-center rounded-full text-white/60 hover:bg-white/10"><X size={18} /></button>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {fields.map((f) => (
+              <div key={f.name} className={f.type === 'textarea' || f.type === 'image' ? 'md:col-span-2' : ''}>
+                <label className="adm-label" htmlFor={`f-${kind}-${f.name}`}>{f.label}{f.required && ' *'}</label>
+                {f.type === 'textarea' ? (
+                  <textarea id={`f-${kind}-${f.name}`} rows={4} required={f.required} value={form[f.name] || ''} onChange={set(f.name)} className="adm-input resize-y" />
+                ) : f.type === 'image' ? (
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="grid h-24 w-40 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/10 bg-black/30">
+                      {form[f.name] ? <img src={form[f.name]} alt="" className="h-full w-full object-cover" /> : <ImagePlus size={24} className="text-white/30" />}
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <input id={`f-${kind}-${f.name}`} type="text" value={form[f.name]?.startsWith('data:') ? '(uploaded image)' : form[f.name] || ''} onChange={set(f.name)} readOnly={form[f.name]?.startsWith('data:')} placeholder="Paste an image URL…" className="adm-input" />
+                      <div className="flex gap-2">
+                        <label className="adm-btn-ghost cursor-pointer"><ImagePlus size={15} />Upload image<input type="file" accept="image/*" className="sr-only" onChange={(e) => pickImage(e, f.name)} /></label>
+                        {form[f.name] && <button type="button" className="adm-btn-ghost" onClick={() => setForm((x) => ({ ...x, [f.name]: '' }))}>Remove</button>}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <input id={`f-${kind}-${f.name}`} type="text" required={f.required} value={form[f.name] || ''} onChange={set(f.name)} list={f.type === 'combo' ? `dl-${kind}-${f.name}` : undefined} className="adm-input" />
+                    {f.type === 'combo' && <datalist id={`dl-${kind}-${f.name}`}>{f.options.map((o) => <option key={o} value={o} />)}</datalist>}
+                  </>
+                )}
+              </div>
+            ))}
+            <div>
+              <label className="adm-label" htmlFor={`f-${kind}-order`}>Display order</label>
+              <input id={`f-${kind}-order`} type="number" value={order} onChange={(e) => setOrder(e.target.value)} placeholder="Auto" className="adm-input" />
+            </div>
+            <label className="flex items-center gap-3 self-end rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm font-semibold">
+              <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} className="h-4 w-4 accent-emerald-400" />Visible on the website
+            </label>
+          </div>
+          <div className="mt-5 flex flex-wrap justify-end gap-2">
+            <button type="button" className="adm-btn-ghost" onClick={() => setEditing(null)}>Cancel</button>
+            <Btn type="submit" loading={busy === `save-${kind}`} className="adm-btn"><Check size={16} className={busy === `save-${kind}` ? 'hidden' : ''} />Save {singular.toLowerCase()}</Btn>
+          </div>
+        </form>
+      )}
+
+      {shown.length === 0 ? <div className="adm-glass rounded-2xl"><Empty icon={FolderKanban} text={`No ${title.toLowerCase()} yet. Press “Add ${singular.toLowerCase()}”.`} /></div> : (
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {shown.map((it, i) => (
+            <article key={it.id} style={{ animationDelay: `${i * 55}ms` }} className={`adm-glass adm-in group overflow-hidden rounded-2xl transition hover:-translate-y-1 ${it.published ? '' : 'opacity-60'}`}>
+              {it.data.image !== undefined && (
+                <div className="relative h-40 overflow-hidden bg-gradient-to-br from-emerald-700 to-emerald-950">
+                  {it.data.image && <img src={it.data.image} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />}
+                  <span className={`adm-chip absolute left-3 top-3 ${it.published ? 'bg-emerald-500/90 text-white' : 'bg-black/70 text-white/80'}`}>{it.published ? 'Live' : 'Hidden'}</span>
+                </div>
+              )}
+              <div className="p-5">
+                {it.data.image === undefined && <span className={`adm-chip mb-2 ${it.published ? 'bg-emerald-400/15 text-emerald-200' : 'bg-white/10 text-white/60'}`}>{it.published ? 'Live' : 'Hidden'}</span>}
+                <h3 className="font-bold leading-snug">{it.data.title || 'Untitled'}</h3>
+                <div className="mt-2 flex flex-wrap gap-1.5">{meta.map((k) => it.data[k] && <span key={k} className="adm-chip bg-white/8 text-white/65" style={{ background: 'rgba(255,255,255,.07)' }}>{it.data[k]}</span>)}</div>
+                <p className="mt-3 line-clamp-3 text-sm text-white/60">{it.data.description}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button type="button" onClick={() => startEdit(it)} className="adm-btn-ghost !px-3 !py-1.5"><Pencil size={14} />Edit</button>
+                  <Btn type="button" loading={busy === `pub-${it.id}`} onClick={() => togglePublish(it)} className="adm-btn-ghost !px-3 !py-1.5">{it.published ? <EyeOff size={14} /> : <Eye size={14} />}{it.published ? 'Hide' : 'Publish'}</Btn>
+                  <Btn type="button" loading={busy === `del-${it.id}`} onClick={() => remove(it)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} />Delete</Btn>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ----- Applications ----- */
+function ApplicationsPanel({ items, setItems, ctx, token }) {
+  const { call, run, busy, search } = ctx;
+  const [openId, setOpenId] = useState(null);
+  const q = search.trim().toLowerCase();
+  const shown = items.filter((a) => !q || [a.name, a.email, a.position, a.phone, a.message].some((v) => (v || '').toLowerCase().includes(q)));
+
+  const setStatus = (a, status) => run(`st-${a.id}`, async () => {
+    await call(`/api/admin/applications/${a.id}`, { method: 'PATCH', body: { status } });
+    setItems((l) => l.map((x) => (x.id === a.id ? { ...x, status } : x)));
+  }, `Marked as ${status}`);
+  const remove = (a) => {
+    if (!window.confirm(`Delete the application from ${a.name}?`)) return;
+    run(`del-${a.id}`, async () => {
+      await call(`/api/admin/applications/${a.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== a.id));
+    }, 'Application deleted');
+  };
+  const downloadCv = (a) => run(`cv-${a.id}`, async () => {
+    const res = await apiRequest(`/api/admin/applications/${a.id}/cv`, { token, raw: true });
+    const url = URL.createObjectURL(await res.blob());
+    const link = document.createElement('a');
+    link.href = url; link.download = a.cv_filename || 'cv.pdf'; link.click();
+    URL.revokeObjectURL(url);
+  });
+
+  return (
+    <Panel title="Applications" subtitle="Candidates who applied for a role or sent an open application."
+      actions={<button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-applications.csv', items, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }, { key: 'position', label: 'Position' }, { key: 'status', label: 'Status' }])}><Download size={15} />Export CSV</button>}>
+      <div className="adm-glass overflow-x-auto rounded-2xl">
+        {shown.length === 0 ? <Empty icon={FileText} text="No applications yet." /> : (
+          <table className="w-full min-w-[760px] text-left text-sm">
+            <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">Candidate</th><th className="px-3 py-3">Position</th><th className="px-3 py-3">Applied</th><th className="px-3 py-3">Status</th><th className="px-5 py-3 text-right">Actions</th></tr></thead>
+            <tbody>
+              {shown.map((a) => (
+                <>
+                  <tr key={a.id} className="adm-row border-b border-white/5">
+                    <td className="px-5 py-3.5"><p className="font-bold">{a.name}</p><p className="text-xs text-white/50">{a.email}{a.phone ? ` · ${a.phone}` : ''}</p></td>
+                    <td className="px-3 py-3.5 text-white/75">{a.position}</td>
+                    <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(a.created_at)}</td>
+                    <td className="px-3 py-3.5">
+                      <div className="flex items-center gap-2">
+                        {busy === `st-${a.id}` ? <Spinner size={16} className="text-orange-300" /> : <span className={`adm-chip capitalize ring-1 ${APP_STATUS_STYLE[a.status]}`}>{a.status}</span>}
+                        <select value={a.status} onChange={(e) => setStatus(a, e.target.value)} className="adm-input !w-auto !py-1.5 !text-xs" aria-label={`Status for ${a.name}`}>{APP_STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex justify-end gap-2">
+                        {a.message && <button type="button" onClick={() => setOpenId(openId === a.id ? null : a.id)} className="adm-btn-ghost !px-3 !py-1.5"><Eye size={14} />Note</button>}
+                        {a.has_cv && <Btn type="button" loading={busy === `cv-${a.id}`} onClick={() => downloadCv(a)} className="adm-btn-ghost !px-3 !py-1.5"><Download size={14} />CV</Btn>}
+                        {a.cv_url && <a href={a.cv_url} target="_blank" rel="noreferrer" className="adm-btn-ghost !px-3 !py-1.5"><ArrowUpRight size={14} />Link</a>}
+                        <Btn type="button" loading={busy === `del-${a.id}`} onClick={() => remove(a)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} /></Btn>
+                      </div>
+                    </td>
+                  </tr>
+                  {openId === a.id && <tr key={`${a.id}-n`} className="border-b border-white/5 bg-black/20"><td colSpan={5} className="whitespace-pre-wrap px-5 py-4 text-sm text-white/75">{a.message}</td></tr>}
+                </>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Users ----- */
+function UsersPanel({ items, setItems, ctx }) {
+  const { call, run, busy, search } = ctx;
+  const q = search.trim().toLowerCase();
+  const shown = items.filter((u) => !q || [u.name, u.email, u.provider].some((v) => (v || '').toLowerCase().includes(q)));
+  const remove = (u) => {
+    if (!window.confirm(`Delete the account of ${u.name}?`)) return;
+    run(`del-${u.id}`, async () => {
+      await call(`/api/admin/users/${u.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== u.id));
+    }, 'User deleted');
+  };
+  return (
+    <Panel title="Users" subtitle="People who created an account on the website.">
+      <div className="adm-glass overflow-x-auto rounded-2xl">
+        {shown.length === 0 ? <Empty icon={Users} text="No users found." /> : (
+          <table className="w-full min-w-[680px] text-left text-sm">
+            <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">User</th><th className="px-3 py-3">Role</th><th className="px-3 py-3">Sign-in</th><th className="px-3 py-3">Joined</th><th className="px-3 py-3">Last login</th><th className="px-5 py-3" /></tr></thead>
+            <tbody>
+              {shown.map((u) => (
+                <tr key={u.id} className="adm-row border-b border-white/5">
+                  <td className="px-5 py-3.5"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(u.name)}</span><span><span className="block font-bold">{u.name}</span><span className="text-xs text-white/50">{u.email}</span></span></div></td>
+                  <td className="px-3 py-3.5"><span className={`adm-chip ${u.role === 'admin' ? 'bg-orange-400/20 text-orange-200' : 'bg-white/8 text-white/65'}`}>{u.role}</span></td>
+                  <td className="px-3 py-3.5 capitalize text-white/65">{u.provider}</td>
+                  <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.created_at)}</td>
+                  <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.last_login)}</td>
+                  <td className="px-5 py-3.5 text-right">{u.role !== 'admin' && <Btn type="button" loading={busy === `del-${u.id}`} onClick={() => remove(u)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} /></Btn>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Settings: password, exports, sign out ----- */
+function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
+  const { call, run, busy, toast } = ctx;
+  const [pw, setPw] = useState({ current: '', next: '', confirm: '' });
+  const [show, setShow] = useState(false);
+  const change = (e) => {
+    e.preventDefault();
+    if (pw.next !== pw.confirm) return toast('The new passwords do not match.', 'err');
+    run('pwd', async () => {
+      await call('/api/admin/password', { method: 'POST', body: { current: pw.current, next: pw.next } });
+      setPw({ current: '', next: '', confirm: '' });
+    }, 'Password updated');
+  };
+  return (
+    <Panel title="Settings" subtitle="Your account, security and data exports.">
+      <div className="grid gap-5 lg:grid-cols-2">
+        <form onSubmit={change} className="adm-glass rounded-2xl p-6">
+          <h3 className="flex items-center gap-2 text-lg font-bold"><KeyRound size={18} className="text-orange-300" />Change password</h3>
+          <div className="mt-4 space-y-4">
+            {[['current', 'Current password', 'current-password'], ['next', 'New password (10+ characters)', 'new-password'], ['confirm', 'Repeat new password', 'new-password']].map(([k, label, ac]) => (
+              <div key={k}><label className="adm-label" htmlFor={`pw-${k}`}>{label}</label><input id={`pw-${k}`} required type={show ? 'text' : 'password'} autoComplete={ac} minLength={k === 'current' ? 1 : 10} value={pw[k]} onChange={(e) => setPw((p) => ({ ...p, [k]: e.target.value }))} className="adm-input" /></div>
+            ))}
+            <label className="flex items-center gap-2 text-xs text-white/60"><input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} className="accent-emerald-400" />Show passwords</label>
+            <Btn type="submit" loading={busy === 'pwd'} className="adm-btn w-full">Update password</Btn>
+          </div>
+        </form>
+        <div className="space-y-5">
+          <div className="adm-glass rounded-2xl p-6">
+            <h3 className="flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-emerald-300" />Signed in as</h3>
+            <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold">{initials(user?.name)}</span><div><p className="font-bold">{user?.name}</p><p className="text-sm text-white/55">{user?.email}</p></div></div>
+            <p className="mt-4 text-xs text-white/45">Admin sessions expire automatically after 12 hours.</p>
+            <button type="button" onClick={onLogout} className="adm-btn-danger mt-4"><LogOut size={15} />Sign out</button>
+          </div>
+          <div className="adm-glass rounded-2xl p-6">
+            <h3 className="flex items-center gap-2 text-lg font-bold"><Download size={18} className="text-sky-300" />Export data</h3>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-messages.csv', messages, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'organization', label: 'Organization' }, { key: 'service', label: 'Service' }, { key: 'message', label: 'Message' }])}>Messages (CSV)</button>
+              <button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-applications.csv', applications, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }, { key: 'position', label: 'Position' }, { key: 'status', label: 'Status' }])}>Applications (CSV)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- The dashboard shell ----- */
+function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
+  const [tab, setTab] = useState('overview');
+  const [focusMessage, setFocusMessage] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [openings, setOpenings] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [busy, setBusy] = useState('');
+  const [toasts, setToasts] = useState([]);
+  const [search, setSearch] = useState('');
+
+  const call = (path, opts = {}) => apiRequest(path, { token, ...opts });
+  const toast = (text, type = 'ok') => {
+    const id = Date.now() + Math.random();
+    setToasts((t) => [...t, { id, text, type }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4200);
+  };
+  const handleError = (e) => {
+    if (e.status === 401 || e.status === 403) { onLogout(); return; }
+    toast(e.message, 'err');
+  };
+  // Runs one action with a spinner on the button whose key matches `busy`.
+  const run = async (key, fn, okMessage) => {
+    setBusy(key);
+    try {
+      const result = await fn();
+      if (okMessage) toast(okMessage);
+      return result;
+    } catch (e) {
+      handleError(e);
+      return undefined;
+    } finally {
+      setBusy('');
+    }
+  };
+
+  const refresh = async (manual = false) => {
+    if (manual) setRefreshing(true);
+    try {
+      const [me, st, ms, pr, op, ap, us] = await Promise.all([
+        call('/api/auth/me'), call('/api/admin/stats'), call('/api/admin/messages'),
+        call('/api/admin/content?kind=project'), call('/api/admin/content?kind=opening'),
+        call('/api/admin/applications'), call('/api/admin/users'),
+      ]);
+      setUser(me.user); setStats(st); setMessages(ms.items); setProjects(pr.items); setOpenings(op.items); setApplications(ap.items); setUsers(us.items);
+      if (manual) toast('Dashboard refreshed');
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setLoading(false); setRefreshing(false);
+    }
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { refresh(); }, [token]);
+
+  // Keep the badge numbers live without another request.
+  const liveStats = stats && {
+    ...stats,
+    unread_messages: messages.filter((m) => !m.is_read).length,
+    messages: messages.length,
+    applications: applications.length,
+    new_applications: applications.filter((a) => a.status === 'new').length,
+    users: users.filter((u) => u.role === 'user').length,
+    projects: projects.length,
+    openings: openings.length,
+  };
+  const unread = messages.filter((m) => !m.is_read).length;
+  const newApps = applications.filter((a) => a.status === 'new').length;
+  const badge = { messages: unread, applications: newApps };
+  const goto = (id, messageId = null) => { setTab(id); setFocusMessage(messageId); setSearch(''); };
+  const ctx = { call, run, busy, toast, search };
+
+  let content = null;
+  if (tab === 'overview') content = <Overview stats={liveStats} messages={messages} applications={applications} goto={goto} user={user} />;
+  if (tab === 'messages') content = <MessagesPanel items={messages} setItems={setMessages} ctx={ctx} focusId={focusMessage} />;
+  if (tab === 'projects') content = <ContentManager kind="project" title="Projects" singular="Project" subtitle="Projects shown in the “Recent projects” section of the website." items={projects} setItems={setProjects} fields={PROJECT_FIELDS} meta={['category']} ctx={ctx} />;
+  if (tab === 'openings') content = <ContentManager kind="opening" title="Careers" singular="Opening" subtitle="Open positions that candidates can apply for." items={openings} setItems={setOpenings} fields={OPENING_FIELDS} meta={['type', 'location', 'deadline']} ctx={ctx} />;
+  if (tab === 'applications') content = <ApplicationsPanel items={applications} setItems={setApplications} ctx={ctx} token={token} />;
+  if (tab === 'users') content = <UsersPanel items={users} setItems={setUsers} ctx={ctx} />;
+  if (tab === 'settings') content = <SettingsPanel user={user} ctx={ctx} messages={messages} applications={applications} onLogout={onLogout} />;
+
+  const NavButtons = ({ horizontal }) => ADMIN_TABS.map((tb) => (
+    <button key={tb.id} type="button" data-active={tab === tb.id} onClick={() => goto(tb.id)} className={`adm-nav ${horizontal ? '!w-auto shrink-0 !px-4' : ''}`}>
+      <tb.icon size={18} />{tb.label}
+      {badge[tb.id] > 0 && <span className="ml-auto rounded-full bg-orange-500 px-2 py-0.5 text-[.65rem] font-extrabold text-white">{badge[tb.id]}</span>}
+    </button>
+  ));
+
+  return (
+    <div className="relative flex h-full">
+      <aside className="adm-glass hidden w-64 shrink-0 flex-col gap-1 border-y-0 border-l-0 p-4 lg:flex">
+        <div className="mb-5 flex items-center gap-3 px-1">
+          <span className="grid h-12 w-12 place-items-center rounded-full bg-white p-1.5"><img src={logo} alt="" className="h-full w-full object-contain" /></span>
+          <div><p className="text-lg font-extrabold leading-tight">REL4D</p><p className="text-[.65rem] font-bold uppercase tracking-[.2em] text-orange-300">Admin console</p></div>
+        </div>
+        <NavButtons />
+        <div className="mt-auto rounded-2xl border border-white/10 bg-black/25 p-3">
+          <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 font-bold">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
+          <button type="button" onClick={onLogout} className="adm-btn-danger mt-3 w-full !py-2"><LogOut size={14} />Sign out</button>
+        </div>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="adm-glass flex flex-wrap items-center gap-3 border-x-0 border-t-0 px-4 py-3 sm:px-6">
+          <span className="grid h-10 w-10 place-items-center rounded-full bg-white p-1 lg:hidden"><img src={logo} alt="" className="h-full w-full object-contain" /></span>
+          <div className="relative min-w-[160px] flex-1 sm:max-w-md">
+            <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search in this section…" aria-label="Search" className="adm-input !pl-10" />
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Btn type="button" loading={refreshing} onClick={() => refresh(true)} className="adm-btn-ghost">{!refreshing && <RefreshCw size={15} />}<span className="hidden sm:inline">Refresh</span></Btn>
+            <button type="button" onClick={onClose} className="adm-btn-ghost"><X size={15} /><span className="hidden sm:inline">Close</span></button>
+            <button type="button" onClick={onLogout} className="adm-btn-danger lg:hidden" aria-label="Sign out"><LogOut size={15} /></button>
+          </div>
+        </header>
+        <nav className="flex gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 lg:hidden" aria-label="Admin sections"><NavButtons horizontal /></nav>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          {loading ? (
+            <div className="grid h-full min-h-[50vh] place-items-center"><div className="flex flex-col items-center gap-4 text-white/70"><Spinner size={46} className="text-orange-300" /><p className="text-sm font-semibold">Loading your dashboard…</p></div></div>
+          ) : content}
+        </main>
+      </div>
+
+      <div className="pointer-events-none fixed bottom-5 right-5 z-[300] flex w-[min(92vw,22rem)] flex-col gap-2" aria-live="polite">
+        {toasts.map((t) => (
+          <div key={t.id} className={`adm-toast adm-glass pointer-events-auto flex items-start gap-3 rounded-xl px-4 py-3 text-sm font-semibold ${t.type === 'err' ? '!border-red-400/40 text-red-100' : '!border-emerald-400/40 text-emerald-50'}`}>
+            <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${t.type === 'err' ? 'bg-red-500' : 'bg-emerald-500'}`}>{t.type === 'err' ? <X size={12} /> : <Check size={12} />}</span>{t.text}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ----- Portal: renders the console above the whole website ----- */
+function AdminPortal({ onClose }) {
+  const [token, setToken] = useState(readToken);
+  const [user, setUser] = useState(null);
+  const logout = () => { saveToken(''); setToken(''); setUser(null); };
+  const loggedIn = (newToken, newUser) => { saveToken(newToken); setToken(newToken); setUser(newUser); };
+
+  useEffect(() => {
+    if (token) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [token, onClose]);
+
+  return createPortal(
+    <div className="adm fixed inset-0 z-[200] overflow-hidden" role="dialog" aria-modal="true" aria-label="Admin console">
+      <style>{ADMIN_CSS}</style>
+      <AdminBackdrop />
+      {token
+        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} />
+        : <AdminLogin onLoggedIn={loggedIn} onClose={onClose} />}
+    </div>,
+    document.body,
   );
 }
 
@@ -980,6 +1911,7 @@ body{background:var(--paper)}
 .r4d-app[data-theme="dark"] textarea::placeholder{color:#9eafa2}
 section[id]{scroll-margin-top:90px}
 @keyframes r4d-spin{to{transform:rotate(360deg)}}
+@keyframes r4d-spinner{to{transform:rotate(360deg)}}
 @keyframes r4d-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes r4d-fill{from{width:0}to{width:100%}}
 @keyframes r4d-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
@@ -987,6 +1919,7 @@ section[id]{scroll-margin-top:90px}
 @keyframes r4d-marquee{to{transform:translateX(-50%)}}
 @keyframes r4d-letter-bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}60%{transform:translateY(0)}}
 .r4d-spin{animation:r4d-spin 6s linear infinite}
+.r4d-spinner{animation:r4d-spinner .7s linear infinite}
 .r4d-float{animation:r4d-float 4s ease-in-out infinite}
 .r4d-fill{animation:r4d-fill 1.8s ease forwards}
 .r4d-rise{opacity:0;animation:r4d-rise .8s ease forwards}
@@ -1000,6 +1933,7 @@ section[id]{scroll-margin-top:90px}
 /* ------------------------------- Page --------------------------------- */
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const [adminOpen, setAdminOpen] = useState(() => typeof window !== 'undefined' && window.location.hash === '#admin');
   const [theme, setTheme] = useState(() => {
     try { return localStorage.getItem('rel4d-theme') || 'light'; } catch { return 'light'; }
   });
@@ -1008,7 +1942,25 @@ export default function Home() {
   });
   const t = UI_COPY[language] || UI_COPY.en;
 
-  useEffect(() => { const t = setTimeout(() => setLoading(false), 1900); return () => clearTimeout(t); }, []);
+  const openAdmin = () => {
+    setAdminOpen(true);
+    try { window.history.replaceState(null, '', '#admin'); } catch { /* ignore */ }
+  };
+  const closeAdmin = () => {
+    setAdminOpen(false);
+    try { window.history.replaceState(null, '', window.location.pathname + window.location.search); } catch { /* ignore */ }
+  };
+
+  useEffect(() => { const timer = setTimeout(() => setLoading(false), 1900); return () => clearTimeout(timer); }, []);
+  useEffect(() => { // typing /#admin in the address bar also opens the pop-up
+    const onHash = () => { if (window.location.hash === '#admin') setAdminOpen(true); };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+  useEffect(() => { // page behind the pop-up must not scroll
+    document.body.style.overflow = adminOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [adminOpen]);
   useEffect(() => {
     document.documentElement.lang = language;
     document.title = language === 'rw' ? 'REL4D Ltd | Ubushakashatsi no kwigira ku iterambere' : language === 'fr' ? 'REL4D Ltd | Recherche et apprentissage au service du développement' : 'REL4D Ltd | Research and Learning for Development';
@@ -1026,7 +1978,7 @@ export default function Home() {
         <style>{CSS}</style>
         <Loader done={!loading} />
         <LangTab language={language} setLanguage={setLanguage} t={t} />
-        <Navbar theme={theme} setTheme={setTheme} t={t} />
+        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} />
         <main>
           <Hero />
           <Stats />
@@ -1041,7 +1993,8 @@ export default function Home() {
           <Team />
           <Contact t={t} />
         </main>
-        <Footer />
+        <Footer onAdmin={openAdmin} />
+        {adminOpen && <AdminPortal onClose={closeAdmin} />}
       </div>
     </LanguageContext.Provider>
   );
