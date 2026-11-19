@@ -3,7 +3,7 @@ import logo from './assets/logo.PNG';
 import { translate } from './translations.js';
 import {
   Menu, X, ChevronDown, Layers, Cpu, BarChart3, GraduationCap, Mail, Phone, MapPin, Moon, Sun, Leaf,
-  ArrowUpRight, Send, CheckCircle2, Award, Briefcase, BadgeCheck, Star,
+  ArrowUpRight, Send, CheckCircle2, Award, Briefcase, BadgeCheck, Star, LockKeyhole,
 } from 'lucide-react';
 
 /* =====================================================================
@@ -142,19 +142,19 @@ const UI_COPY = {
     label: 'English', chooseLanguage: 'Choose language', themeLight: 'Switch to light mode', themeDark: 'Switch to dark mode',
     nav: { Home: 'Home', About: 'About', Services: 'Services', Expertise: 'Expertise', Experience: 'Experience', Projects: 'Projects', Contact: 'Contact', 'Our story': 'Our story', 'Mission & vision': 'Mission & vision', Leadership: 'Leadership', 'Model Building': 'Model Building', 'System Customization': 'System Customization', 'Research & Evaluation': 'Research & Evaluation', 'Capacity Building': 'Capacity Building' },
     talk: 'Let’s talk', join: 'Join REL4D', marquee: ['Endline', 'Impact', 'MEL systems', 'Analytics', 'Learning', 'Capacity', 'Baseline', 'Endline'],
-    contactTitle: 'Request a proposal', name: 'Full name', email: 'Email address', organization: 'Organization (optional)', service: 'Service interested in', details: 'Project details', send: 'Send request', sent: 'Your email app is opening with your message.', multipleServices: 'Multiple services',
+    contactTitle: 'Request a proposal', name: 'Full name', email: 'Email address', organization: 'Organization (optional)', service: 'Service interested in', details: 'Project details', send: 'Send request', sending: 'Sending…', sent: 'Your request has been sent. We’ll be in touch soon.', sendError: 'We could not send your request. Please try again.', multipleServices: 'Multiple services',
   },
   fr: {
     label: 'Français', chooseLanguage: 'Choisir la langue', themeLight: 'Passer en mode clair', themeDark: 'Passer en mode sombre',
     nav: { Home: 'Accueil', About: 'À propos', Services: 'Services', Expertise: 'Expertise', Experience: 'Parcours', Projects: 'Projets', Contact: 'Contact', 'Our story': 'Notre histoire', 'Mission & vision': 'Mission et vision', Leadership: 'Direction', 'Model Building': 'Élaboration de modèles', 'System Customization': 'Personnalisation des systèmes', 'Research & Evaluation': 'Recherche et évaluation', 'Capacity Building': 'Renforcement des capacités' },
     talk: 'Parlons-en', join: 'Contacter REL4D', marquee: ['Évaluation finale', 'Impact', 'Systèmes S&E', 'Analytique', 'Apprentissage', 'Capacités', 'Étude de référence', 'Évaluation finale'],
-    contactTitle: 'Demander une proposition', name: 'Nom complet', email: 'Adresse e-mail', organization: 'Organisation (facultatif)', service: 'Service souhaité', details: 'Détails du projet', send: 'Envoyer la demande', sent: 'Votre application de messagerie va ouvrir le message.', multipleServices: 'Plusieurs services',
+    contactTitle: 'Demander une proposition', name: 'Nom complet', email: 'Adresse e-mail', organization: 'Organisation (facultatif)', service: 'Service souhaité', details: 'Détails du projet', send: 'Envoyer la demande', sending: 'Envoi en cours…', sent: 'Votre demande a été envoyée. Nous vous contacterons bientôt.', sendError: 'Votre demande n’a pas pu être envoyée. Veuillez réessayer.', multipleServices: 'Plusieurs services',
   },
   rw: {
     label: 'Kinyarwanda', chooseLanguage: 'Hitamo ururimi', themeLight: 'Hindura ujye ku mucyo', themeDark: 'Hindura ujye mu mwijima',
     nav: { Home: 'Ahabanza', About: 'Ibitwerekeye', Services: 'Serivisi', Expertise: 'Ubumenyi', Experience: 'Uburambe', Projects: 'Imishinga', Contact: 'Twandikire', 'Our story': 'Amateka yacu', 'Mission & vision': 'Intego n’icyerekezo', Leadership: 'Ubuyobozi', 'Model Building': 'Gukora imiterere', 'System Customization': 'Gutunganya sisitemu', 'Research & Evaluation': 'Ubushakashatsi n’isuzuma', 'Capacity Building': 'Kongera ubushobozi' },
     talk: 'Tuganire', join: 'Vugana na REL4D', marquee: ['Isuzuma rya nyuma', 'Ingaruka', 'Sisitemu za MEL', 'Isesengura', 'Kwiga', 'Kongera ubushobozi', 'Ibarura fatizo', 'Isuzuma rya nyuma'],
-    contactTitle: 'Saba icyifuzo cy’akazi', name: 'Amazina yose', email: 'Aderesi ya imeyili', organization: 'Ikigo (si ngombwa)', service: 'Serivisi wifuza', details: 'Ibisobanuro by’umushinga', send: 'Ohereza ubusabe', sent: 'Porogaramu ya imeyili iri gufungura ubutumwa bwawe.', multipleServices: 'Serivisi nyinshi',
+    contactTitle: 'Saba icyifuzo cy’akazi', name: 'Amazina yose', email: 'Aderesi ya imeyili', organization: 'Ikigo (si ngombwa)', service: 'Serivisi wifuza', details: 'Ibisobanuro by’umushinga', send: 'Ohereza ubusabe', sending: 'Birimo koherezwa…', sent: 'Ubusabe bwawe bwoherejwe. Turakuvugisha vuba.', sendError: 'Ubusabe bwawe ntibwoherejwe. Ongera ugerageze.', multipleServices: 'Serivisi nyinshi',
   },
 };
 
@@ -388,6 +388,7 @@ function Navbar({ theme, setTheme, t }) {
           <button type="button" className="grid h-11 w-11 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)]" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? t.themeLight : t.themeDark} title={theme === 'dark' ? t.themeLight : t.themeDark}>
             {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
           </button>
+          <a href="#admin" onClick={(event) => { event.preventDefault(); window.location.hash = 'admin'; window.location.reload(); }} className="hidden h-11 w-11 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)] sm:grid" aria-label="Admin login" title="Admin login"><LockKeyhole size={18} /></a>
           <a href="#contact" className="hidden items-center gap-1.5 rounded-full bg-[var(--gd)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--o)] sm:inline-flex">{t.talk} <ArrowUpRight size={16} /></a>
           <button className="grid h-11 w-11 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>
             {open ? <X /> : <Menu />}
@@ -717,16 +718,26 @@ function Experience() {
 
 function Projects() {
   const tr = useTranslate();
+  const [databaseProjects, setDatabaseProjects] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then((response) => response.ok ? response.json() : [])
+      .then((items) => setDatabaseProjects(Array.isArray(items) ? items : []))
+      .catch(() => setDatabaseProjects([]));
+  }, []);
+
+  const visibleProjects = databaseProjects.length ? databaseProjects : PROJECTS;
   return (
     <section id="projects" className="bg-[var(--gs)] py-24">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <Heading title="Recent" accent="projects" text="Key work across development sectors in Rwanda." />
         <div className="grid gap-6 md:grid-cols-3">
-          {PROJECTS.map((p, i) => (
+          {visibleProjects.map((p, i) => (
             <Reveal key={p.id} delay={i * 100}>
               <article className="group h-full overflow-hidden rounded-[2rem] rounded-tr-xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[var(--g)] to-[var(--gd)]">
-                  <img src={p.image} alt={p.title} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                  <img src={p.image_url || p.image} alt={p.title} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                   <span className="absolute right-4 top-4 rounded-full bg-[var(--o)] px-3 py-1 text-xs font-semibold text-white">{tr(p.category)}</span>
                 </div>
                 <div className="p-6">
@@ -816,21 +827,34 @@ function Team() {
 
 function Contact({ t }) {
   const tr = useTranslate();
-  const language = useContext(LanguageContext);
   const [form, setForm] = useState({ name: '', email: '', organization: '', service: '', message: '' });
-  const [sent, setSent] = useState(false);
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+  const [status, setStatus] = useState('idle');
+  const set = (k) => (e) => {
+    setForm((current) => ({ ...current, [k]: e.target.value }));
+    if (status !== 'sending') setStatus('idle');
+  };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    const body = language === 'rw'
-      ? `Amazina: ${form.name}\nImeyili: ${form.email}\nIkigo: ${form.organization || 'Ntabwo cyatanzwe'}\nSerivisi: ${form.service || 'Ikibazo rusange'}\n\n${form.message}`
-      : language === 'fr'
-        ? `Nom : ${form.name}\nE-mail : ${form.email}\nOrganisation : ${form.organization || 'Non précisée'}\nService : ${form.service || 'Demande générale'}\n\n${form.message}`
-        : `Name: ${form.name}\nEmail: ${form.email}\nOrganization: ${form.organization || 'Not provided'}\nService: ${form.service || 'General inquiry'}\n\n${form.message}`;
-    const subject = language === 'rw' ? 'Ubusabe bwa serivisi REL4D' : language === 'fr' ? 'Demande de proposition REL4D' : 'Proposal request: ' + (form.service || 'General inquiry');
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    setStatus('sending');
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          organization: form.organization,
+          subject: form.service,
+          message: form.message,
+        }),
+      });
+      if (!response.ok) throw new Error('Contact request failed');
+      setStatus('sent');
+      setForm({ name: '', email: '', organization: '', service: '', message: '' });
+    } catch {
+      setStatus('error');
+    }
   };
 
   const input = 'w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-sm text-[var(--gd)] outline-none transition placeholder:text-black/40 hover:border-[var(--g)] focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15';
@@ -882,9 +906,10 @@ function Contact({ t }) {
                 </select></label>
               </div>
               <label className="block space-y-1.5 text-sm font-medium text-[var(--gd)]"><span>{t.details} *</span><textarea className={`${input} resize-y`} rows={5} placeholder={t.details} value={form.message} onChange={set('message')} required /></label>
-              {sent && <p role="status" className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm text-[var(--g)]"><CheckCircle2 size={18} /> {t.sent}</p>}
-              <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)]">
-                <Send size={17} />{t.send}
+              {status === 'sent' && <p role="status" className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm text-[var(--g)]"><CheckCircle2 size={18} /> {t.sent}</p>}
+              {status === 'error' && <p role="alert" className="rounded-xl bg-white px-4 py-2.5 text-sm text-red-700">{t.sendError}</p>}
+              <button disabled={status === 'sending'} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:cursor-wait disabled:opacity-70">
+                <Send size={17} />{status === 'sending' ? t.sending : t.send}
               </button>
             </form>
           </Reveal>

@@ -1,16 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import * as HomeModule from './home.jsx'
+import Home from './home.jsx'
+import AdminPanel from './admin.jsx'
 
-const App =
-  HomeModule.default ??
-  HomeModule.App ??
-  HomeModule.Home ??
-  Object.values(HomeModule).find((value) => typeof value === 'function')
+const isAdmin = window.location.hash === '#admin'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    {isAdmin ? <AdminPanel /> : <Home />}
   </StrictMode>,
 )
