@@ -339,31 +339,16 @@ function Loader({ done }) {
 
 /* --------------------- Language tab (fixed on the left) ---------------- */
 function LangTab({ language, setLanguage, t }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="fixed left-3 top-24 z-40">
-      <button onClick={() => setOpen((v) => !v)} aria-label={t.chooseLanguage} aria-expanded={open} aria-haspopup="menu"
-        className="flex items-center gap-2 rounded-xl bg-[var(--gd)] px-3 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-[var(--g)]">
-        {language.toUpperCase()} <ChevronDown size={16} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <ul className="r4d-pop absolute left-0 top-full mt-2 w-48 overflow-hidden rounded-xl bg-white p-1.5 text-sm shadow-xl ring-1 ring-black/10" role="menu" aria-label={t.chooseLanguage}>
-          {Object.entries(UI_COPY).map(([code, labels]) => (
-            <li key={code} role="none"><button role="menuitemradio" aria-checked={language === code}
-              className={`w-full rounded-lg px-3 py-2 text-left font-semibold ${language === code ? 'bg-[var(--os)] text-[var(--od)]' : 'hover:bg-[var(--gs)]'}`}
-              onClick={() => { setLanguage(code); setOpen(false); }}>{labels.label}</button></li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+  // Language selection is now placed inside the main navbar.
+  return null;
 }
 
 /* ------------------------------ Navbar -------------------------------- */
-function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
+function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, language, setLanguage }) {
   const tr = useTranslate();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState(null);
+  const [languageOpen, setLanguageOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const active = useActiveSection(SECTION_IDS);
 
@@ -385,7 +370,7 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
           {/* left: logo */}
           <a href="#home" onClick={close} className="flex shrink-0 items-center gap-2.5">
             <img src={logo} alt="" className="h-11 w-11 object-contain" />
-            <span className="text-xl font-extrabold tracking-tight text-[var(--gd)]">REL4D<span className="text-[var(--o)]">.</span></span>
+            <span className="text-xl font-extrabold tracking-tight text-[var(--gd)]">REL4D</span>
           </a>
 
           {/* centre: links */}
@@ -410,8 +395,24 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
             ))}
           </ul>
 
-          {/* right: theme, admin (small), account */}
+          {/* right: language, theme, admin (small), account */}
           <div className="ml-auto flex items-center gap-1.5 lg:ml-0">
+            <div className="relative">
+              <button type="button" onClick={() => setLanguageOpen((v) => !v)} aria-label={t.chooseLanguage} aria-expanded={languageOpen}
+                className="flex h-10 items-center gap-1 rounded-full px-2.5 text-xs font-bold text-[var(--gd)] transition hover:bg-[var(--gs)]">
+                {language.toUpperCase()} <ChevronDown size={13} className={`transition-transform ${languageOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {languageOpen && (
+                <div className="r4d-pop absolute right-0 top-full mt-2 w-44 overflow-hidden rounded-xl border border-black/10 bg-white p-1.5 shadow-xl">
+                  {Object.entries(UI_COPY).map(([code, labels]) => (
+                    <button key={code} type="button" onClick={() => { setLanguage(code); setLanguageOpen(false); }}
+                      className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold ${language === code ? 'bg-[var(--os)] text-[var(--od)]' : 'text-[var(--gd)] hover:bg-[var(--gs)]'}`}>
+                      {labels.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? t.themeLight : t.themeDark}
               className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)]">
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -459,30 +460,22 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
 /* ------------------------------ Sections ------------------------------ */
 function Hero() {
   const tr = useTranslate();
-  const accent = tr('development excellence.');
   return (
-    <section id="home" className="relative isolate overflow-hidden bg-[#0c2a1c] pb-28 pt-[68px] text-white">
-      {/* animated aurora + grid */}
+    <section id="home" className="relative isolate overflow-hidden bg-white pb-28 pt-[68px] text-[var(--gd)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="r4d-blob absolute -left-24 top-10 h-96 w-96 rounded-full bg-emerald-500/40 blur-[110px]" />
-        <div className="r4d-blob absolute right-0 top-1/3 h-[28rem] w-[28rem] rounded-full bg-orange-500/30 blur-[120px]" style={{ animationDelay: '-6s' }} />
-        <div className="absolute inset-0 opacity-60" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)', backgroundSize: '48px 48px', WebkitMaskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)', maskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)' }} />
-        <Spiral className="r4d-float absolute left-[46%] top-28 hidden w-16 text-[var(--o)]/70 lg:block" />
+        <div className="absolute right-0 top-1/4 h-[22rem] w-[22rem] rounded-full bg-emerald-100/60 blur-[110px]" />
+        <div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(rgba(40,86,64,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(40,86,64,.035) 1px,transparent 1px)', backgroundSize: '48px 48px', WebkitMaskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)', maskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)' }} />
       </div>
 
       <div className="mx-auto grid min-h-[calc(100vh-68px)] max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.1fr_1fr] lg:px-8">
         <div>
-          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur" style={{ animationDelay: '1.9s' }}>
-            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--o)] opacity-75" /><span className="relative h-2 w-2 rounded-full bg-[var(--o)]" /></span>
+          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-[var(--g)]/20 bg-[var(--gs)] px-4 py-1.5 text-sm font-medium text-[var(--gd)]" style={{ animationDelay: '1.9s' }}>
             {tr('Evidence drives change and transformation')}
           </p>
-          <h1 className="r4d-rise mt-6 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.6rem]" style={{ animationDelay: '2s' }}>
-            {tr('Research & learning for')}{' '}
-            <span className="text-[var(--o)]" aria-label={accent}>
-              {Array.from(accent).map((c, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ color: 'var(--o)', animationDelay: `${i * 55}ms` }}>{c === ' ' ? '\u00a0' : c}</span>)}
-            </span>
+          <h1 className="r4d-rise mt-6 text-4xl font-extrabold leading-[1.08] text-[var(--gd)] sm:text-5xl lg:text-[3.6rem]" style={{ animationDelay: '2s' }}>
+            {tr('Research & learning for')}{' '}<span className="text-[var(--o)]">{tr('development excellence.')}</span>
           </h1>
-          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg" style={{ animationDelay: '2.15s' }}>
+          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-black/70 sm:text-lg" style={{ animationDelay: '2.15s' }}>
             {tr('REL4D is a registered consultancy in Kigali that conducts research and evaluations and supports learning for international development programmes, using data analytics, machine learning and AI to get the most from evidence.')}
           </p>
           <div className="r4d-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: '2.3s' }}>
@@ -843,7 +836,7 @@ function Careers() {
             <div className="grid gap-5 md:grid-cols-2">
               {openings.map((opening, i) => {
                 const data = opening.data || opening;
-                return <Reveal key={opening.id || i} delay={i * 80} className="h-full"><article className="flex h-full flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm"><div className="flex flex-wrap gap-2 text-xs font-bold"><span className="rounded-full bg-[var(--os)] px-3 py-1 text-[var(--od)]">{tr(data.type || 'Consultancy')}</span><span className="rounded-full bg-[var(--gs)] px-3 py-1 text-[var(--gd)]">{tr(data.location || 'Kigali, Rwanda')}</span></div><h3 className="mt-5 text-xl font-bold text-[var(--gd)]">{data.title}</h3><p className="mt-3 flex-1 text-sm leading-relaxed text-black/65">{tr(data.description)}</p>{data.deadline && <p className="mt-4 text-xs font-semibold text-black/50">Deadline: {data.deadline}</p>}<button type="button" onClick={() => { setSelected(opening); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--o)]">Apply for this role <ArrowUpRight size={16} /></button></article></Reveal>;
+                return <Reveal key={opening.id || i} delay={i * 80} className="h-full"><article className="flex h-full flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm"><div className="flex flex-wrap gap-2 text-xs font-bold"><span className="rounded-full bg-[var(--os)] px-3 py-1 text-[var(--od)]">{tr(data.type || 'Consultancy')}</span><span className="rounded-full bg-[var(--gs)] px-3 py-1 text-[var(--gd)]">{tr(data.location || 'Kigali, Rwanda')}</span></div><h3 className="mt-5 text-xl font-bold text-[var(--gd)]">{data.title}</h3><p className="mt-3 flex-1 text-sm leading-relaxed text-black/65">{tr(data.description)}</p><button type="button" onClick={() => { setSelected(opening); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--o)]">Apply for this role <ArrowUpRight size={16} /></button></article></Reveal>;
               })}
             </div>
             <div className="mt-8 text-center">
@@ -1620,7 +1613,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
   const firstName = (user?.name || 'Admin').split(' ')[0];
   const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - i)); return d; });
-  const inDay = (list, key, d) => list.filter((m) => { const t = new Date(m[key]).getTime(); return t >= d.getTime() && t < d.getTime() + 86400000; }).length;
+  const inDay = (list, key, d) => list.filter((m) => { const t = new Date(m[key]).getTime(); return t >= d.getTime() && t.getTime() < d.getTime() + 86400000; }).length;
   const counts = days.map((d) => inDay(messages, 'created_at', d));
   const signups = days.map((d) => inDay(users, 'created_at', d));
   const byStatus = APP_STATUSES.map((s) => ({ s, n: applications.filter((a) => a.status === s).length }));
@@ -1838,8 +1831,7 @@ export default function Home() {
       <div className="r4d-app" data-theme={theme} lang={language}>
         <style>{CSS}</style>
         <Loader done={!loading} />
-        <LangTab language={language} setLanguage={setLanguage} t={t} />
-        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} onAuth={setAuthMode} account={account} onLogout={accountOut} />
+        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} onAuth={setAuthMode} account={account} onLogout={accountOut} language={language} setLanguage={setLanguage} />
         {authMode && <AuthModal mode={authMode} setMode={(mode) => { setAuthNotice(''); setAuthMode(mode); }} onClose={closeAuth} onDone={accountDone} notice={authNotice} />}
         <main>
           <Hero />
