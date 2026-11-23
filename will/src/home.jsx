@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { Fragment, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import logo from './assets/logo.PNG';
 import { translate } from './translations.js';
@@ -7,7 +7,7 @@ import {
   ArrowUpRight, Send, CheckCircle2, Award, Briefcase, BadgeCheck, Star, LockKeyhole,
   LayoutDashboard, MessageSquare, FolderKanban, Users, Settings, Trash2, Pencil, Eye, EyeOff, Search,
   Reply, Download, RefreshCw, LogOut, Plus, ShieldCheck, Inbox, Check, KeyRound, Bell, FileText, ImagePlus,
-  UserPlus, UserRound, TrendingUp,
+  UserPlus, UserRound, TrendingUp, AlertCircle, ArrowLeft,
 } from 'lucide-react';
 
 /* =====================================================================
@@ -158,13 +158,13 @@ const UI_COPY = {
   },
   fr: {
     label: 'Français', chooseLanguage: 'Choisir la langue', themeLight: 'Passer en mode clair', themeDark: 'Passer en mode sombre',
-    nav: { Home: 'Accueil', About: 'À propos', Services: 'Services', Expertise: 'Expertise', Experience: 'Parcours', Projects: 'Projets', Contact: 'Contact', 'Our story': 'Notre histoire', 'Mission & vision': 'Mission et vision', Leadership: 'Direction', 'Model Building': 'Élaboration de modèles', 'System Customization': 'Personnalisation des systèmes', 'Research & Evaluation': 'Recherche et évaluation', 'Capacity Building': 'Renforcement des capacités' },
+    nav: { Home: 'Accueil', About: 'À propos', Services: 'Services', Expertise: 'Expertise', Experience: 'Parcours', Projects: 'Projets', Careers: 'Carrières', Contact: 'Contact', 'Our story': 'Notre histoire', 'Mission & vision': 'Mission et vision', Leadership: 'Direction', 'Model Building': 'Élaboration de modèles', 'System Customization': 'Personnalisation des systèmes', 'Research & Evaluation': 'Recherche et évaluation', 'Capacity Building': 'Renforcement des capacités' },
     talk: 'Parlons-en', join: 'Contacter REL4D', marquee: ['Évaluation finale', 'Impact', 'Systèmes S&E', 'Analytique', 'Apprentissage', 'Capacités', 'Étude de référence', 'Évaluation finale'],
     contactTitle: 'Demander une proposition', name: 'Nom complet', email: 'Adresse e-mail', organization: 'Organisation (facultatif)', service: 'Service souhaité', details: 'Détails du projet', send: 'Envoyer la demande', sending: 'Envoi en cours…', sent: 'Votre demande a été envoyée. Nous vous contacterons bientôt.', sendError: 'Votre demande n’a pas pu être envoyée. Veuillez réessayer.', multipleServices: 'Plusieurs services',
   },
   rw: {
     label: 'Kinyarwanda', chooseLanguage: 'Hitamo ururimi', themeLight: 'Hindura ujye ku mucyo', themeDark: 'Hindura ujye mu mwijima',
-    nav: { Home: 'Ahabanza', About: 'Ibitwerekeye', Services: 'Serivisi', Expertise: 'Ubumenyi', Experience: 'Uburambe', Projects: 'Imishinga', Contact: 'Twandikire', 'Our story': 'Amateka yacu', 'Mission & vision': 'Intego n’icyerekezo', Leadership: 'Ubuyobozi', 'Model Building': 'Gukora imiterere', 'System Customization': 'Gutunganya sisitemu', 'Research & Evaluation': 'Ubushakashatsi n’isuzuma', 'Capacity Building': 'Kongera ubushobozi' },
+    nav: { Home: 'Ahabanza', About: 'Ibitwerekeye', Services: 'Serivisi', Expertise: 'Ubumenyi', Experience: 'Uburambe', Projects: 'Imishinga', Careers: 'Akazi', Contact: 'Twandikire', 'Our story': 'Amateka yacu', 'Mission & vision': 'Intego n’icyerekezo', Leadership: 'Ubuyobozi', 'Model Building': 'Gukora imiterere', 'System Customization': 'Gutunganya sisitemu', 'Research & Evaluation': 'Ubushakashatsi n’isuzuma', 'Capacity Building': 'Kongera ubushobozi' },
     talk: 'Tuganire', join: 'Vugana na REL4D', marquee: ['Isuzuma rya nyuma', 'Ingaruka', 'Sisitemu za MEL', 'Isesengura', 'Kwiga', 'Kongera ubushobozi', 'Ibarura fatizo', 'Isuzuma rya nyuma'],
     contactTitle: 'Saba icyifuzo cy’akazi', name: 'Amazina yose', email: 'Aderesi ya imeyili', organization: 'Ikigo (si ngombwa)', service: 'Serivisi wifuza', details: 'Ibisobanuro by’umushinga', send: 'Ohereza ubusabe', sending: 'Birimo koherezwa…', sent: 'Ubusabe bwawe bwoherejwe. Turakuvugisha vuba.', sendError: 'Ubusabe bwawe ntibwoherejwe. Ongera ugerageze.', multipleServices: 'Serivisi nyinshi',
   },
@@ -1254,7 +1254,19 @@ const ADMIN_CSS_EXTRA = `
 .adm[data-t="light"] .adm-title{color:#285640!important}
 .adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09)!important}
 .adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)!important}
+
+/* Welcome banner on the dashboard overview (plain CSS so the light-theme overrides never touch it) */
+.adm-hero{position:relative;isolation:isolate;overflow:hidden;border-radius:1.25rem;padding:1.5rem 1.6rem;margin-bottom:1rem;color:#fff;background:linear-gradient(120deg,#0b2417 0%,#285640 62%,#3d7556 100%);box-shadow:0 22px 50px -26px rgba(12,42,28,.8)}
+.adm-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(380px 240px at 100% 0%,rgba(243,160,68,.42),transparent 70%),radial-gradient(300px 220px at 0% 100%,rgba(74,222,128,.22),transparent 70%)}
+.adm-hero small{display:block;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.7)}
+.adm-hero h3{margin-top:.25rem;font-size:1.65rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;color:#fff}
+.adm-hero p{margin-top:.4rem;max-width:34rem;font-size:.86rem;line-height:1.5;color:rgba(255,255,255,.78)}
+.adm-hero-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}
+.adm-hero-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;border-radius:9999px;font-size:.78rem;font-weight:700;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);transition:background .2s,transform .2s}
+.adm-hero-chip:hover{background:rgba(255,255,255,.26);transform:translateY(-1px)}
+.adm-hero-chip b{display:inline-grid;place-items:center;min-width:1.35rem;height:1.35rem;padding:0 .35rem;border-radius:9999px;font-size:.68rem;background:#F3A044;color:#2b1a05}
 `;
+
 function ThemeToggle({ theme, setTheme }) {
   return (
     <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="adm-btn-ghost" aria-label="Toggle admin theme">
@@ -1274,16 +1286,41 @@ function AdminBackdrop() {
   );
 }
 
+/* =====================================================================
+   SIGN-IN SCREENS  (visitor sign in, create account, admin sign in)
+   One shared, professional layout: brand panel on the left, form on the
+   right, social sign-in below the main form.
+   ===================================================================== */
+const SOCIAL_ICONS = {
+  google: (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z" />
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
+      <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.07H2.18a11 11 0 0 0 0 9.86l3.66-2.83z" />
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" />
+    </svg>
+  ),
+  linkedin: (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#0A66C2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z" /></svg>
+  ),
+  facebook: (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#1877F2" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.88v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z" /></svg>
+  ),
+  github: (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#24292f" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.83-.26.83-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.73.08-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12 12 0 0 0 12 .3z" /></svg>
+  ),
+};
+
 const SOCIAL_PROVIDERS = [
-  { id: 'google', label: 'Google', mark: 'G', color: 'text-[#4285F4]' },
-  { id: 'linkedin', label: 'LinkedIn', mark: 'in', color: 'bg-[#0A66C2] text-white' },
-  { id: 'facebook', label: 'Facebook', mark: 'f', color: 'bg-[#1877F2] text-white' },
-  { id: 'github', label: 'GitHub', mark: 'GH', color: 'bg-[#24292f] text-white' },
+  { id: 'google', label: 'Google' },
+  { id: 'linkedin', label: 'LinkedIn' },
+  { id: 'facebook', label: 'Facebook' },
+  { id: 'github', label: 'GitHub' },
 ];
 
 function SocialAuthButtons({ intent }) {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="r4d-social-grid">
       {SOCIAL_PROVIDERS.map((provider) => (
         <button
           key={provider.id}
@@ -1292,12 +1329,86 @@ function SocialAuthButtons({ intent }) {
             const query = intent === 'admin' ? '?intent=admin' : '';
             window.location.assign(`${API}/api/auth/${provider.id}${query}`);
           }}
-          className="flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-3 py-3 text-sm font-semibold text-[#24372c] transition hover:border-[var(--g)] hover:bg-[var(--gs)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--g)]/20"
+          className="r4d-social"
+          aria-label={`Continue with ${provider.label}`}
         >
-          <span className={`grid h-5 min-w-5 place-items-center rounded text-xs font-extrabold ${provider.color}`}>{provider.mark}</span>
-          <span>Continue with {provider.label}</span>
+          {SOCIAL_ICONS[provider.id]}
+          <span>{provider.label}</span>
         </button>
       ))}
+    </div>
+  );
+}
+
+/* Left brand panel (hidden on phones, where a slim brand bar is shown instead) */
+function AuthBrandPanel({ eyebrow, title, text, points, footer }) {
+  return (
+    <aside className="r4d-auth-side">
+      <div className="r4d-auth-brand">
+        <span className="r4d-auth-logo"><img src={logo} alt="REL4D" /></span>
+        <span><strong>REL4D<i>.</i></strong><small>{eyebrow}</small></span>
+      </div>
+      <div className="r4d-auth-copy">
+        <h2>{title}</h2>
+        <p>{text}</p>
+        <ul>
+          {points.map(({ icon: Icon, title: pointTitle, text: pointText }) => (
+            <li key={pointTitle}>
+              <span><Icon size={18} /></span>
+              <div><b>{pointTitle}</b><em>{pointText}</em></div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p className="r4d-auth-foot">{footer}</p>
+    </aside>
+  );
+}
+
+function AuthMobileBar({ label }) {
+  return (
+    <div className="r4d-auth-mobilebar">
+      <span className="r4d-auth-logo"><img src={logo} alt="REL4D" /></span>
+      <span><strong>REL4D<i>.</i></strong><small>{label}</small></span>
+    </div>
+  );
+}
+
+/* Text input with a leading icon and an optional element on the right */
+function AuthField({ icon: Icon, label, id, right, ...rest }) {
+  return (
+    <div>
+      <label className="r4d-label" htmlFor={id}>{label}</label>
+      <div className="r4d-field">
+        {Icon && <Icon size={17} className="lead" aria-hidden="true" />}
+        <input id={id} {...rest} className={`r4d-input${Icon ? '' : ' noicon'}${right ? ' has-right' : ''}`} />
+        {right}
+      </div>
+    </div>
+  );
+}
+
+function PasswordField({ id, label, value, onChange, autoComplete, placeholder, minLength }) {
+  const [show, setShow] = useState(false);
+  return (
+    <AuthField
+      id={id} icon={LockKeyhole} label={label} required minLength={minLength}
+      type={show ? 'text' : 'password'} autoComplete={autoComplete} placeholder={placeholder}
+      value={value} onChange={onChange}
+      right={<button type="button" className="r4d-eye" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? <EyeOff size={17} /> : <Eye size={17} />}</button>}
+    />
+  );
+}
+
+function PasswordStrength({ value }) {
+  if (!value) return null;
+  const score = [value.length >= 8, /[a-z]/.test(value) && /[A-Z]/.test(value), /\d/.test(value), /[^A-Za-z0-9]/.test(value)].filter(Boolean).length;
+  const labels = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'];
+  const colors = ['#ef4444', '#ef4444', '#f59e0b', '#84cc16', '#16a34a'];
+  return (
+    <div className="r4d-strength" aria-live="polite">
+      <div className="bars">{[1, 2, 3, 4].map((n) => <i key={n} style={{ background: n <= score ? colors[score] : '#e2e9e4' }} />)}</div>
+      <span style={{ color: colors[score] }}>{labels[score]}</span>
     </div>
   );
 }
@@ -1305,7 +1416,6 @@ function SocialAuthButtons({ intent }) {
 /* ----- the pop-up that appears when you press the Admin button ----- */
 function AdminLogin({ onLoggedIn, onClose, notice }) {
   const [creds, setCreds] = useState({ email: '', password: '' });
-  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const submit = async (e) => {
@@ -1315,27 +1425,35 @@ function AdminLogin({ onLoggedIn, onClose, notice }) {
     catch (err) { setError(err.message); setLoading(false); }
   };
   return (
-    <div className="absolute inset-0 grid place-items-center overflow-y-auto bg-[#eef3ef] p-4"
-      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="adm-in w-full max-w-md overflow-hidden rounded-3xl border border-black/[.07] bg-white shadow-[0_24px_70px_-24px_rgba(23,38,29,.45)]">
-        <div className="flex justify-end px-5 pt-5"><button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-black/55 transition hover:bg-[var(--gs)] hover:text-[var(--gd)]"><X size={18}/></button></div>
-        <div className="px-8 pb-8">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-black/[.06] bg-[var(--gs)] p-2"><img src={logo} alt="REL4D" className="h-full w-full object-contain"/></div>
-          <p className="mt-5 text-center text-[.68rem] font-extrabold uppercase tracking-[.22em] text-[var(--o)]">REL4D administration</p>
-          <h2 className="mt-1 text-center text-3xl font-extrabold text-[var(--gd)]">Welcome back</h2>
-          <p className="mt-2 text-center text-sm text-black/50">Sign in to manage your website.</p>
-          {notice && <p role="alert" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
-          <div className="mt-6">
-            <SocialAuthButtons intent="admin" />
-            <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10" />or sign in with administrator email<span className="h-px flex-1 bg-black/10" /></div>
-          </div>
-          <form onSubmit={submit} className="mt-7 space-y-4">
-            <div><label className="adm-label" htmlFor="adm-email">Email address</label><input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com"/></div>
-            <div><label className="adm-label" htmlFor="adm-pass">Password</label><div className="relative"><input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="Enter your password"/><button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-black/45 hover:bg-black/5">{show ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div></div>
-            {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-            <Btn type="submit" loading={loading} className="adm-btn w-full !rounded-xl !bg-[var(--gd)] !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''}/>{loading ? 'Signing in…' : 'Sign in'}</Btn>
+    <div className="r4d-auth-stage" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="r4d-auth-card adm-in">
+        <AuthMobileBar label="Admin console" />
+        <AuthBrandPanel
+          eyebrow="Admin console"
+          title="Run your website from one place."
+          text="Review enquiries, publish projects and manage applications securely."
+          points={[
+            { icon: MessageSquare, title: 'Messages inbox', text: 'Read, star and reply to enquiries from the contact form.' },
+            { icon: FolderKanban, title: 'Projects, team and careers', text: 'Add, edit, hide or remove anything shown on the site.' },
+            { icon: FileText, title: 'Applications', text: 'Track candidates from new to hired and download CVs.' },
+          ]}
+          footer="Authorised administrators only. Sessions expire after 12 hours."
+        />
+        <div className="r4d-auth-main">
+          <button type="button" onClick={onClose} aria-label="Close" className="r4d-auth-close"><X size={18} /></button>
+          <span className="r4d-auth-badge"><ShieldCheck size={14} />Secure area</span>
+          <h2 className="r4d-auth-title">Admin sign in</h2>
+          <p className="r4d-auth-sub">Enter your administrator details to open the console.</p>
+          {notice && <p role="alert" className="r4d-alert warn" style={{ marginTop: '1rem' }}><AlertCircle size={16} className="shrink-0" /><span>{notice}</span></p>}
+          <form onSubmit={submit} className="r4d-auth-form">
+            <AuthField id="adm-email" icon={Mail} label="Email address" required type="email" autoComplete="email" autoFocus placeholder="admin@rel4d.com" value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} />
+            <PasswordField id="adm-pass" label="Password" autoComplete="current-password" placeholder="Enter your password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} />
+            {error && <p role="alert" className="r4d-alert err"><AlertCircle size={16} className="shrink-0" /><span>{error}</span></p>}
+            <Btn type="submit" loading={loading} className="r4d-auth-btn">{!loading && <ShieldCheck size={17} />}{loading ? 'Signing in…' : 'Sign in to console'}</Btn>
           </form>
-          <button type="button" onClick={onClose} className="mx-auto mt-5 block text-sm font-semibold text-black/45 transition hover:text-[var(--gd)]">← Back to website</button>
+          <div className="r4d-divider">or continue with</div>
+          <SocialAuthButtons intent="admin" />
+          <button type="button" onClick={onClose} className="r4d-auth-back"><ArrowLeft size={15} />Back to website</button>
         </div>
       </div>
     </div>
@@ -1366,44 +1484,79 @@ function Empty({ icon: Icon, text }) {
   );
 }
 
+/* ----- Visitor sign in / create account pop-up ----- */
 function AuthModal({ mode, setMode, onClose, onDone, notice }) {
   const [f, setF] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [show, setShow] = useState(false);
   const reg = mode === 'register';
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
   const submit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError(''); setLoading(true);
     try {
       const data = await apiRequest(reg ? '/api/auth/register' : '/api/auth/login', { method: 'POST', body: reg ? f : { email: f.email, password: f.password } });
       onDone(data.token, data.user);
     } catch (err) { setError(err.message); setLoading(false); }
   };
+
   return createPortal(
-    <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }} role="dialog" aria-modal="true">
-      <div className="r4d-pop max-h-[92vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
-        <div className="flex items-start justify-between">
-          <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{reg ? 'Create your account' : 'Welcome back'}</h2></div>
-          <button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5"><X size={18} /></button>
-        </div>
-        <div className="mt-5 grid grid-cols-2 rounded-xl bg-[var(--gs)] p-1 text-sm font-semibold">
-          {[['login', 'Sign in'], ['register', 'Create account']].map(([m, l]) => <button key={m} type="button" onClick={() => { setMode(m); setError(''); }} className={`rounded-lg py-2 transition ${mode === m ? 'bg-white text-[var(--gd)] shadow' : 'text-black/55'}`}>{l}</button>)}
-        </div>
-        {reg && <p className="mt-4 text-sm leading-relaxed text-black/55">Create a REL4D account to stay connected. If you are interested in joining the team, you can then submit your CV through Careers.</p>}
-        <div className="mt-5"><SocialAuthButtons intent="user" /></div>
-        <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10"/>or continue with email<span className="h-px flex-1 bg-black/10"/></div>
-        {notice && <p role="alert" className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
-        <form onSubmit={submit} className="mt-5 space-y-3.5">
-          {reg && <input required className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Full name" autoComplete="name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
-          <input required type="email" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Email address" autoComplete="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
-          <div className="relative">
-            <input required minLength={reg ? 8 : 1} type={show ? 'text' : 'password'} className="w-full rounded-xl border border-black/15 px-4 py-3 pr-11 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder={reg ? 'Password (8+ characters)' : 'Password'} autoComplete={reg ? 'new-password' : 'current-password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
-            <button type="button" onClick={() => setShow((v) => !v)} aria-label="Toggle password" className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center text-black/50">{show ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+    <div className="r4d-auth-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }} role="dialog" aria-modal="true" aria-label={reg ? 'Create your account' : 'Sign in'}>
+      <div className="r4d-auth-card r4d-pop">
+        <AuthMobileBar label="Research & learning" />
+        <AuthBrandPanel
+          eyebrow="Research & learning"
+          title={reg ? 'Join the REL4D community.' : 'Good to see you again.'}
+          text={reg
+            ? 'Create a free account to stay close to our work and apply for opportunities with REL4D.'
+            : 'Sign in to pick up where you left off and keep in touch with the REL4D team.'}
+          points={[
+            { icon: Bell, title: 'Stay connected', text: 'Follow our projects and updates from Kigali.' },
+            { icon: Briefcase, title: 'Apply with your CV', text: 'Send applications for open roles or an open application.' },
+            { icon: ShieldCheck, title: 'Private and secure', text: 'Your details are only used to manage your account.' },
+          ]}
+          footer={`REL4D Ltd · Kigali, Rwanda · TIN ${CONTACT.tin}`}
+        />
+        <div className="r4d-auth-main">
+          <button type="button" onClick={onClose} aria-label="Close" className="r4d-auth-close"><X size={18} /></button>
+          <span className="r4d-auth-badge">{reg ? <UserPlus size={14} /> : <UserRound size={14} />}{reg ? 'New account' : 'Visitor account'}</span>
+          <h2 className="r4d-auth-title">{reg ? 'Create your account' : 'Welcome back'}</h2>
+          <p className="r4d-auth-sub">{reg ? 'It takes less than a minute. No payment needed.' : 'Sign in with your email or a social account.'}</p>
+
+          <div className="r4d-tabs" role="tablist" aria-label="Account">
+            {[['login', 'Sign in'], ['register', 'Create account']].map(([m, l]) => (
+              <button key={m} type="button" role="tab" aria-selected={mode === m} onClick={() => { setMode(m); setError(''); }}>{l}</button>
+            ))}
           </div>
-          {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
-          <Btn type="submit" loading={loading} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:opacity-70">{reg ? 'Create account' : 'Sign in'}</Btn>
-        </form>
+
+          {notice && <p role="alert" className="r4d-alert warn" style={{ marginTop: '1rem' }}><AlertCircle size={16} className="shrink-0" /><span>{notice}</span></p>}
+
+          <form onSubmit={submit} className="r4d-auth-form">
+            {reg && <AuthField id="auth-name" icon={UserRound} label="Full name" required autoComplete="name" placeholder="Your full name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
+            <AuthField id="auth-email" icon={Mail} label="Email address" required type="email" autoComplete="email" placeholder="you@example.com" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
+            <div>
+              <PasswordField id="auth-pass" label="Password" minLength={reg ? 8 : 1} autoComplete={reg ? 'new-password' : 'current-password'} placeholder={reg ? 'At least 8 characters' : 'Enter your password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
+              {reg && <PasswordStrength value={f.password} />}
+            </div>
+            {error && <p role="alert" className="r4d-alert err"><AlertCircle size={16} className="shrink-0" /><span>{error}</span></p>}
+            <Btn type="submit" loading={loading} className="r4d-auth-btn">{!loading && (reg ? <UserPlus size={17} /> : <ArrowUpRight size={17} />)}{loading ? (reg ? 'Creating account…' : 'Signing in…') : (reg ? 'Create account' : 'Sign in')}</Btn>
+          </form>
+
+          <div className="r4d-divider">or continue with</div>
+          <SocialAuthButtons intent="user" />
+
+          <p className="r4d-auth-switch">
+            {reg ? 'Already have an account?' : 'New to REL4D?'}{' '}
+            <button type="button" className="r4d-auth-link" onClick={() => { setMode(reg ? 'login' : 'register'); setError(''); }}>{reg ? 'Sign in' : 'Create an account'}</button>
+          </p>
+        </div>
       </div>
     </div>, document.body);
 }
@@ -1473,6 +1626,7 @@ const STAT_CARDS = [
 function Overview({ stats, messages, applications, users = [], goto, user }) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const firstName = (user?.name || 'Admin').split(' ')[0];
   const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - i)); return d; });
   const inDay = (list, key, d) => list.filter((m) => { const t = new Date(m[key]).getTime(); return t >= d.getTime() && t < d.getTime() + 86400000; }).length;
   const counts = days.map((d) => inDay(messages, 'created_at', d));
@@ -1480,8 +1634,22 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
   const byStatus = APP_STATUSES.map((s) => ({ s, n: applications.filter((a) => a.status === s).length }));
   const svc = Object.entries(messages.reduce((a, m) => { const k = m.service || 'General'; a[k] = (a[k] || 0) + 1; return a; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const svcMax = Math.max(1, ...svc.map(([, n]) => n));
+  const unreadCount = Number(stats?.unread_messages || 0);
+  const newAppCount = Number(stats?.new_applications || 0);
   return (
-    <Panel title={`${greeting}, ${(user?.name || 'Admin').split(' ')[0]}`} subtitle="Website activity at a glance.">
+    <Panel title="Overview" subtitle="Website activity at a glance.">
+      <div className="adm-hero adm-in">
+        <small>{new Date().toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small>
+        <h3>{greeting}, {firstName}</h3>
+        <p>Welcome back to the REL4D admin console. Here is what needs your attention today.</p>
+        <div className="adm-hero-actions">
+          <button type="button" className="adm-hero-chip" onClick={() => goto('messages')}><Inbox size={14} />Unread messages{unreadCount > 0 && <b>{unreadCount}</b>}</button>
+          <button type="button" className="adm-hero-chip" onClick={() => goto('applications')}><FileText size={14} />New applications{newAppCount > 0 && <b>{newAppCount}</b>}</button>
+          <button type="button" className="adm-hero-chip" onClick={() => goto('projects')}><Plus size={14} />Add a project</button>
+          <button type="button" className="adm-hero-chip" onClick={() => goto('openings')}><Briefcase size={14} />Post a job</button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-7">
         {STAT_CARDS.map((c, i) => (
           <button key={c.key} type="button" onClick={() => goto(c.tab)} style={{ animationDelay: `${i * 40}ms` }} className="adm-glass adm-in flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition hover:-translate-y-0.5">
@@ -1821,8 +1989,8 @@ function ApplicationsPanel({ items, setItems, ctx, token }) {
             <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">Candidate</th><th className="px-3 py-3">Position</th><th className="px-3 py-3">Applied</th><th className="px-3 py-3">Status</th><th className="px-5 py-3 text-right">Actions</th></tr></thead>
             <tbody>
               {shown.map((a) => (
-                <>
-                  <tr key={a.id} className="adm-row border-b border-white/5">
+                <Fragment key={a.id}>
+                  <tr className="adm-row border-b border-white/5">
                     <td className="px-5 py-3.5"><p className="font-bold">{a.name}</p><p className="text-xs text-white/50">{a.email}{a.phone ? ` · ${a.phone}` : ''}</p></td>
                     <td className="px-3 py-3.5 text-white/75">{a.position}</td>
                     <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(a.created_at)}</td>
@@ -1841,8 +2009,8 @@ function ApplicationsPanel({ items, setItems, ctx, token }) {
                       </div>
                     </td>
                   </tr>
-                  {openId === a.id && <tr key={`${a.id}-n`} className="border-b border-white/5 bg-black/20"><td colSpan={5} className="whitespace-pre-wrap px-5 py-4 text-sm text-white/75">{a.message}</td></tr>}
-                </>
+                  {openId === a.id && <tr className="border-b border-white/5 bg-black/20"><td colSpan={5} className="whitespace-pre-wrap px-5 py-4 text-sm text-white/75">{a.message}</td></tr>}
+                </Fragment>
               ))}
             </tbody>
           </table>
@@ -2178,6 +2346,82 @@ section[id]{scroll-margin-top:90px}
 .r4d-marquee-viewport:hover .r4d-marquee-track,.r4d-marquee-viewport:focus-within .r4d-marquee-track{animation-play-state:paused}
 .r4d-letter-bounce{animation:r4d-letter-bounce 10s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.r4d-spin,.r4d-float,.r4d-marquee-track,.r4d-letter-bounce,.r4d-rise,.r4d-blob,.r4d-shine,.r4d-portrait-ring::before,.r4d-orbit,.r4d-orbit-dot{animation:none;opacity:1}.r4d-fill{animation:none;width:100%}}
+
+/* ===== Sign-in screens: visitor sign in, create account and admin sign in ===== */
+.r4d-auth-overlay{position:fixed;inset:0;z-index:150;display:grid;place-items:center;overflow-y:auto;padding:1rem;background:rgba(6,20,13,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.r4d-auth-stage{position:absolute;inset:0;z-index:1;display:grid;place-items:center;overflow-y:auto;padding:1rem;background:linear-gradient(145deg,#f4f7f4,#e4ede7)}
+.r4d-auth-card{width:100%;max-width:960px;display:grid;grid-template-columns:1fr;overflow:hidden;border-radius:1.75rem;background:#fff;color:#24372c;box-shadow:0 40px 100px -34px rgba(6,20,13,.7);margin:auto}
+@media(min-width:860px){.r4d-auth-card{grid-template-columns:.95fr 1.05fr}}
+
+.r4d-auth-side{position:relative;isolation:isolate;display:none;flex-direction:column;justify-content:space-between;gap:2rem;padding:2.4rem 2.4rem 2rem;color:#fff;overflow:hidden;background:linear-gradient(155deg,#0b2417 0%,#285640 58%,#1f4a34 100%)}
+@media(min-width:860px){.r4d-auth-side{display:flex}}
+.r4d-auth-side::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(420px 300px at 105% -5%,rgba(243,160,68,.38),transparent 70%),radial-gradient(360px 300px at -10% 105%,rgba(74,222,128,.25),transparent 70%)}
+.r4d-auth-side::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:38px 38px;-webkit-mask-image:radial-gradient(ellipse at 30% 30%,#000 10%,transparent 75%);mask-image:radial-gradient(ellipse at 30% 30%,#000 10%,transparent 75%)}
+.r4d-auth-brand,.r4d-auth-mobilebar{display:flex;align-items:center;gap:.8rem}
+.r4d-auth-mobilebar{padding:.9rem 1.25rem;color:#fff;background:linear-gradient(120deg,#0b2417,#285640)}
+@media(min-width:860px){.r4d-auth-mobilebar{display:none}}
+.r4d-auth-logo{display:grid;place-items:center;flex:none;width:2.9rem;height:2.9rem;border-radius:9999px;background:#fff;padding:.3rem;box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
+.r4d-auth-logo img{width:100%;height:100%;object-fit:contain}
+.r4d-auth-brand strong,.r4d-auth-mobilebar strong{display:block;font-size:1.25rem;font-weight:800;letter-spacing:-.01em;line-height:1.1;color:#fff}
+.r4d-auth-brand strong i,.r4d-auth-mobilebar strong i{font-style:normal;color:#F3A044}
+.r4d-auth-brand small,.r4d-auth-mobilebar small{display:block;margin-top:.2rem;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#F3A044}
+.r4d-auth-copy h2{font-size:2rem;font-weight:800;line-height:1.12;letter-spacing:-.02em;color:#fff}
+.r4d-auth-copy>p{margin-top:.8rem;font-size:.92rem;line-height:1.6;color:rgba(255,255,255,.78)}
+.r4d-auth-copy ul{margin:1.6rem 0 0;padding:0;display:grid;gap:.95rem;list-style:none}
+.r4d-auth-copy li{display:flex;gap:.8rem;align-items:flex-start}
+.r4d-auth-copy li>span{display:grid;place-items:center;flex:none;width:2.25rem;height:2.25rem;border-radius:.75rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#F3A044}
+.r4d-auth-copy li b{display:block;font-size:.88rem;font-weight:700;color:#fff}
+.r4d-auth-copy li em{display:block;font-style:normal;font-size:.78rem;line-height:1.45;color:rgba(255,255,255,.68)}
+.r4d-auth-foot{font-size:.72rem;color:rgba(255,255,255,.58)}
+
+.r4d-auth-main{position:relative;padding:1.75rem 1.4rem 1.6rem}
+@media(min-width:860px){.r4d-auth-main{padding:2.5rem 2.6rem 2rem;max-height:min(92vh,760px);overflow-y:auto}}
+.r4d-auth-close{position:absolute;top:1rem;right:1rem;display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:9999px;color:#5d7064;border:1px solid #e1e8e3;background:#fff;transition:background .2s,color .2s}
+.r4d-auth-close:hover{background:#F1F6F0;color:#285640}
+.r4d-auth-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .7rem;border-radius:9999px;font-size:.72rem;font-weight:700;color:#D9822E;background:#FFF4E7}
+.r4d-auth-title{margin-top:.85rem;font-size:1.8rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;color:#285640}
+.r4d-auth-sub{margin-top:.4rem;font-size:.88rem;line-height:1.5;color:#66796d}
+.r4d-auth-form{display:grid;gap:1rem;margin-top:1.4rem}
+.r4d-tabs{display:grid;grid-template-columns:1fr 1fr;gap:.2rem;margin-top:1.3rem;padding:.3rem;border-radius:.95rem;background:#eef3ef}
+.r4d-tabs button{padding:.6rem .5rem;border-radius:.7rem;font-size:.85rem;font-weight:700;color:#5d7064;transition:background .2s,color .2s,box-shadow .2s}
+.r4d-tabs button:hover{color:#285640}
+.r4d-tabs button[aria-selected="true"]{background:#fff;color:#285640;box-shadow:0 4px 12px -6px rgba(0,0,0,.35)}
+
+.r4d-label{display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:700;color:#3f5547}
+.r4d-field{position:relative}
+.r4d-field .lead{position:absolute;left:.95rem;top:50%;transform:translateY(-50%);color:#7b8d82;pointer-events:none;transition:color .2s}
+.r4d-field:focus-within .lead{color:#285640}
+.r4d-input{width:100%;border:1.5px solid #d9e2dc;background:#f8faf8;border-radius:.9rem;padding:.8rem 1rem .8rem 2.8rem;font-size:.9rem;color:#17261d;outline:none;transition:border-color .2s,box-shadow .2s,background .2s}
+.r4d-input.noicon{padding-left:1rem}
+.r4d-input.has-right{padding-right:2.9rem}
+.r4d-input:hover{border-color:#a9bfb1}
+.r4d-input:focus{border-color:#4D8A6C;background:#fff;box-shadow:0 0 0 4px rgba(77,138,108,.16)}
+.r4d-input::placeholder{color:#93a59a}
+.r4d-eye{position:absolute;right:.45rem;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:2.1rem;height:2.1rem;border-radius:.6rem;color:#7b8d82;transition:background .2s,color .2s}
+.r4d-eye:hover{background:#eef3ef;color:#285640}
+.r4d-strength{display:flex;align-items:center;gap:.7rem;margin-top:.55rem;font-size:.74rem;font-weight:700}
+.r4d-strength .bars{display:flex;flex:1;gap:.3rem}
+.r4d-strength .bars i{height:.28rem;flex:1;border-radius:9999px;transition:background .25s}
+
+.r4d-auth-btn{display:inline-flex;width:100%;align-items:center;justify-content:center;gap:.55rem;border-radius:.9rem;padding:.9rem 1.2rem;font-size:.92rem;font-weight:700;color:#fff;background:linear-gradient(120deg,#285640,#3d7556);box-shadow:0 16px 30px -16px rgba(40,86,64,.85);transition:background .25s,transform .25s,box-shadow .25s}
+.r4d-auth-btn:hover:not(:disabled){background:linear-gradient(120deg,#D9822E,#F3A044);transform:translateY(-1px);box-shadow:0 18px 32px -16px rgba(217,130,46,.9)}
+.r4d-auth-btn:focus-visible{outline:3px solid rgba(243,160,68,.55);outline-offset:2px}
+.r4d-auth-btn:disabled{opacity:.75;cursor:wait}
+.r4d-divider{display:flex;align-items:center;gap:.8rem;margin:1.25rem 0 1rem;font-size:.74rem;font-weight:600;color:#8a9b90}
+.r4d-divider::before,.r4d-divider::after{content:"";flex:1;height:1px;background:#e2e9e4}
+.r4d-social-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.r4d-social{display:flex;align-items:center;justify-content:center;gap:.55rem;padding:.72rem .6rem;border:1.5px solid #dbe4de;border-radius:.85rem;background:#fff;font-size:.82rem;font-weight:600;color:#24372c;transition:border-color .2s,background .2s,transform .2s}
+.r4d-social:hover{border-color:#4D8A6C;background:#F1F6F0;transform:translateY(-1px)}
+.r4d-social:focus-visible{outline:3px solid rgba(77,138,108,.35);outline-offset:2px}
+.r4d-alert{display:flex;align-items:flex-start;gap:.6rem;border-radius:.85rem;padding:.75rem .9rem;font-size:.82rem;line-height:1.45}
+.r4d-alert.err{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.r4d-alert.warn{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.r4d-auth-switch{margin-top:1.3rem;text-align:center;font-size:.84rem;color:#66796d}
+.r4d-auth-link{font-weight:700;color:#285640;transition:color .2s}
+.r4d-auth-link:hover{color:#D9822E;text-decoration:underline}
+.r4d-auth-back{display:flex;align-items:center;justify-content:center;gap:.4rem;margin:1.3rem auto 0;font-size:.84rem;font-weight:600;color:#66796d;transition:color .2s}
+.r4d-auth-back:hover{color:#285640}
+@media (prefers-reduced-motion:reduce){.r4d-auth-btn,.r4d-social{transition:none}}
 `;
 
 /* ------------------------------- Page --------------------------------- */
@@ -2238,6 +2482,7 @@ export default function Home() {
     setAuthNotice('');
     try { window.history.replaceState(null, '', window.location.pathname + window.location.search); } catch { /* ignore */ }
   };
+  const closeAuth = () => { setAuthMode(null); setAuthNotice(''); };
 
   useEffect(() => { const timer = setTimeout(() => setLoading(false), 1900); return () => clearTimeout(timer); }, []);
   useEffect(() => { // typing /#admin in the address bar also opens the pop-up
@@ -2246,9 +2491,9 @@ export default function Home() {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
   useEffect(() => { // page behind the pop-up must not scroll
-    document.body.style.overflow = adminOpen ? 'hidden' : '';
+    document.body.style.overflow = adminOpen || authMode ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [adminOpen]);
+  }, [adminOpen, authMode]);
   useEffect(() => {
     document.documentElement.lang = language;
     document.title = language === 'rw' ? 'REL4D Ltd | Ubushakashatsi no kwigira ku iterambere' : language === 'fr' ? 'REL4D Ltd | Recherche et apprentissage au service du développement' : 'REL4D Ltd | Research and Learning for Development';
@@ -2267,7 +2512,7 @@ export default function Home() {
         <Loader done={!loading} />
         <LangTab language={language} setLanguage={setLanguage} t={t} />
         <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} onAuth={setAuthMode} account={account} onLogout={accountOut} />
-        {authMode && <AuthModal mode={authMode} setMode={(mode) => { setAuthNotice(''); setAuthMode(mode); }} onClose={() => { setAuthMode(null); setAuthNotice(''); }} onDone={accountDone} notice={authNotice} />}
+        {authMode && <AuthModal mode={authMode} setMode={(mode) => { setAuthNotice(''); setAuthMode(mode); }} onClose={closeAuth} onDone={accountDone} notice={authNotice} />}
         <main>
           <Hero />
           <Stats />
