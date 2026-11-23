@@ -134,19 +134,16 @@ const TRAINING = [
 /* `ids` = the page sections that highlight this menu item while you scroll */
 const NAV = [
   { label: 'Home', href: '#home', ids: ['home'] },
-  { label: 'About', ids: ['about', 'mission', 'expertise', 'experience', 'credentials', 'team'], children: [
+  { label: 'About', ids: ['about', 'mission', 'team'], children: [
     { label: 'Our story', href: '#about' },
     { label: 'Mission & vision', href: '#mission' },
-    { label: 'Expertise', href: '#expertise' },
-    { label: 'Experience', href: '#experience' },
-    { label: 'Credentials', href: '#credentials' },
     { label: 'Leadership', href: '#team' },
   ] },
   { label: 'Services', ids: ['services'], children: SERVICES.map((s) => ({ label: s.title, href: '#services' })) },
-  { label: 'Work', ids: ['projects', 'careers'], children: [
-    { label: 'Projects', href: '#projects' },
-    { label: 'Careers', href: '#careers' },
-  ] },
+  { label: 'Expertise', href: '#expertise', ids: ['expertise'] },
+  { label: 'Experience', href: '#experience', ids: ['experience'] },
+  { label: 'Projects', href: '#projects', ids: ['projects'] },
+  { label: 'Careers', href: '#careers', ids: ['careers'] },
   { label: 'Contact', href: '#contact', ids: ['contact'] },
 ];
 
@@ -155,19 +152,19 @@ const SECTION_IDS = ['home', 'about', 'mission', 'services', 'expertise', 'exper
 const UI_COPY = {
   en: {
     label: 'English', chooseLanguage: 'Choose language', themeLight: 'Switch to light mode', themeDark: 'Switch to dark mode',
-    nav: { Home: 'Home', About: 'About', Services: 'Services', Work: 'Work', Expertise: 'Expertise', Experience: 'Experience', Projects: 'Projects', Careers: 'Careers', Contact: 'Contact', Credentials: 'Credentials', 'Our story': 'Our story', 'Mission & vision': 'Mission & vision', Leadership: 'Leadership', 'Model Building': 'Model Building', 'System Customization': 'System Customization', 'Research & Evaluation': 'Research & Evaluation', 'Capacity Building': 'Capacity Building' },
+    nav: { Home: 'Home', About: 'About', Services: 'Services', Expertise: 'Expertise', Experience: 'Experience', Projects: 'Projects', Careers: 'Careers', Contact: 'Contact', 'Our story': 'Our story', 'Mission & vision': 'Mission & vision', Leadership: 'Leadership', 'Model Building': 'Model Building', 'System Customization': 'System Customization', 'Research & Evaluation': 'Research & Evaluation', 'Capacity Building': 'Capacity Building' },
     talk: 'Let’s talk', join: 'Join REL4D', marquee: ['Endline', 'Impact', 'MEL systems', 'Analytics', 'Learning', 'Capacity', 'Baseline', 'Endline'],
     contactTitle: 'Request a proposal', name: 'Full name', email: 'Email address', organization: 'Organization (optional)', service: 'Service interested in', details: 'Project details', send: 'Send request', sending: 'Sending…', sent: 'Your request has been sent. We’ll be in touch soon.', sendError: 'We could not send your request. Please try again.', multipleServices: 'Multiple services',
   },
   fr: {
     label: 'Français', chooseLanguage: 'Choisir la langue', themeLight: 'Passer en mode clair', themeDark: 'Passer en mode sombre',
-    nav: { Home: 'Accueil', About: 'À propos', Services: 'Services', Work: 'Projets', Expertise: 'Expertise', Experience: 'Parcours', Projects: 'Projets', Careers: 'Carrières', Contact: 'Contact', Credentials: 'Qualifications', 'Our story': 'Notre histoire', 'Mission & vision': 'Mission et vision', Leadership: 'Direction', 'Model Building': 'Élaboration de modèles', 'System Customization': 'Personnalisation des systèmes', 'Research & Evaluation': 'Recherche et évaluation', 'Capacity Building': 'Renforcement des capacités' },
+    nav: { Home: 'Accueil', About: 'À propos', Services: 'Services', Expertise: 'Expertise', Experience: 'Parcours', Projects: 'Projets', Contact: 'Contact', 'Our story': 'Notre histoire', 'Mission & vision': 'Mission et vision', Leadership: 'Direction', 'Model Building': 'Élaboration de modèles', 'System Customization': 'Personnalisation des systèmes', 'Research & Evaluation': 'Recherche et évaluation', 'Capacity Building': 'Renforcement des capacités' },
     talk: 'Parlons-en', join: 'Contacter REL4D', marquee: ['Évaluation finale', 'Impact', 'Systèmes S&E', 'Analytique', 'Apprentissage', 'Capacités', 'Étude de référence', 'Évaluation finale'],
     contactTitle: 'Demander une proposition', name: 'Nom complet', email: 'Adresse e-mail', organization: 'Organisation (facultatif)', service: 'Service souhaité', details: 'Détails du projet', send: 'Envoyer la demande', sending: 'Envoi en cours…', sent: 'Votre demande a été envoyée. Nous vous contacterons bientôt.', sendError: 'Votre demande n’a pas pu être envoyée. Veuillez réessayer.', multipleServices: 'Plusieurs services',
   },
   rw: {
     label: 'Kinyarwanda', chooseLanguage: 'Hitamo ururimi', themeLight: 'Hindura ujye ku mucyo', themeDark: 'Hindura ujye mu mwijima',
-    nav: { Home: 'Ahabanza', About: 'Ibitwerekeye', Services: 'Serivisi', Work: 'Imirimo', Expertise: 'Ubumenyi', Experience: 'Uburambe', Projects: 'Imishinga', Careers: 'Akazi', Contact: 'Twandikire', Credentials: 'Impamyabumenyi', 'Our story': 'Amateka yacu', 'Mission & vision': 'Intego n’icyerekezo', Leadership: 'Ubuyobozi', 'Model Building': 'Gukora imiterere', 'System Customization': 'Gutunganya sisitemu', 'Research & Evaluation': 'Ubushakashatsi n’isuzuma', 'Capacity Building': 'Kongera ubushobozi' },
+    nav: { Home: 'Ahabanza', About: 'Ibitwerekeye', Services: 'Serivisi', Expertise: 'Ubumenyi', Experience: 'Uburambe', Projects: 'Imishinga', Contact: 'Twandikire', 'Our story': 'Amateka yacu', 'Mission & vision': 'Intego n’icyerekezo', Leadership: 'Ubuyobozi', 'Model Building': 'Gukora imiterere', 'System Customization': 'Gutunganya sisitemu', 'Research & Evaluation': 'Ubushakashatsi n’isuzuma', 'Capacity Building': 'Kongera ubushobozi' },
     talk: 'Tuganire', join: 'Vugana na REL4D', marquee: ['Isuzuma rya nyuma', 'Ingaruka', 'Sisitemu za MEL', 'Isesengura', 'Kwiga', 'Kongera ubushobozi', 'Ibarura fatizo', 'Isuzuma rya nyuma'],
     contactTitle: 'Saba icyifuzo cy’akazi', name: 'Amazina yose', email: 'Aderesi ya imeyili', organization: 'Ikigo (si ngombwa)', service: 'Serivisi wifuza', details: 'Ibisobanuro by’umushinga', send: 'Ohereza ubusabe', sending: 'Birimo koherezwa…', sent: 'Ubusabe bwawe bwoherejwe. Turakuvugisha vuba.', sendError: 'Ubusabe bwawe ntibwoherejwe. Ongera ugerageze.', multipleServices: 'Serivisi nyinshi',
   },
@@ -464,61 +461,58 @@ function Hero() {
   const tr = useTranslate();
   const accent = tr('development excellence.');
   return (
-    <section id="home" className="r4d-hero relative isolate overflow-hidden bg-[var(--paper)] pb-28 pt-[68px] text-[#24372c]">
+    <section id="home" className="relative isolate overflow-hidden bg-[#0c2a1c] pb-28 pt-[68px] text-white">
+      {/* animated aurora + grid */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="r4d-blob absolute -left-24 top-10 h-96 w-96 rounded-full bg-emerald-500/10 blur-[110px]" />
-        <div className="r4d-blob absolute right-0 top-1/3 h-[28rem] w-[28rem] rounded-full bg-orange-500/10 blur-[120px]" style={{ animationDelay: '-6s' }} />
-        <div className="r4d-hero-grid absolute inset-0" />
-        <Spiral className="r4d-float absolute left-[46%] top-28 hidden w-16 text-[var(--o)]/60 lg:block" />
+        <div className="r4d-blob absolute -left-24 top-10 h-96 w-96 rounded-full bg-emerald-500/40 blur-[110px]" />
+        <div className="r4d-blob absolute right-0 top-1/3 h-[28rem] w-[28rem] rounded-full bg-orange-500/30 blur-[120px]" style={{ animationDelay: '-6s' }} />
+        <div className="absolute inset-0 opacity-60" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)', backgroundSize: '48px 48px', WebkitMaskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)', maskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)' }} />
+        <Spiral className="r4d-float absolute left-[46%] top-28 hidden w-16 text-[var(--o)]/70 lg:block" />
       </div>
 
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-14 lg:min-h-[calc(100vh-68px)] lg:grid-cols-[1.08fr_.92fr] lg:gap-8 lg:px-8">
-        <div className="mx-auto w-full max-w-2xl lg:mx-0">
-          <p className="r4d-hero-kicker r4d-rise inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/85 px-4 py-1.5 text-sm font-semibold text-[var(--gd)] shadow-sm backdrop-blur" style={{ animationDelay: '1.9s' }}>
+      <div className="mx-auto grid min-h-[calc(100vh-68px)] max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.1fr_1fr] lg:px-8">
+        <div>
+          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur" style={{ animationDelay: '1.9s' }}>
             <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--o)] opacity-75" /><span className="relative h-2 w-2 rounded-full bg-[var(--o)]" /></span>
             {tr('Evidence drives change and transformation')}
           </p>
-          <h1 className="r4d-hero-title r4d-rise mt-6 max-w-[15ch] text-4xl font-extrabold leading-[1.08] tracking-[-.035em] sm:text-5xl lg:text-[3.75rem]" style={{ animationDelay: '2s' }}>
-            <span className="block">{tr('Research & learning for')}</span>{' '}
-            <span className="r4d-hero-accent text-[#df4c2b]" aria-label={accent}>
-              {accent.split(' ').map((word, wordIndex) => (
-                <span key={`${word}-${wordIndex}`} className="inline-block whitespace-nowrap">
-                  {Array.from(word).map((c, i) => <span key={`${c}-${i}`} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${(wordIndex * 7 + i) * 70}ms` }}>{c}</span>)}
-                  {wordIndex < accent.split(' ').length - 1 && <span aria-hidden="true">&nbsp;</span>}
-                </span>
-              ))}
+          <h1 className="r4d-rise mt-6 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.6rem]" style={{ animationDelay: '2s' }}>
+            {tr('Research & learning for')}{' '}
+            <span className="bg-gradient-to-r from-emerald-300 via-[var(--o)] to-emerald-300 bg-clip-text text-transparent r4d-shine" aria-label={accent}>
+              {Array.from(accent).map((c, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${i * 55}ms` }}>{c === ' ' ? '\u00a0' : c}</span>)}
             </span>
           </h1>
-          <p className="r4d-hero-description r4d-rise mt-6 max-w-xl text-base leading-relaxed text-[#53645a] sm:text-lg" style={{ animationDelay: '2.15s' }}>
+          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg" style={{ animationDelay: '2.15s' }}>
             {tr('REL4D is a registered consultancy in Kigali that conducts research and evaluations and supports learning for international development programmes, using data analytics, machine learning and AI to get the most from evidence.')}
           </p>
           <div className="r4d-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: '2.3s' }}>
-            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-7 py-3.5 font-semibold text-white shadow-lg shadow-orange-900/15 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
-            <a href="#contact" className="r4d-hero-secondary rounded-xl border border-[var(--gd)]/20 bg-white/80 px-7 py-3.5 font-semibold text-[var(--gd)] shadow-sm backdrop-blur transition hover:border-[var(--o)] hover:text-[var(--od)]">{tr('Request a proposal')}</a>
+            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-7 py-3.5 font-semibold text-white shadow-lg shadow-orange-900/30 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
+            <a href="#contact" className="rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 font-semibold backdrop-blur transition hover:bg-white hover:text-[var(--gd)]">{tr('Request a proposal')}</a>
           </div>
+          {/* mini trust row */}
           <div className="r4d-rise mt-10 grid max-w-lg grid-cols-3 gap-3" style={{ animationDelay: '2.45s' }}>
             {[[50, '+', 'Projects'], [15, '+', 'Sectors'], [10, '+', 'Years']].map(([v, s, l]) => (
-              <div key={l} className="r4d-hero-stat rounded-2xl border border-[var(--gd)]/10 bg-white/80 px-4 py-3 shadow-sm backdrop-blur">
-                <p className="r4d-hero-stat-value text-2xl font-extrabold text-[var(--gd)]"><CountUp to={v} suffix={s} /></p>
-                <p className="r4d-hero-stat-label text-xs text-[#68766d]">{tr(l)}</p>
+              <div key={l} className="rounded-2xl border border-white/10 bg-white/[.07] px-4 py-3 backdrop-blur">
+                <p className="text-2xl font-extrabold"><CountUp to={v} suffix={s} /></p>
+                <p className="text-xs text-white/60">{tr(l)}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="r4d-rise relative mx-auto w-full max-w-[480px] px-5 pb-5 pt-4 sm:px-8" style={{ animationDelay: '2.2s' }}>
-          <div className="r4d-orbit absolute left-1/2 top-1/2 aspect-square w-[94%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[var(--o)]/35" />
-          <div className="r4d-portrait-ring relative mx-auto aspect-square w-full max-w-[390px] rounded-full p-[7px]">
-            <div className="absolute inset-[8px] rounded-full border border-white/70" />
-            <div className="relative h-full w-full overflow-hidden rounded-full border-[5px] border-[var(--paper)] bg-[#e8eee8] shadow-[0_30px_90px_-20px_rgba(31,53,39,.32)] ring-1 ring-black/10">
-              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} fetchPriority="high" className="h-full w-full rounded-full object-cover object-[center_20%] transition duration-700 hover:scale-105" />
-              <div className="absolute inset-x-6 bottom-5 rounded-2xl border border-white/35 bg-[#17261d]/80 px-4 py-3 text-center text-white shadow-lg backdrop-blur-md">
-                <p className="font-bold">Jean Willy ULIHO</p><p className="text-xs text-white/80">{tr('Managing Director')} · REL4D Ltd</p>
+        <div className="r4d-rise relative mx-auto w-full max-w-[420px] px-5 pb-5 pt-4 sm:px-8" style={{ animationDelay: '2.2s' }}>
+          <div className="r4d-orbit absolute left-1/2 top-1/2 aspect-square w-[94%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-emerald-200/30" />
+          <div className="r4d-portrait-ring relative mx-auto aspect-square w-full max-w-[360px] rounded-full p-[7px]">
+            <div className="absolute inset-[8px] rounded-full border border-white/35" />
+            <div className="relative h-full w-full overflow-hidden rounded-full border-[5px] border-[#0c2a1c] bg-white/10 shadow-[0_30px_90px_-20px_rgba(0,0,0,.7)] ring-1 ring-white/35">
+              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full rounded-full object-cover object-[center_20%] transition duration-700 hover:scale-105" />
+              <div className="absolute inset-x-6 bottom-5 rounded-2xl border border-white/25 bg-[#07140d]/65 px-4 py-3 text-center backdrop-blur-md">
+                <p className="font-bold">Jean Willy ULIHO</p><p className="text-xs text-white/75">{tr('Managing Director')} · REL4D Ltd</p>
               </div>
             </div>
           </div>
-          <span className="r4d-orbit-dot absolute left-[13%] top-[24%] h-3 w-3 rounded-full bg-[var(--o)] shadow-[0_0_22px_rgba(243,160,68,.45)]" />
-          <span className="r4d-orbit-dot absolute bottom-[13%] right-[17%] h-2.5 w-2.5 rounded-full bg-[var(--gd)] shadow-[0_0_20px_rgba(40,86,64,.25)]" />
+          <span className="r4d-orbit-dot absolute left-[13%] top-[24%] h-3 w-3 rounded-full bg-[var(--o)] shadow-[0_0_22px_rgba(243,160,68,.9)]" />
+          <span className="r4d-orbit-dot absolute bottom-[13%] right-[17%] h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_20px_rgba(110,231,183,.9)]" />
           <div className="r4d-float absolute -left-1 top-16 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/95 px-3 py-2.5 text-[var(--gd)] shadow-xl sm:-left-3">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--g)] text-white"><BadgeCheck size={20} /></span>
             <span className="text-sm font-bold leading-tight">{tr('50+ projects')}<span className="block text-xs font-medium text-black/50">{tr('delivered across Rwanda')}</span></span>
@@ -1181,14 +1175,14 @@ const STATUS_COLOR = {
 const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'rejected', 'hired'];
 
 const ADMIN_TABS = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard, group: 'Workspace' },
-  { id: 'messages', label: 'Messages', icon: MessageSquare, group: 'Workspace' },
-  { id: 'applications', label: 'Applications', icon: FileText, group: 'Workspace' },
-  { id: 'projects', label: 'Projects', icon: FolderKanban, group: 'Website' },
-  { id: 'team', label: 'Team', icon: UserRound, group: 'Website' },
-  { id: 'openings', label: 'Careers', icon: Briefcase, group: 'Website' },
-  { id: 'users', label: 'Users', icon: Users, group: 'People & account' },
-  { id: 'settings', label: 'Settings', icon: Settings, group: 'People & account' },
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'messages', label: 'Messages', icon: MessageSquare },
+  { id: 'projects', label: 'Projects', icon: FolderKanban },
+  { id: 'team', label: 'Team', icon: UserRound },
+  { id: 'openings', label: 'Careers', icon: Briefcase },
+  { id: 'applications', label: 'Applications', icon: FileText },
+  { id: 'users', label: 'Users', icon: Users },
+  { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
 const ADMIN_CSS = `
@@ -1214,7 +1208,6 @@ select.adm-input option{background:#0d1d15;color:#f1f7f2}
 .adm-btn:disabled,.adm-btn-ghost:disabled,.adm-btn-danger:disabled{opacity:.65;cursor:not-allowed}
 .adm-chip{display:inline-flex;align-items:center;gap:.35rem;border-radius:9999px;padding:.22rem .7rem;font-size:.7rem;font-weight:700}
 .adm-nav{display:flex;align-items:center;gap:.7rem;width:100%;border-radius:.9rem;padding:.72rem .9rem;font-size:.875rem;font-weight:600;color:rgba(232,241,234,.65);transition:all .2s;text-align:left}
-.adm-nav-group{padding:.2rem .85rem .45rem;font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:rgba(232,241,234,.38)}
 .adm-nav:hover{background:rgba(255,255,255,.06);color:#fff}
 .adm-nav[data-active="true"]{background:linear-gradient(120deg,rgba(74,222,128,.22),rgba(243,160,68,.2));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
 .adm-title{background:linear-gradient(90deg,#fff,#a7f3d0,#fdba74,#fff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:adm-shine 7s linear infinite}
@@ -1261,12 +1254,6 @@ const ADMIN_CSS_EXTRA = `
 .adm[data-t="light"] .adm-title{color:#285640!important}
 .adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09)!important}
 .adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)!important}
-.adm[data-t="light"] .adm-bg .adm-blob{display:none}
-.adm[data-t="light"] .adm-title{background:none;animation:none}
-.adm[data-t="light"] .adm-glass{-webkit-backdrop-filter:none;backdrop-filter:none}
-.adm[data-t="light"] .adm-btn{background:#285640;box-shadow:none}
-.adm[data-t="light"] .adm-nav-group{color:#849188}
-.adm[data-t="light"] .adm-nav[data-active="true"]{background:#edf5ef;color:#285640;box-shadow:inset 0 0 0 1px rgba(40,86,64,.1)}
 `;
 function ThemeToggle({ theme, setTheme }) {
   return (
@@ -1288,15 +1275,15 @@ function AdminBackdrop() {
 }
 
 const SOCIAL_PROVIDERS = [
-  { id: 'google', label: 'Google', icon: null },
-  { id: 'linkedin', label: 'LinkedIn', icon: Briefcase, color: '#0A66C2' },
-  { id: 'facebook', label: 'Facebook', icon: Users, color: '#1877F2' },
-  { id: 'github', label: 'GitHub', icon: Cpu, color: '#24292f' },
+  { id: 'google', label: 'Google', mark: 'G', color: 'text-[#4285F4]' },
+  { id: 'linkedin', label: 'LinkedIn', mark: 'in', color: 'bg-[#0A66C2] text-white' },
+  { id: 'facebook', label: 'Facebook', mark: 'f', color: 'bg-[#1877F2] text-white' },
+  { id: 'github', label: 'GitHub', mark: 'GH', color: 'bg-[#24292f] text-white' },
 ];
 
 function SocialAuthButtons({ intent }) {
   return (
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+    <div className="grid grid-cols-2 gap-2">
       {SOCIAL_PROVIDERS.map((provider) => (
         <button
           key={provider.id}
@@ -1305,18 +1292,9 @@ function SocialAuthButtons({ intent }) {
             const query = intent === 'admin' ? '?intent=admin' : '';
             window.location.assign(`${API}/api/auth/${provider.id}${query}`);
           }}
-          className="flex min-h-12 items-center justify-center gap-2.5 rounded-xl border border-[#d9dfdb] bg-white px-3 py-3 text-sm font-semibold text-[#24372c] shadow-sm transition hover:border-[#9eaaa2] hover:bg-[#f8faf8] hover:shadow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--g)]/20"
+          className="flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-3 py-3 text-sm font-semibold text-[#24372c] transition hover:border-[var(--g)] hover:bg-[var(--gs)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--g)]/20"
         >
-          {provider.id === 'google' ? (
-            <svg aria-hidden="true" viewBox="0 0 48 48" className="h-[18px] w-[18px]">
-              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z" />
-              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94a11.05 11.05 0 0 1-4.8 7.24l7.73 5.99c4.51-4.16 7.11-10.29 7.11-17.7Z" />
-              <path fill="#FBBC05" d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19Z" />
-              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.76l-7.73-5.99c-2.15 1.45-4.9 2.3-8.17 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" />
-            </svg>
-          ) : (
-            <provider.icon aria-hidden="true" size={18} color={provider.color} strokeWidth={2.2} />
-          )}
+          <span className={`grid h-5 min-w-5 place-items-center rounded text-xs font-extrabold ${provider.color}`}>{provider.mark}</span>
           <span>Continue with {provider.label}</span>
         </button>
       ))}
@@ -2046,21 +2024,12 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
   if (tab === 'users') content = <UsersPanel items={users} setItems={setUsers} ctx={ctx} />;
   if (tab === 'settings') content = <SettingsPanel user={user} ctx={ctx} messages={messages} applications={applications} onLogout={onLogout} />;
 
-  const navButtons = (horizontal = false) => (
-    <div className={horizontal ? 'flex gap-1' : 'space-y-5'}>
-      {['Workspace', 'Website', 'People & account'].map((group) => (
-        <div key={group} className={horizontal ? 'contents' : 'space-y-1'}>
-          {!horizontal && <p className="adm-nav-group">{group}</p>}
-          {ADMIN_TABS.filter((tb) => tb.group === group).map((tb) => (
-            <button key={tb.id} type="button" data-active={tab === tb.id} onClick={() => goto(tb.id)} className={`adm-nav ${horizontal ? '!w-auto shrink-0 !px-4' : ''}`}>
-              <tb.icon size={18} strokeWidth={1.8} />{tb.label}
-              {badge[tb.id] > 0 && <span className="ml-auto rounded-full bg-orange-500 px-2 py-0.5 text-[.65rem] font-extrabold text-white">{badge[tb.id]}</span>}
-            </button>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
+  const navButtons = (horizontal = false) => ADMIN_TABS.map((tb) => (
+    <button key={tb.id} type="button" data-active={tab === tb.id} onClick={() => goto(tb.id)} className={`adm-nav ${horizontal ? '!w-auto shrink-0 !px-4' : ''}`}>
+      <tb.icon size={18} />{tb.label}
+      {badge[tb.id] > 0 && <span className="ml-auto rounded-full bg-orange-500 px-2 py-0.5 text-[.65rem] font-extrabold text-white">{badge[tb.id]}</span>}
+    </button>
+  ));
 
   return (
     <div className="relative flex h-full">
@@ -2141,27 +2110,13 @@ const CSS = `
 :root{
   --g:#4D8A6C; --gd:#285640; --gs:#F1F6F0;
   --o:#F3A044; --od:#D9822E; --os:#FFF4E7;
-  --earth:#65513B; --paper:#fff;
+  --earth:#65513B; --paper:#FBFAF6;
 }
 html{scroll-behavior:smooth}
 body{background:var(--paper)}
 .r4d-app{min-height:100vh;background:var(--paper);color:#24372c;transition:background-color .25s ease,color .25s ease}
 .r4d-app[data-theme="dark"]{--paper:#14231c;--gs:#20362a;--os:#3a3123;--g:#75ad83;--gd:#285640;--o:#f3a044;--od:#f3a044;color:#e6eee7;color-scheme:dark}
 .r4d-app[data-theme="dark"] #home{background-color:#14231c!important;color:#edf4ee}
-.r4d-hero-grid{background-image:linear-gradient(rgba(40,86,64,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(40,86,64,.045) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)}
-.r4d-app[data-theme="dark"] nav[aria-label="Main"]{background:rgba(20,35,28,.94);border-color:rgba(255,255,255,.1)}
-.r4d-app[data-theme="dark"] nav[aria-label="Main"] a,
-.r4d-app[data-theme="dark"] nav[aria-label="Main"] button{color:#e6eee7}
-.r4d-app[data-theme="dark"] .r4d-hero{background:#14231c;color:#edf4ee}
-.r4d-app[data-theme="dark"] .r4d-hero-grid{background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)}
-.r4d-app[data-theme="dark"] .r4d-hero-kicker{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#e6eee7}
-.r4d-app[data-theme="dark"] .r4d-hero-title{color:#edf4ee}
-.r4d-app[data-theme="dark"] .r4d-hero-description{color:rgba(237,244,238,.74)}
-.r4d-app[data-theme="dark"] .r4d-hero-secondary{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#edf4ee}
-.r4d-app[data-theme="dark"] .r4d-hero-stat{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.13)}
-.r4d-app[data-theme="dark"] .r4d-hero-stat-value{color:#e6eee7}
-.r4d-app[data-theme="dark"] .r4d-hero-stat-label{color:rgba(237,244,238,.62)}
-.r4d-app[data-theme="dark"] .r4d-portrait-ring>div:first-child{border-color:rgba(255,255,255,.35)}
 .r4d-app[data-theme="dark"] #home .bg-white,
 .r4d-app[data-theme="dark"] #home [class*="bg-white/"]{background-color:#20362a!important}
 .r4d-app[data-theme="dark"] #home [class*="border-emerald-800"]{border-color:rgba(167,208,177,.35)!important}
@@ -2203,7 +2158,7 @@ section[id]{scroll-margin-top:90px}
 @keyframes r4d-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes r4d-pop{from{opacity:0;transform:scale(.97) translateY(6px)}to{opacity:1;transform:none}}
 @keyframes r4d-marquee{to{transform:translateX(-50%)}}
-@keyframes r4d-letter-bounce{0%,75%,100%{transform:translateY(0)}8%{transform:translateY(-6px)}16%{transform:translateY(0)}}
+@keyframes r4d-letter-bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}60%{transform:translateY(0)}}
 .r4d-portrait-ring{isolation:isolate;position:relative;background:rgba(255,255,255,.08);box-shadow:0 16px 48px -24px rgba(0,0,0,.7)}
 .r4d-portrait-ring::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:conic-gradient(from 0deg,#4ade80,#f3a044,#a7f3d0,#f3a044,#4ade80);animation:r4d-ring-spin 8s linear infinite}
 .r4d-orbit{animation:r4d-orbit-spin 30s linear infinite}
