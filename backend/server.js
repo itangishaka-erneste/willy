@@ -153,7 +153,7 @@ const PROVIDERS = {
     scope: 'openid email profile',
     profile: async (token) => {
       const p = await getJson('https://openidconnect.googleapis.com/v1/userinfo', token);
-      return { id: p.sub, name: p.name, email: p.email_verified ? p.email : null, avatar: p.picture };
+      return { id: p.sub, name: p.name, email: p.email_verified ? p.email : null, emailVerified: Boolean(p.email_verified), avatar: p.picture };
     },
   },
   facebook: {
@@ -162,7 +162,7 @@ const PROVIDERS = {
     scope: 'email,public_profile',
     profile: async (token) => {
       const p = await getJson('https://graph.facebook.com/me?fields=id,name,email,picture.type(large)', token);
-      return { id: p.id, name: p.name, email: p.email || null, avatar: p.picture?.data?.url };
+      return { id: p.id, name: p.name, email: p.email || null, emailVerified: Boolean(p.email), avatar: p.picture?.data?.url };
     },
   },
   linkedin: {
@@ -171,7 +171,7 @@ const PROVIDERS = {
     scope: 'openid profile email',
     profile: async (token) => {
       const p = await getJson('https://api.linkedin.com/v2/userinfo', token);
-      return { id: p.sub, name: p.name, email: p.email_verified === false ? null : p.email, avatar: p.picture };
+      return { id: p.sub, name: p.name, email: p.email_verified ? p.email : null, emailVerified: Boolean(p.email_verified), avatar: p.picture };
     },
   },
   github: {
@@ -185,13 +185,13 @@ const PROVIDERS = {
         const emails = await getJson('https://api.github.com/user/emails', token);
         email = (emails.find((e) => e.primary && e.verified) || emails.find((e) => e.verified))?.email || null;
       } catch { /* no email permission */ }
-      return { id: String(p.id), name: p.name || p.login, email, avatar: p.avatar_url };
+        return { id: String(p.id), name: p.name || p.login, email, emailVerified: Boolean(email), avatar: p.avatar_url };
     },
   },
 };
 
 async function getJson(url, token) {
-  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'User-Agent': 'rel4d-site' } });
+    const r = await fetch(url, { headers: { Authorization: 'Bearer ' + token, Accept: 'application/json', 'User-Agent': 'rel4d-site' } });
   if (!r.ok) throw new Error(`Profile request failed (${r.status})`);
   return r.json();
 }
@@ -207,8 +207,9 @@ app.get('/api/auth/:provider', (req, res) => {
   const provider = PROVIDERS[name];
   if (!provider) return fail(res, 404, 'Unknown sign-in provider.');
   const { id } = providerKeys(name);
-  if (!id) return backToSite(res, `auth_error=${encodeURIComponent(`${name[0].toUpperCase() + name.slice(1)} sign-in is not set up yet.`)}`);
-  const state = jwt.sign({ p: name, n: crypto.randomBytes(8).toString('hex') }, JWT_SECRET, { expiresIn: '10m' });
+  const intent = req.query.intent === 'admin' ? 'admin' : 'user';
+  if (!id) return backToSite(res, `auth_error=${encodeURIComponent(`${name[0].toUpperCase() + name.slice(1)} sign-in is not set up yet.`)}&auth_intent=${intent}`);
+  const state = jwt.sign({ p: name, n: crypto.randomBytes(8).toString('hex'), intent }, JWT_SECRET, { expiresIn: '10m' });
   const params = new URLSearchParams({ client_id: id, redirect_uri: redirectUri(name), response_type: 'code', scope: provider.scope, state });
   res.redirect(`${provider.authUrl}?${params}`);
 });
@@ -216,13 +217,15 @@ app.get('/api/auth/:provider', (req, res) => {
 app.get('/api/auth/:provider/callback', wrap(async (req, res) => {
   const name = req.params.provider;
   const provider = PROVIDERS[name];
-  const oops = (msg) => backToSite(res, `auth_error=${encodeURIComponent(msg)}`);
+  let adminIntent = false;
+  const oops = (msg) => backToSite(res, `auth_error=${encodeURIComponent(msg)}&auth_intent=${adminIntent ? 'admin' : 'user'}`);
   if (!provider) return fail(res, 404, 'Unknown sign-in provider.');
-  if (req.query.error || !req.query.code) return oops('Sign-in was cancelled.');
   try {
     const decoded = jwt.verify(String(req.query.state || ''), JWT_SECRET);
-    if (decoded.p !== name) throw new Error('state mismatch');
+    if (decoded.p !== name || !['admin', 'user'].includes(decoded.intent)) throw new Error('state mismatch');
+    adminIntent = decoded.intent === 'admin';
   } catch { return oops('Sign-in link expired. Please try again.'); }
+  if (req.query.error || !req.query.code) return oops('Sign-in was cancelled.');
 
   try {
     const { id, secret } = providerKeys(name);
@@ -240,10 +243,35 @@ app.get('/api/auth/:provider/callback', wrap(async (req, res) => {
     const displayName = clean(p.name, 100) || 'REL4D visitor';
 
     let user = (await query('SELECT * FROM users WHERE provider = $1 AND provider_id = $2', [name, String(p.id)])).rows[0];
+    if (adminIntent) {
+      if (user && user.role !== 'admin') return oops('This social account is not linked to an administrator.');
+      if (!user) {
+        if (!p.emailVerified || !p.email) return oops('Use an administrator account with a verified email for this provider.');
+        const adminAccount = (await query(
+          `SELECT * FROM users WHERE LOWER(email) = $1 AND role = 'admin'`,
+          [email],
+        )).rows[0];
+        if (!adminAccount) return oops('No administrator account matches this verified social email.');
+        if (adminAccount.provider && adminAccount.provider !== 'local'
+          && (adminAccount.provider !== name || (adminAccount.provider_id && adminAccount.provider_id !== String(p.id)))) {
+          return oops('This administrator account is already linked to another sign-in provider.');
+        }
+        user = (await query(
+          `UPDATE users SET provider = $2, provider_id = $3, avatar = COALESCE(avatar, $4)
+           WHERE id = $1 AND role = 'admin'
+             AND (provider = 'local' OR (provider = $2 AND (provider_id IS NULL OR provider_id = $3)))
+           RETURNING *`,
+          [adminAccount.id, name, String(p.id), p.avatar || null],
+        )).rows[0];
+        if (!user) return oops('This administrator account is already linked to another sign-in provider.');
+      }
+      await query('UPDATE users SET last_login = NOW() WHERE id = $1', [user.id]);
+      return backToSite(res, `auth_admin_token=${encodeURIComponent(signToken(user))}`);
+    }
+
     if (!user) {
       const sameEmail = (await query('SELECT * FROM users WHERE LOWER(email) = $1', [email])).rows[0];
       if (sameEmail) {
-        // Never let a social login take over the admin account.
         if (sameEmail.role === 'admin') return oops('The admin account must sign in with its password.');
         user = (await query(
           `UPDATE users SET provider = COALESCE(NULLIF(provider, 'local'), $2), provider_id = COALESCE(provider_id, $3), avatar = COALESCE(avatar, $4) WHERE id = $1 RETURNING *`,
@@ -281,6 +309,7 @@ const flatList = (kind) => wrap(async (_req, res) => {
 });
 app.get('/api/projects', flatList('project'));
 app.get('/api/openings', flatList('opening'));
+app.get('/api/team', flatList('team'));
 
 /* ------------------------ contact form messages ----------------------- */
 // The website form posts to /api/contact (and /api/messages works too).

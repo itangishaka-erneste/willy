@@ -7,6 +7,7 @@ import {
   ArrowUpRight, Send, CheckCircle2, Award, Briefcase, BadgeCheck, Star, LockKeyhole,
   LayoutDashboard, MessageSquare, FolderKanban, Users, Settings, Trash2, Pencil, Eye, EyeOff, Search,
   Reply, Download, RefreshCw, LogOut, Plus, ShieldCheck, Inbox, Check, KeyRound, Bell, FileText, ImagePlus,
+  UserPlus, UserRound, TrendingUp,
 } from 'lucide-react';
 
 /* =====================================================================
@@ -99,15 +100,18 @@ const CLIENTS = [
 ];
 
 const PROJECTS = [
-  { id: 'p1', title: 'USAID Ingobyi Activity Endline Survey', category: 'Health',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80',
-    description: 'Comprehensive endline assessment of a health system strengthening programme across Rwanda’s healthcare facilities.' },
-  { id: 'p2', title: 'Igire Ubaka Ejo Baseline Survey', category: 'Economic',
+  { id: 'p1', title: 'TradeMark Africa Standards & SPS Young Professionals Programme', category: 'Economic',
     image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80',
-    description: 'Baseline data collection in Gasabo, Kayonza and Rusizi districts for an economic empowerment programme.' },
-  { id: 'p3', title: 'DREAMS Baseline Survey', category: 'Education',
+    description: 'Baseline, endline and employment-traceability assessment of young professionals’ knowledge, standards awareness, employability and work readiness.' },
+  { id: 'p2', title: 'Healthy Teeth for Life Endline Evaluation', category: 'Health',
+    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80',
+    description: 'Co-principal evaluation of an oral-health programme, covering relevance, effectiveness, efficiency, impact, sustainability and stakeholder learning.' },
+  { id: 'p3', title: 'Kura Umenye Family Strengthening & Education Evaluation', category: 'Education',
     image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80',
-    description: 'Technical lead for the baseline assessment of a vulnerable-youth programme in Nyarugenge District.' },
+    description: 'Endline evaluation across family strengthening, education, psychosocial support and SRHR in more than eight districts.' },
+  { id: 'p4', title: 'TVET Development for Transformation', category: 'Education',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
+    description: 'Baseline study and M&E framework development for Rwanda Polytechnic institutions, with reporting tools and practical programme indicators.' },
 ];
 
 const CREDENTIALS = [
@@ -117,12 +121,14 @@ const CREDENTIALS = [
 ];
 
 const TRAINING = [
-  'MIT: Data Analysis for Social Scientists; Designing and Running Randomized Evaluations (2026)',
-  'King’s College London: Prediction Modelling for Health Research; R for Health Research (2025)',
-  'WorldQuant University: Foundations of Financial Engineering (2025)',
-  'Harvard T.H. Chan School of Public Health: Quantitative Methods for M&E (2019)',
-  'Johns Hopkins / NIH: Biostatistics (2018)',
-  'CDC TRAIN: Economic Evaluation in Public Health (2020)',
+  'MIT Open Learning: Evaluating Social Programs; Impact Evaluation certificates',
+  'edX: Evaluating Impact in Low- and Middle-Income Countries; Data Analytics for Business',
+  'WorldQuant University: Foundations of Financial Engineering and applied Python, risk and econometrics',
+  'King’s College London: Prediction Modelling in Health Research',
+  'James Lind Institute: Postgraduate Diploma in Public Health Research',
+  'Udemy: Project Impact Evaluation with R Software',
+  'Athena Global Education: Executive Diploma in Business Communication and Diploma in Business Administration',
+  'Alison: Leadership and Management Styles, Emotional Intelligence and Health Studies',
 ];
 
 /* `ids` = the page sections that highlight this menu item while you scroll */
@@ -137,15 +143,16 @@ const NAV = [
   { label: 'Expertise', href: '#expertise', ids: ['expertise'] },
   { label: 'Experience', href: '#experience', ids: ['experience'] },
   { label: 'Projects', href: '#projects', ids: ['projects'] },
+  { label: 'Careers', href: '#careers', ids: ['careers'] },
   { label: 'Contact', href: '#contact', ids: ['contact'] },
 ];
 
-const SECTION_IDS = ['home', 'about', 'mission', 'services', 'expertise', 'experience', 'projects', 'credentials', 'team', 'contact'];
+const SECTION_IDS = ['home', 'about', 'mission', 'services', 'expertise', 'experience', 'projects', 'careers', 'credentials', 'team', 'contact'];
 
 const UI_COPY = {
   en: {
     label: 'English', chooseLanguage: 'Choose language', themeLight: 'Switch to light mode', themeDark: 'Switch to dark mode',
-    nav: { Home: 'Home', About: 'About', Services: 'Services', Expertise: 'Expertise', Experience: 'Experience', Projects: 'Projects', Contact: 'Contact', 'Our story': 'Our story', 'Mission & vision': 'Mission & vision', Leadership: 'Leadership', 'Model Building': 'Model Building', 'System Customization': 'System Customization', 'Research & Evaluation': 'Research & Evaluation', 'Capacity Building': 'Capacity Building' },
+    nav: { Home: 'Home', About: 'About', Services: 'Services', Expertise: 'Expertise', Experience: 'Experience', Projects: 'Projects', Careers: 'Careers', Contact: 'Contact', 'Our story': 'Our story', 'Mission & vision': 'Mission & vision', Leadership: 'Leadership', 'Model Building': 'Model Building', 'System Customization': 'System Customization', 'Research & Evaluation': 'Research & Evaluation', 'Capacity Building': 'Capacity Building' },
     talk: 'Let’s talk', join: 'Join REL4D', marquee: ['Endline', 'Impact', 'MEL systems', 'Analytics', 'Learning', 'Capacity', 'Baseline', 'Endline'],
     contactTitle: 'Request a proposal', name: 'Full name', email: 'Email address', organization: 'Organization (optional)', service: 'Service interested in', details: 'Project details', send: 'Send request', sending: 'Sending…', sent: 'Your request has been sent. We’ll be in touch soon.', sendError: 'We could not send your request. Please try again.', multipleServices: 'Multiple services',
   },
@@ -353,7 +360,7 @@ function LangTab({ language, setLanguage, t }) {
 }
 
 /* ------------------------------ Navbar -------------------------------- */
-function Navbar({ theme, setTheme, t, onAdmin }) {
+function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
   const tr = useTranslate();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState(null);
@@ -369,85 +376,80 @@ function Navbar({ theme, setTheme, t, onAdmin }) {
 
   const close = () => { setOpen(false); setDrop(null); };
   const isActive = (item) => item.ids.includes(active);
+  const link = (on) => `flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-semibold transition hover:bg-[var(--gs)] hover:text-[var(--o)] ${on ? 'bg-[var(--gs)] text-[var(--o)]' : 'text-[var(--gd)]'}`;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
-      <nav aria-label={tr('Main')}
-        className={`mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-2xl transition-all duration-300 ${scrolled ? 'bg-white/85 px-3 py-1.5 shadow-lg backdrop-blur-xl ring-1 ring-black/5' : 'px-0 py-0'}`}>
-        {/* Logo + the admin login button that sits right beside it */}
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <a href="#home" className="flex shrink-0 items-center gap-3 px-2 py-2" onClick={close}>
-            <img src={logo} alt="" className={`object-contain transition-all duration-300 ${scrolled ? 'h-12 w-12 sm:h-14 sm:w-14' : 'h-14 w-14 sm:h-16 sm:w-16'}`} />
-            <span className="text-lg font-bold tracking-tight text-[var(--gd)] sm:text-xl">REL4D<span aria-hidden="true">.</span></span>
+    <header className="fixed inset-x-0 top-0 z-50">
+      <nav aria-label={tr('Main')} className={`transition-all duration-300 ${scrolled ? 'bg-white/90 shadow-md backdrop-blur-xl' : 'bg-white/70 backdrop-blur-md'} border-b border-black/5`}>
+        <div className="mx-auto flex h-[68px] max-w-7xl items-center gap-4 px-4 lg:px-8">
+          {/* left: logo */}
+          <a href="#home" onClick={close} className="flex shrink-0 items-center gap-2.5">
+            <img src={logo} alt="" className="h-11 w-11 object-contain" />
+            <span className="text-xl font-extrabold tracking-tight text-[var(--gd)]">REL4D<span className="text-[var(--o)]">.</span></span>
           </a>
-          <button type="button" onClick={onAdmin} aria-label="Admin login" title="Admin login"
-            className="group inline-flex items-center gap-1.5 rounded-full border border-[var(--gd)]/15 bg-white/85 px-3 py-2 text-xs font-bold text-[var(--gd)] shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-[var(--gd)] hover:text-white hover:shadow-lg">
-            <LockKeyhole size={14} className="transition group-hover:rotate-[-12deg]" /><span className="hidden sm:inline">Admin</span>
-          </button>
-        </div>
-        <div className={`flex items-center gap-2 rounded-2xl border border-white/70 bg-white/90 px-3 backdrop-blur-xl ring-1 ring-black/5 transition-all duration-300 ${scrolled ? 'py-1.5 shadow-md' : 'py-2.5 shadow-lg'}`}>
-        <ul className="hidden items-center gap-1 lg:flex">
-          {NAV.map((item) => (
-            <li key={item.label} className="relative"
-              onMouseEnter={() => item.children && setDrop(item.label)} onMouseLeave={() => setDrop(null)}>
-              {item.children ? (
-                <>
-                  <button className={`flex items-center gap-1 rounded-full px-3 py-2 text-sm font-semibold transition hover:bg-[var(--gs)] hover:text-[var(--o)] ${isActive(item) ? 'bg-[var(--gs)] text-[var(--o)]' : 'text-[var(--gd)]'}`}
-                    aria-expanded={drop === item.label} onClick={() => setDrop(drop === item.label ? null : item.label)}>
-                    {t.nav[item.label] || item.label}
-                    <ChevronDown size={15} className={`transition-transform ${drop === item.label ? 'rotate-180' : ''}`} />
-                  </button>
-                  {drop === item.label && (
-                    <div className="absolute left-0 top-full w-64 pt-3">
-                      <ul className="r4d-pop overflow-hidden rounded-2xl border border-black/10 bg-white p-2 shadow-xl">
-                        {item.children.map((c) => (
-                          <li key={c.label}>
-                            <a href={c.href} onClick={close} className="block rounded-xl px-4 py-2.5 text-sm hover:bg-[var(--os)] hover:text-[var(--od)]">{t.nav[c.label] || c.label}</a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <a href={item.href} className={`block rounded-full px-3 py-2 text-sm font-semibold transition hover:bg-[var(--gs)] hover:text-[var(--o)] ${isActive(item) ? 'bg-[var(--gs)] text-[var(--o)]' : 'text-[var(--gd)]'}`}>{t.nav[item.label] || item.label}</a>
-              )}
-            </li>
-          ))}
-        </ul>
 
-        <div className="flex items-center gap-2">
-          <button type="button" className="grid h-11 w-11 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)]" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? t.themeLight : t.themeDark} title={theme === 'dark' ? t.themeLight : t.themeDark}>
-            {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
-          </button>
-          <a href="#contact" className="hidden items-center gap-1.5 rounded-full bg-[var(--gd)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--o)] sm:inline-flex">{t.talk} <ArrowUpRight size={16} /></a>
-          <button className="grid h-11 w-11 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>
-            {open ? <X /> : <Menu />}
-          </button>
-        </div>
+          {/* centre: links */}
+          <ul className="mx-auto hidden items-center gap-0.5 lg:flex">
+            {NAV.map((item) => (
+              <li key={item.label} className="relative" onMouseEnter={() => item.children && setDrop(item.label)} onMouseLeave={() => setDrop(null)}>
+                {item.children ? (
+                  <>
+                    <button className={link(isActive(item))} aria-expanded={drop === item.label}>
+                      {t.nav[item.label] || item.label}<ChevronDown size={14} className={`transition-transform ${drop === item.label ? 'rotate-180' : ''}`} />
+                    </button>
+                    {drop === item.label && (
+                      <div className="absolute left-0 top-full w-60 pt-2">
+                        <ul className="r4d-pop overflow-hidden rounded-2xl border border-black/10 bg-white p-2 shadow-xl">
+                          {item.children.map((c) => <li key={c.label}><a href={c.href} onClick={close} className="block rounded-xl px-4 py-2.5 text-sm hover:bg-[var(--os)] hover:text-[var(--od)]">{t.nav[c.label] || c.label}</a></li>)}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                ) : <a href={item.href} className={link(isActive(item))}>{t.nav[item.label] || item.label}</a>}
+              </li>
+            ))}
+          </ul>
+
+          {/* right: theme, admin (small), account */}
+          <div className="ml-auto flex items-center gap-1.5 lg:ml-0">
+            <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? t.themeLight : t.themeDark}
+              className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)]">
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button type="button" onClick={onAdmin} aria-label="Admin login" title="Admin login"
+              className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)] hover:text-[var(--o)]"><LockKeyhole size={17} /></button>
+            {account ? (
+              <div className="hidden items-center gap-2 sm:flex">
+                <span title={account.email} className="grid h-10 w-10 place-items-center rounded-full bg-[var(--gd)] text-sm font-bold text-white">{(account.name || '?')[0].toUpperCase()}</span>
+                <button type="button" onClick={onLogout} className="text-sm font-semibold text-[var(--gd)] hover:text-[var(--o)]">Sign out</button>
+              </div>
+            ) : (
+              <>
+                <button type="button" onClick={() => onAuth('login')} className="hidden rounded-full px-4 py-2.5 text-sm font-semibold text-[var(--gd)] transition hover:bg-[var(--gs)] sm:block">Sign in</button>
+                <button type="button" onClick={() => onAuth('register')} className="hidden items-center gap-1.5 rounded-full bg-[var(--gd)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--o)] sm:inline-flex"><UserPlus size={15} />Create account</button>
+              </>
+            )}
+            <button className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>{open ? <X /> : <Menu />}</button>
+          </div>
         </div>
       </nav>
 
       {open && (
-        <div className="r4d-pop mx-auto mt-2 max-h-[75vh] max-w-6xl overflow-y-auto rounded-3xl bg-white px-5 pb-5 shadow-xl ring-1 ring-black/5 lg:hidden">
+        <div className="r4d-pop max-h-[78vh] overflow-y-auto border-b border-black/5 bg-white px-5 pb-5 shadow-xl lg:hidden">
           {NAV.map((item) => (
             <div key={item.label} className="border-b border-black/5 py-1">
               {item.children ? (
                 <>
-                  <button className={`flex w-full items-center justify-between py-3 font-medium ${isActive(item) ? 'text-[var(--o)]' : ''}`} onClick={() => setDrop(drop === item.label ? null : item.label)}>
-                    {t.nav[item.label] || item.label}<ChevronDown size={18} className={drop === item.label ? 'rotate-180' : ''} />
-                  </button>
-                  {drop === item.label && item.children.map((c) => (
-                    <a key={c.label} href={c.href} onClick={close} className="block py-2 pl-4 text-sm text-black/70">{t.nav[c.label] || c.label}</a>
-                  ))}
+                  <button className="flex w-full items-center justify-between py-3 font-medium" onClick={() => setDrop(drop === item.label ? null : item.label)}>{t.nav[item.label] || item.label}<ChevronDown size={18} className={drop === item.label ? 'rotate-180' : ''} /></button>
+                  {drop === item.label && item.children.map((c) => <a key={c.label} href={c.href} onClick={close} className="block py-2 pl-4 text-sm text-black/70">{t.nav[c.label] || c.label}</a>)}
                 </>
-              ) : (
-                <a href={item.href} onClick={close} className={`block py-3 font-medium ${isActive(item) ? 'text-[var(--o)]' : ''}`}>{t.nav[item.label] || item.label}</a>
-              )}
+              ) : <a href={item.href} onClick={close} className={`block py-3 font-medium ${isActive(item) ? 'text-[var(--o)]' : ''}`}>{t.nav[item.label] || item.label}</a>}
             </div>
           ))}
-          <a href="#contact" onClick={close} className="mt-4 block rounded-xl bg-[var(--o)] py-3 text-center font-semibold text-white">{t.join}</a>
-          <button type="button" onClick={() => { close(); onAdmin(); }} className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gd)]/20 py-3 font-semibold text-[var(--gd)]"><LockKeyhole size={16} /> Admin login</button>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <button type="button" onClick={() => { close(); onAuth('login'); }} className="rounded-xl border border-[var(--gd)]/20 py-3 font-semibold text-[var(--gd)]">Sign in</button>
+            <button type="button" onClick={() => { close(); onAuth('register'); }} className="rounded-xl bg-[var(--o)] py-3 font-semibold text-white">Create account</button>
+          </div>
         </div>
       )}
     </header>
@@ -457,64 +459,71 @@ function Navbar({ theme, setTheme, t, onAdmin }) {
 /* ------------------------------ Sections ------------------------------ */
 function Hero() {
   const tr = useTranslate();
-  const accentText = tr('development excellence.');
+  const accent = tr('development excellence.');
   return (
-    <section id="home" className="relative isolate overflow-hidden bg-[#f8faf6] pb-32 pt-36 text-[var(--gd)] sm:pb-40 lg:pt-44">
-      {/* Layered, softly animated canvas inspired by evidence and data. */}
-      <div className="pointer-events-none absolute inset-0 -z-10" style={{ backgroundImage: 'radial-gradient(ellipse at 78% 30%, rgba(77,138,108,.18), transparent 40%), radial-gradient(ellipse at 8% 14%, rgba(243,160,68,.16), transparent 32%), linear-gradient(rgba(40,86,64,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(40,86,64,.035) 1px, transparent 1px)', backgroundSize: 'auto, auto, 46px 46px, 46px 46px' }} />
-      <div className="pointer-events-none absolute right-0 top-0 -z-10 h-[68%] w-[56%] rounded-bl-[48%] bg-gradient-to-bl from-white/80 via-emerald-100/45 to-transparent" />
-      <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-24 hidden h-52 w-60 rotate-[-8deg] rounded-3xl border border-white/80 bg-white/35 shadow-[0_24px_70px_rgba(39,88,58,.10)] sm:block lg:right-[12%] lg:top-32">
-        <div className="absolute inset-x-5 top-5 flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[var(--o)]/70" /><i className="h-2 w-2 rounded-full bg-[var(--g)]/60" /><span className="ml-auto h-1.5 w-12 rounded-full bg-[var(--g)]/15" /></div>
-        <div className="absolute inset-x-5 bottom-5 top-14 border-b border-l border-[var(--gd)]/10" style={{ backgroundImage: 'linear-gradient(to top, rgba(39,88,58,.05) 1px, transparent 1px)' }}>
-          <div className="absolute inset-x-2 bottom-0 h-[78%]" style={{ clipPath: 'polygon(0 76%, 18% 58%, 35% 67%, 53% 34%, 70% 45%, 87% 14%, 100% 23%, 100% 100%, 0 100%)', background: 'linear-gradient(180deg, rgba(120,185,138,.3), rgba(120,185,138,.025))' }} />
-          <svg viewBox="0 0 220 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible"><polyline points="0,72 40,54 78,63 116,33 154,43 192,14 220,22" fill="none" stroke="var(--g)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="192" cy="14" r="4" fill="var(--o)" /></svg>
-        </div>
+    <section id="home" className="relative isolate overflow-hidden bg-[#0c2a1c] pb-28 pt-[68px] text-white">
+      {/* animated aurora + grid */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        <div className="r4d-blob absolute -left-24 top-10 h-96 w-96 rounded-full bg-emerald-500/40 blur-[110px]" />
+        <div className="r4d-blob absolute right-0 top-1/3 h-[28rem] w-[28rem] rounded-full bg-orange-500/30 blur-[120px]" style={{ animationDelay: '-6s' }} />
+        <div className="absolute inset-0 opacity-60" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)', backgroundSize: '48px 48px', WebkitMaskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)', maskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)' }} />
+        <Spiral className="r4d-float absolute left-[46%] top-28 hidden w-16 text-[var(--o)]/70 lg:block" />
       </div>
-      <DashedArrow className="pointer-events-none absolute left-[9%] top-32 hidden w-56 text-[var(--g)] lg:block" />
-      <Spiral className="r4d-float pointer-events-none absolute right-[7%] top-28 hidden w-24 text-[var(--o)] lg:block" />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-2 lg:px-8 xl:grid-cols-[130px_1.1fr_1fr]">
-        {/* medal + ladder illustration */}
-        <div className="r4d-float hidden flex-col items-center gap-4 self-end xl:flex" aria-hidden="true">
-          <Medal className="w-28 text-[var(--g)]/30" star="var(--o)" />
-          <Ladder className="-mb-24 w-28 text-[var(--gd)]/20" rung="white" />
-        </div>
-
+      <div className="mx-auto grid min-h-[calc(100vh-68px)] max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.1fr_1fr] lg:px-8">
         <div>
-          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-emerald-800/15 bg-white/75 px-4 py-1.5 text-sm font-medium text-emerald-900 shadow-sm" style={{ animationDelay: '1.9s' }}>
-            <span className="h-2 w-2 rounded-full bg-[var(--o)]" /> {tr('Evidence drives change and transformation')}
+          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur" style={{ animationDelay: '1.9s' }}>
+            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--o)] opacity-75" /><span className="relative h-2 w-2 rounded-full bg-[var(--o)]" /></span>
+            {tr('Evidence drives change and transformation')}
           </p>
-          <h1 className="r4d-rise mt-6 text-3xl font-bold leading-[1.12] sm:text-4xl lg:text-[2.8rem]" style={{ animationDelay: '2s' }}>
-            <span className="text-[var(--gd)]">{tr('Research & learning for')} </span><span className="inline-block text-[var(--o)]" aria-label={accentText}>{Array.from(accentText).map((letter, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${i * 55}ms` }}>{letter === ' ' ? '\u00a0' : letter}</span>)}</span>
+          <h1 className="r4d-rise mt-6 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.6rem]" style={{ animationDelay: '2s' }}>
+            {tr('Research & learning for')}{' '}
+            <span className="bg-gradient-to-r from-emerald-300 via-[var(--o)] to-emerald-300 bg-clip-text text-transparent r4d-shine" aria-label={accent}>
+              {Array.from(accent).map((c, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${i * 55}ms` }}>{c === ' ' ? '\u00a0' : c}</span>)}
+            </span>
           </h1>
-          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-slate-700 sm:text-[1.05rem]" style={{ animationDelay: '2.15s' }}>
+          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg" style={{ animationDelay: '2.15s' }}>
             {tr('REL4D is a registered consultancy in Kigali that conducts research and evaluations and supports learning for international development programmes, using data analytics, machine learning and AI to get the most from evidence.')}
           </p>
-          <div className="r4d-rise mt-9 flex flex-wrap gap-3" style={{ animationDelay: '2.3s' }}>
-            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-8 py-4 font-semibold text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
-            <a href="#contact" className="rounded-xl border-2 border-[var(--gd)]/20 bg-white/70 px-8 py-4 font-semibold text-[var(--gd)] transition hover:border-[var(--gd)] hover:bg-[var(--gd)] hover:text-white">{tr('Request a proposal')}</a>
+          <div className="r4d-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: '2.3s' }}>
+            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-7 py-3.5 font-semibold text-white shadow-lg shadow-orange-900/30 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
+            <a href="#contact" className="rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 font-semibold backdrop-blur transition hover:bg-white hover:text-[var(--gd)]">{tr('Request a proposal')}</a>
+          </div>
+          {/* mini trust row */}
+          <div className="r4d-rise mt-10 grid max-w-lg grid-cols-3 gap-3" style={{ animationDelay: '2.45s' }}>
+            {[[50, '+', 'Projects'], [15, '+', 'Sectors'], [10, '+', 'Years']].map(([v, s, l]) => (
+              <div key={l} className="rounded-2xl border border-white/10 bg-white/[.07] px-4 py-3 backdrop-blur">
+                <p className="text-2xl font-extrabold"><CountUp to={v} suffix={s} /></p>
+                <p className="text-xs text-white/60">{tr(l)}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* circular hero photo with orange ring + quarter-circle accent */}
-        <div className="r4d-rise relative mx-auto w-full max-w-[300px] sm:max-w-[440px] lg:max-w-[500px]" style={{ animationDelay: '2.2s' }}>
-          <div className="absolute -inset-5 animate-pulse rounded-[46%] bg-gradient-to-br from-[var(--g)]/35 via-white/65 to-[var(--o)]/35 blur-md [animation-duration:6s] sm:-inset-7" />
-          <div className="absolute -bottom-5 -right-5 h-32 w-32 rounded-full bg-[var(--o)] shadow-xl shadow-orange-900/15 sm:-bottom-7 sm:-right-7 sm:h-40 sm:w-40" />
-          <div className="absolute -left-5 top-12 h-20 w-20 rounded-full border border-[var(--g)]/25 sm:-left-10 sm:h-28 sm:w-28" />
-          <div className="relative aspect-[.94/1] rotate-2 rounded-[46%] bg-white p-2 shadow-2xl shadow-emerald-950/20 ring-1 ring-[var(--gd)]/10 sm:aspect-square">
-            <div className="h-full w-full -rotate-2 overflow-hidden rounded-[46%] border-[6px] border-white">
-              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full object-cover object-[center_28%] transition duration-700 hover:scale-105" />
+        <div className="r4d-rise relative mx-auto w-full max-w-[420px] px-5 pb-5 pt-4 sm:px-8" style={{ animationDelay: '2.2s' }}>
+          <div className="r4d-orbit absolute left-1/2 top-1/2 aspect-square w-[94%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-emerald-200/30" />
+          <div className="r4d-portrait-ring relative mx-auto aspect-square w-full max-w-[360px] rounded-full p-[7px]">
+            <div className="absolute inset-[8px] rounded-full border border-white/35" />
+            <div className="relative h-full w-full overflow-hidden rounded-full border-[5px] border-[#0c2a1c] bg-white/10 shadow-[0_30px_90px_-20px_rgba(0,0,0,.7)] ring-1 ring-white/35">
+              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full rounded-full object-cover object-[center_20%] transition duration-700 hover:scale-105" />
+              <div className="absolute inset-x-6 bottom-5 rounded-2xl border border-white/25 bg-[#07140d]/65 px-4 py-3 text-center backdrop-blur-md">
+                <p className="font-bold">Jean Willy ULIHO</p><p className="text-xs text-white/75">{tr('Managing Director')} · REL4D Ltd</p>
+              </div>
             </div>
           </div>
-          <div className="r4d-float absolute -left-3 bottom-10 flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 text-[var(--gd)] shadow-xl sm:-left-8">
+          <span className="r4d-orbit-dot absolute left-[13%] top-[24%] h-3 w-3 rounded-full bg-[var(--o)] shadow-[0_0_22px_rgba(243,160,68,.9)]" />
+          <span className="r4d-orbit-dot absolute bottom-[13%] right-[17%] h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_20px_rgba(110,231,183,.9)]" />
+          <div className="r4d-float absolute -left-1 top-16 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/95 px-3 py-2.5 text-[var(--gd)] shadow-xl sm:-left-3">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--g)] text-white"><BadgeCheck size={20} /></span>
             <span className="text-sm font-bold leading-tight">{tr('50+ projects')}<span className="block text-xs font-medium text-black/50">{tr('delivered across Rwanda')}</span></span>
           </div>
+          <div className="r4d-float absolute -right-1 top-1/2 w-36 rounded-2xl border border-white/20 bg-white/95 p-3 text-[var(--gd)] shadow-xl sm:-right-3" style={{ animationDelay: '-2s' }}>
+            <div className="flex items-center justify-between text-[.65rem] font-bold uppercase text-black/50"><span>Impact</span><TrendingUp size={13} className="text-[var(--o)]" /></div>
+            <svg viewBox="0 0 120 40" className="mt-1 h-10 w-full"><polyline points="0,32 20,24 40,28 60,14 80,18 100,6 120,10" fill="none" stroke="var(--g)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="100" cy="6" r="3" fill="var(--o)" /></svg>
+          </div>
         </div>
       </div>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-0 h-20 rounded-t-[55%] bg-white sm:h-28" />
-      <Curve />
+      <Curve className="text-[var(--paper)]" />
     </section>
   );
 }
@@ -786,6 +795,80 @@ function Projects() {
   );
 }
 
+function Careers() {
+  const tr = useTranslate();
+  const [openings, setOpenings] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [applicationOpen, setApplicationOpen] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', cvUrl: '' });
+  const [cv, setCv] = useState(null);
+  const [status, setStatus] = useState('idle');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch(`${API}/api/openings`).then((r) => r.ok ? r.json() : []).then((items) => setOpenings(Array.isArray(items) ? items : [])).catch(() => setOpenings([]));
+  }, []);
+
+  const apply = async (e) => {
+    e.preventDefault();
+    if (status === 'sending') return;
+    setStatus('sending'); setError('');
+    try {
+      let cvData = null;
+      if (cv) {
+        const base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result).split(',')[1]);
+          reader.onerror = () => reject(new Error('Could not read the CV file.'));
+          reader.readAsDataURL(cv);
+        });
+        cvData = { name: cv.name, data: base64 };
+      }
+      const res = await fetch(`${API}/api/applications`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ opening_id: selected?.id || null, name: form.name, email: form.email, phone: form.phone, message: form.message, cv_url: form.cvUrl, cv: cvData }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Application could not be submitted.');
+      setStatus('sent'); setForm({ name: '', email: '', phone: '', message: '', cvUrl: '' }); setCv(null);
+    } catch (err) { setError(err.message); setStatus('idle'); }
+  };
+
+  return (
+    <section id="careers" className="bg-[var(--gs)] py-24">
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <Heading title="Careers at" accent="REL4D" text="Join a team turning evidence into better decisions and stronger development programmes." />
+        {openings.length ? (
+          <>
+            <div className="grid gap-5 md:grid-cols-2">
+              {openings.map((opening, i) => {
+                const data = opening.data || opening;
+                return <Reveal key={opening.id || i} delay={i * 80} className="h-full"><article className="flex h-full flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm"><div className="flex flex-wrap gap-2 text-xs font-bold"><span className="rounded-full bg-[var(--os)] px-3 py-1 text-[var(--od)]">{tr(data.type || 'Consultancy')}</span><span className="rounded-full bg-[var(--gs)] px-3 py-1 text-[var(--gd)]">{tr(data.location || 'Kigali, Rwanda')}</span></div><h3 className="mt-5 text-xl font-bold text-[var(--gd)]">{data.title}</h3><p className="mt-3 flex-1 text-sm leading-relaxed text-black/65">{tr(data.description)}</p>{data.deadline && <p className="mt-4 text-xs font-semibold text-black/50">Deadline: {data.deadline}</p>}<button type="button" onClick={() => { setSelected(opening); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--o)]">Apply for this role <ArrowUpRight size={16} /></button></article></Reveal>;
+              })}
+            </div>
+            <div className="mt-8 text-center">
+              <p className="text-sm text-black/60">Don't see a role that fits? Send us an open application.</p>
+              <button type="button" onClick={() => { setSelected(null); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-3 rounded-xl border border-[var(--gd)]/20 bg-white px-5 py-3 text-sm font-bold text-[var(--gd)] transition hover:border-[var(--o)] hover:text-[var(--od)]">Apply to join REL4D</button>
+            </div>
+          </>
+        ) : (
+          <Reveal><div className="rounded-3xl border border-black/10 bg-white p-8 text-center"><Briefcase className="mx-auto text-[var(--o)]" /><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">No public vacancies right now</h3><p className="mt-2 text-sm text-black/60">You can still send an open application and tell us how you can contribute.</p><button type="button" onClick={() => { setSelected(null); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white transition hover:bg-[var(--o)]">Send an open application</button></div></Reveal>
+        )}
+      </div>
+
+      {applicationOpen || status === 'sent' ? createPortal(
+        <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) { setApplicationOpen(false); setSelected(null); } }}>
+          <div className="r4d-pop w-full max-w-lg rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
+            <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D Careers</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); }} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5"><X size={18} /></button></div>
+            {status === 'sent' ? <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]"/><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); setStatus('idle'); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white">Close</button></div> : (
+              <form onSubmit={apply} className="mt-5 space-y-3"><input required placeholder="Full name" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}/><input required type="email" placeholder="Email address" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}/><input placeholder="Phone number" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}/><textarea placeholder="Short cover note" rows="4" className="w-full resize-y rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}/><input type="url" placeholder="CV link (Google Drive, Dropbox, LinkedIn…)" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.cvUrl} onChange={(e) => setForm({ ...form, cvUrl: e.target.value })}/><div><label className="block text-xs font-bold text-black/55">Or attach CV (PDF or Word, max 2.5 MB)</label><input type="file" accept=".pdf,.doc,.docx" className="mt-2 block w-full text-sm" onChange={(e) => setCv(e.target.files?.[0] || null)}/></div>{error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}<Btn type="submit" loading={status === 'sending'} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3.5 font-bold text-white transition hover:bg-[var(--o)]">Submit application <Send size={16}/></Btn></form>
+            )}
+          </div>
+        </div>, document.body) : null}
+    </section>
+  );
+}
+
 function Credentials() {
   const tr = useTranslate();
   return (
@@ -816,18 +899,33 @@ function Credentials() {
   );
 }
 
+const DEFAULT_TEAM_MEMBERS = [
+  { name: 'Jean Willy ULIHO', role: 'Managing Director',
+    photo: LEADER_IMAGE,
+    bio: 'Data scientist and MERL specialist with more than 10 years of experience across education, early childhood, youth, OVC, health systems and social protection programmes. Holds a Postgraduate Diploma in Public Health Research from James Lind Institute and a BSc in Clinical Psychology from the University of Rwanda. Fluent in English, French and Kinyarwanda.' },
+  { name: 'Research Team', role: 'Technical experts',
+    bio: 'Specialists in survey design, field data collection, analysis and distilling insights across development sectors.' },
+  { name: 'Data Analytics Team', role: 'Data scientists',
+    bio: 'Experts in machine learning, AI for development, predictive modelling and data visualisation systems.' },
+];
+
 function Team() {
   const tr = useTranslate();
-  const [photoBad, setPhotoBad] = useState(false);
-  const members = [
-    { name: 'Jean Willy ULIHO', role: 'Managing Director',
-      photo: LEADER_IMAGE,
-      bio: 'Data scientist and MERL specialist with more than 10 years of experience across education, early childhood, youth, OVC and health systems programmes. MSc Financial Engineering (in progress), Postgraduate in Public Health Research (James Lind Institute) and BSc Clinical Psychology (University of Rwanda). Fluent in English, French and Kinyarwanda.' },
-    { name: 'Research Team', role: 'Technical experts',
-      bio: 'Specialists in survey design, field data collection, analysis and distilling insights across development sectors.' },
-    { name: 'Data Analytics Team', role: 'Data scientists',
-      bio: 'Experts in machine learning, AI for development, predictive modelling and data visualisation systems.' },
-  ];
+  const [savedMembers, setSavedMembers] = useState(null);
+  const [failedPhotos, setFailedPhotos] = useState(() => new Set());
+  useEffect(() => {
+    fetch(`${API}/api/team`)
+      .then((response) => response.ok ? response.json() : [])
+      .then((items) => setSavedMembers(Array.isArray(items) && items.length ? items.map((item) => ({
+        id: item.id,
+        name: item.title,
+        role: item.role,
+        photo: item.image,
+        bio: item.description,
+      })) : DEFAULT_TEAM_MEMBERS))
+      .catch(() => setSavedMembers(DEFAULT_TEAM_MEMBERS));
+  }, []);
+  const members = savedMembers || DEFAULT_TEAM_MEMBERS;
   return (
     <section id="team" className="relative overflow-hidden bg-[var(--gd)] py-28 text-white sm:py-36">
       <Curve flip />
@@ -836,14 +934,16 @@ function Team() {
         <Heading title="Our" accent="leadership" text="Experienced professionals driving evidence-based transformation." light />
         <div className="grid gap-6 md:grid-cols-3">
           {members.map((m, i) => (
-            <Reveal key={m.name} delay={i * 100} className={i === 0 ? 'md:col-span-3 lg:col-span-1' : ''}>
+            <Reveal key={m.id || m.name} delay={i * 100} className={i === 0 ? 'md:col-span-3 lg:col-span-1' : ''}>
               <div className="h-full rounded-3xl rounded-tr-xl border border-white/15 bg-white/5 p-8 text-center backdrop-blur transition hover:border-[var(--o)]">
-                {m.photo && !photoBad ? (
-                  <div className="mx-auto h-32 w-32 rounded-full bg-white p-1.5">
-                    <img src={m.photo} alt={m.name} onError={() => setPhotoBad(true)} className="h-full w-full rounded-full border-4 border-[var(--o)] object-cover" />
+                {m.photo && !failedPhotos.has(m.name) ? (
+                  <div className="r4d-portrait-ring mx-auto h-36 w-36 rounded-full p-[5px]">
+                    <div className="h-full w-full overflow-hidden rounded-full border-4 border-[var(--gd)] bg-white shadow-xl ring-2 ring-white/50">
+                      <img src={m.photo} alt={m.name} onError={() => setFailedPhotos((current) => new Set(current).add(m.name))} className="h-full w-full rounded-full object-cover object-[center_20%] transition duration-500 hover:scale-110" />
+                    </div>
                   </div>
                 ) : (
-                  <div className="mx-auto grid h-32 w-32 place-items-center rounded-full bg-gradient-to-br from-[var(--g)] to-[var(--o)] text-3xl font-bold">{m.name[0]}</div>
+                  <div className="r4d-portrait-ring mx-auto grid h-36 w-36 place-items-center rounded-full p-[5px] text-3xl font-bold"><span className="grid h-full w-full place-items-center rounded-full border-4 border-[var(--gd)] bg-gradient-to-br from-[var(--g)] to-[var(--o)]">{m.name?.[0] || '?'}</span></div>
                 )}
                 <h3 className="mt-5 text-lg font-bold">{tr(m.name)}</h3>
                 <p className="mt-1 text-sm font-medium text-[var(--o)]">{tr(m.role)}</p>
@@ -989,7 +1089,7 @@ async function apiRequest(path, { token, method = 'GET', body, raw = false } = {
   try {
     res = await fetch(`${API}${path}`, {
       method,
-      headers: { ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      headers: { ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: 'Bearer ' + token } : {}) },
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   } catch {
@@ -1051,6 +1151,12 @@ const OPENING_FIELDS = [
   { name: 'deadline', label: 'Deadline' },
   { name: 'description', label: 'Description', type: 'textarea', required: true },
 ];
+const TEAM_FIELDS = [
+  { name: 'title', label: 'Name or team name', required: true },
+  { name: 'role', label: 'Role', required: true },
+  { name: 'image', label: 'Profile photo', type: 'image' },
+  { name: 'description', label: 'Biography', type: 'textarea', required: true },
+];
 
 const APP_STATUS_STYLE = {
   new: 'bg-orange-400/15 text-orange-200 ring-orange-300/30',
@@ -1059,12 +1165,20 @@ const APP_STATUS_STYLE = {
   rejected: 'bg-red-400/15 text-red-200 ring-red-300/30',
   hired: 'bg-violet-400/15 text-violet-200 ring-violet-300/30',
 };
+const STATUS_COLOR = {
+  new: '#fb923c',
+  reviewing: '#38bdf8',
+  shortlisted: '#34d399',
+  rejected: '#f87171',
+  hired: '#a78bfa',
+};
 const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'rejected', 'hired'];
 
 const ADMIN_TABS = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'messages', label: 'Messages', icon: MessageSquare },
   { id: 'projects', label: 'Projects', icon: FolderKanban },
+  { id: 'team', label: 'Team', icon: UserRound },
   { id: 'openings', label: 'Careers', icon: Briefcase },
   { id: 'applications', label: 'Applications', icon: FileText },
   { id: 'users', label: 'Users', icon: Users },
@@ -1110,6 +1224,45 @@ select.adm-input option{background:#0d1d15;color:#f1f7f2}
 @media (prefers-reduced-motion:reduce){.adm-blob,.adm-title,.adm-pulse,.adm-line{animation:none}}
 `;
 
+const ADMIN_CSS_EXTRA = `
+.adm{transition:background .25s,color .25s}
+.adm[data-t="light"]{color:#17261d;background:#eef3ef}
+.adm[data-t="light"] .adm-blob{opacity:.22}
+.adm[data-t="light"] .adm-grid{background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px)}
+.adm[data-t="light"] .adm-glass{background:#fff;border-color:rgba(20,40,28,.1);box-shadow:0 10px 30px -18px rgba(20,40,28,.35)}
+.adm[data-t="light"] .adm-input{background:#fff;color:#17261d;border-color:rgba(20,40,28,.18)}
+.adm[data-t="light"] .adm-input::placeholder{color:rgba(23,38,29,.4)}
+.adm[data-t="light"] select.adm-input option{background:#fff;color:#17261d}
+.adm[data-t="light"] .adm-label{color:rgba(23,38,29,.6)}
+.adm[data-t="light"] .adm-btn-ghost{color:#17261d;border-color:rgba(20,40,28,.16);background:rgba(20,40,28,.04)}
+.adm[data-t="light"] .adm-btn-ghost:hover:not(:disabled){background:rgba(20,40,28,.1)}
+.adm[data-t="light"] .adm-btn-danger{color:#b91c1c;background:rgba(239,68,68,.08)}
+.adm[data-t="light"] .adm-nav{color:rgba(23,38,29,.7)}
+.adm[data-t="light"] .adm-nav:hover{background:rgba(20,40,28,.06);color:#000}
+.adm[data-t="light"] .adm-nav[data-active="true"]{color:#0b2616;background:linear-gradient(120deg,rgba(74,222,128,.3),rgba(243,160,68,.28))}
+.adm[data-t="light"] .adm-title{background-image:linear-gradient(90deg,#14532d,#15803d,#d9822e,#14532d);background-size:200% auto;-webkit-background-clip:text;background-clip:text}
+.adm[data-t="light"] .adm-row:hover{background:rgba(20,40,28,.05)}
+.adm[data-t="light"] [class*="text-white"]{color:rgba(23,38,29,.72)!important}
+.adm[data-t="light"] [class*="bg-black/"]{background-color:rgba(20,40,28,.05)!important}
+.adm[data-t="light"] [class*="border-white/"]{border-color:rgba(20,40,28,.1)!important}
+.adm[data-t="light"] .text-emerald-200,.adm[data-t="light"] .text-emerald-300{color:#15803d!important}
+.adm[data-t="light"] .text-orange-200,.adm[data-t="light"] .text-orange-300{color:#c2410c!important}
+.adm[data-t="light"] .text-red-200,.adm[data-t="light"] .text-red-100{color:#b91c1c!important}
+.adm[data-t="light"] .adm-btn,.adm[data-t="light"] .adm-btn *,.adm[data-t="light"] .bg-gradient-to-br *{color:#fff!important}
+.adm[data-t="light"]{background:#f5f7f5!important}
+.adm[data-t="light"] .adm-bg{background:linear-gradient(145deg,#f8faf8,#eef3ef)}
+.adm[data-t="light"] .adm-title{color:#285640!important}
+.adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09)!important}
+.adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)!important}
+`;
+function ThemeToggle({ theme, setTheme }) {
+  return (
+    <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="adm-btn-ghost" aria-label="Toggle admin theme">
+      {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}<span className="hidden sm:inline">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+    </button>
+  );
+}
+
 function AdminBackdrop() {
   return (
     <div className="adm-bg" aria-hidden="true">
@@ -1121,53 +1274,68 @@ function AdminBackdrop() {
   );
 }
 
+const SOCIAL_PROVIDERS = [
+  { id: 'google', label: 'Google', mark: 'G', color: 'text-[#4285F4]' },
+  { id: 'linkedin', label: 'LinkedIn', mark: 'in', color: 'bg-[#0A66C2] text-white' },
+  { id: 'facebook', label: 'Facebook', mark: 'f', color: 'bg-[#1877F2] text-white' },
+  { id: 'github', label: 'GitHub', mark: 'GH', color: 'bg-[#24292f] text-white' },
+];
+
+function SocialAuthButtons({ intent }) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {SOCIAL_PROVIDERS.map((provider) => (
+        <button
+          key={provider.id}
+          type="button"
+          onClick={() => {
+            const query = intent === 'admin' ? '?intent=admin' : '';
+            window.location.assign(`${API}/api/auth/${provider.id}${query}`);
+          }}
+          className="flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-3 py-3 text-sm font-semibold text-[#24372c] transition hover:border-[var(--g)] hover:bg-[var(--gs)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--g)]/20"
+        >
+          <span className={`grid h-5 min-w-5 place-items-center rounded text-xs font-extrabold ${provider.color}`}>{provider.mark}</span>
+          <span>Continue with {provider.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /* ----- the pop-up that appears when you press the Admin button ----- */
-function AdminLogin({ onLoggedIn, onClose }) {
+function AdminLogin({ onLoggedIn, onClose, notice }) {
   const [creds, setCreds] = useState({ email: '', password: '' });
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
   const submit = async (e) => {
-    e.preventDefault();
-    if (loading) return;
-    setError('');
-    setLoading(true);
-    try {
-      const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds });
-      onLoggedIn(data.token, data.user);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
+    e.preventDefault(); if (loading) return;
+    setError(''); setLoading(true);
+    try { const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds }); onLoggedIn(data.token, data.user); }
+    catch (err) { setError(err.message); setLoading(false); }
   };
-
   return (
-    <div className="absolute inset-0 grid place-items-center overflow-y-auto p-4"
+    <div className="absolute inset-0 grid place-items-center overflow-y-auto bg-[#eef3ef] p-4"
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="adm-in w-full max-w-md rounded-[1.75rem] bg-gradient-to-br from-emerald-400 via-orange-300 to-emerald-600 p-[1.5px] shadow-[0_30px_90px_-20px_rgba(0,0,0,.9)]">
-        <div className="relative overflow-hidden rounded-[1.7rem] bg-[#07140d]/95 p-8 backdrop-blur-xl">
-          <button type="button" onClick={onClose} aria-label="Close" className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white"><X size={18} /></button>
-          <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-white p-2 adm-pulse"><img src={logo} alt="REL4D" className="h-full w-full object-contain" /></div>
-          <p className="mt-5 text-center text-[.7rem] font-bold uppercase tracking-[.25em] text-orange-300">REL4D administration</p>
-          <h2 className="adm-title mt-1 text-center text-3xl font-extrabold">Admin sign in</h2>
-          <p className="mt-2 text-center text-sm text-white/55">Manage messages, projects, careers and applications.</p>
+      <div className="adm-in w-full max-w-md overflow-hidden rounded-3xl border border-black/[.07] bg-white shadow-[0_24px_70px_-24px_rgba(23,38,29,.45)]">
+        <div className="flex justify-end px-5 pt-5"><button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-black/55 transition hover:bg-[var(--gs)] hover:text-[var(--gd)]"><X size={18}/></button></div>
+        <div className="px-8 pb-8">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-black/[.06] bg-[var(--gs)] p-2"><img src={logo} alt="REL4D" className="h-full w-full object-contain"/></div>
+          <p className="mt-5 text-center text-[.68rem] font-extrabold uppercase tracking-[.22em] text-[var(--o)]">REL4D administration</p>
+          <h2 className="mt-1 text-center text-3xl font-extrabold text-[var(--gd)]">Welcome back</h2>
+          <p className="mt-2 text-center text-sm text-black/50">Sign in to manage your website.</p>
+          {notice && <p role="alert" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
+          <div className="mt-6">
+            <SocialAuthButtons intent="admin" />
+            <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10" />or sign in with administrator email<span className="h-px flex-1 bg-black/10" /></div>
+          </div>
           <form onSubmit={submit} className="mt-7 space-y-4">
-            <div>
-              <label className="adm-label" htmlFor="adm-email">Email</label>
-              <input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com" />
-            </div>
-            <div>
-              <label className="adm-label" htmlFor="adm-pass">Password</label>
-              <div className="relative">
-                <input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="••••••••" />
-                <button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-white/55 hover:text-white">{show ? <EyeOff size={17} /> : <Eye size={17} />}</button>
-              </div>
-            </div>
-            {error && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">{error}</p>}
-            <Btn type="submit" loading={loading} className="adm-btn w-full !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''} />{loading ? 'Signing in…' : 'Sign in securely'}</Btn>
+            <div><label className="adm-label" htmlFor="adm-email">Email address</label><input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com"/></div>
+            <div><label className="adm-label" htmlFor="adm-pass">Password</label><div className="relative"><input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="Enter your password"/><button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-black/45 hover:bg-black/5">{show ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div></div>
+            {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            <Btn type="submit" loading={loading} className="adm-btn w-full !rounded-xl !bg-[var(--gd)] !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''}/>{loading ? 'Signing in…' : 'Sign in'}</Btn>
           </form>
-          <button type="button" onClick={onClose} className="mx-auto mt-5 block text-sm font-semibold text-white/55 transition hover:text-white">← Back to website</button>
+          <button type="button" onClick={onClose} className="mx-auto mt-5 block text-sm font-semibold text-black/45 transition hover:text-[var(--gd)]">← Back to website</button>
         </div>
       </div>
     </div>
@@ -1198,23 +1366,96 @@ function Empty({ icon: Icon, text }) {
   );
 }
 
+function AuthModal({ mode, setMode, onClose, onDone, notice }) {
+  const [f, setF] = useState({ name: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [show, setShow] = useState(false);
+  const reg = mode === 'register';
+  const submit = async (e) => {
+    e.preventDefault();
+    setError(''); setLoading(true);
+    try {
+      const data = await apiRequest(reg ? '/api/auth/register' : '/api/auth/login', { method: 'POST', body: reg ? f : { email: f.email, password: f.password } });
+      onDone(data.token, data.user);
+    } catch (err) { setError(err.message); setLoading(false); }
+  };
+  return createPortal(
+    <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }} role="dialog" aria-modal="true">
+      <div className="r4d-pop max-h-[92vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
+        <div className="flex items-start justify-between">
+          <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{reg ? 'Create your account' : 'Welcome back'}</h2></div>
+          <button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5"><X size={18} /></button>
+        </div>
+        <div className="mt-5 grid grid-cols-2 rounded-xl bg-[var(--gs)] p-1 text-sm font-semibold">
+          {[['login', 'Sign in'], ['register', 'Create account']].map(([m, l]) => <button key={m} type="button" onClick={() => { setMode(m); setError(''); }} className={`rounded-lg py-2 transition ${mode === m ? 'bg-white text-[var(--gd)] shadow' : 'text-black/55'}`}>{l}</button>)}
+        </div>
+        {reg && <p className="mt-4 text-sm leading-relaxed text-black/55">Create a REL4D account to stay connected. If you are interested in joining the team, you can then submit your CV through Careers.</p>}
+        <div className="mt-5"><SocialAuthButtons intent="user" /></div>
+        <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10"/>or continue with email<span className="h-px flex-1 bg-black/10"/></div>
+        {notice && <p role="alert" className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
+        <form onSubmit={submit} className="mt-5 space-y-3.5">
+          {reg && <input required className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Full name" autoComplete="name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
+          <input required type="email" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Email address" autoComplete="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
+          <div className="relative">
+            <input required minLength={reg ? 8 : 1} type={show ? 'text' : 'password'} className="w-full rounded-xl border border-black/15 px-4 py-3 pr-11 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder={reg ? 'Password (8+ characters)' : 'Password'} autoComplete={reg ? 'new-password' : 'current-password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
+            <button type="button" onClick={() => setShow((v) => !v)} aria-label="Toggle password" className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center text-black/50">{show ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+          </div>
+          {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
+          <Btn type="submit" loading={loading} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:opacity-70">{reg ? 'Create account' : 'Sign in'}</Btn>
+        </form>
+      </div>
+    </div>, document.body);
+}
+
 /* ----- Overview: stats, 14-day chart, quick actions ----- */
 function Sparkline({ values }) {
-  const w = 640, h = 170, pad = 14;
+  const w = 640, h = 120, pad = 10;
   const max = Math.max(1, ...values);
   const pts = values.map((v, i) => [pad + (i * (w - pad * 2)) / Math.max(1, values.length - 1), h - pad - (v / max) * (h - pad * 2)]);
   const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
   const area = `${line} L${pts[pts.length - 1][0]},${h - pad} L${pts[0][0]},${h - pad} Z`;
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="h-44 w-full" preserveAspectRatio="none" role="img" aria-label="Messages received in the last 14 days">
+    <svg viewBox={`0 0 ${w} ${h}`} className="h-32 w-full" preserveAspectRatio="none" role="img" aria-label="Messages in the last 14 days">
       <defs>
-        <linearGradient id="adm-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#4ade80" stopOpacity=".45" /><stop offset="1" stopColor="#4ade80" stopOpacity="0" /></linearGradient>
+        <linearGradient id="adm-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#4ade80" stopOpacity=".4" /><stop offset="1" stopColor="#4ade80" stopOpacity="0" /></linearGradient>
         <linearGradient id="adm-stroke" x1="0" x2="1"><stop offset="0" stopColor="#4ade80" /><stop offset="1" stopColor="#f3a044" /></linearGradient>
       </defs>
-      {[0.25, 0.5, 0.75].map((f) => <line key={f} x1={pad} x2={w - pad} y1={pad + f * (h - pad * 2)} y2={pad + f * (h - pad * 2)} stroke="rgba(255,255,255,.07)" />)}
+      {[0.25, 0.5, 0.75].map((f) => <line key={f} x1={pad} x2={w - pad} y1={pad + f * (h - pad * 2)} y2={pad + f * (h - pad * 2)} stroke="currentColor" strokeOpacity=".1" />)}
       <path d={area} fill="url(#adm-fill)" />
-      <path d={line} fill="none" stroke="url(#adm-stroke)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="adm-line" />
-      {pts.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={values[i] ? 4 : 2.2} fill={values[i] ? '#f3a044' : 'rgba(255,255,255,.3)'} />)}
+      <path d={line} fill="none" stroke="url(#adm-stroke)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="adm-line" />
+      {pts.map(([x, y], i) => values[i] > 0 && <circle key={i} cx={x} cy={y} r="3" fill="#f3a044" />)}
+    </svg>
+  );
+}
+
+function Donut({ data }) {
+  const total = data.reduce((sum, item) => sum + item.n, 0);
+  const circumference = 2 * Math.PI * 34;
+  let offset = 0;
+  return (
+    <svg viewBox="0 0 80 80" className="h-20 w-20 shrink-0" role="img" aria-label="Applications by status">
+      <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeOpacity=".12" strokeWidth="10" />
+      {total > 0 && data.map(({ s, n }) => {
+        const length = (n / total) * circumference;
+        const segment = (
+          <circle
+            key={s}
+            cx="40"
+            cy="40"
+            r="34"
+            fill="none"
+            stroke={STATUS_COLOR[s]}
+            strokeWidth="10"
+            strokeDasharray={`${length} ${circumference - length}`}
+            strokeDashoffset={-offset}
+            transform="rotate(-90 40 40)"
+          />
+        );
+        offset += length;
+        return segment;
+      })}
+      <text x="40" y="43" textAnchor="middle" className="fill-current text-[12px] font-bold">{total}</text>
     </svg>
   );
 }
@@ -1229,63 +1470,63 @@ const STAT_CARDS = [
   { key: 'openings', label: 'Open positions', icon: Briefcase, tone: 'from-rose-500 to-orange-400', tab: 'openings' },
 ];
 
-function Overview({ stats, messages, applications, goto, user }) {
+function Overview({ stats, messages, applications, users = [], goto, user }) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
   const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - i)); return d; });
-  const counts = days.map((d) => messages.filter((m) => { const t = new Date(m.created_at).getTime(); return t >= d.getTime() && t < d.getTime() + 86400000; }).length);
+  const inDay = (list, key, d) => list.filter((m) => { const t = new Date(m[key]).getTime(); return t >= d.getTime() && t < d.getTime() + 86400000; }).length;
+  const counts = days.map((d) => inDay(messages, 'created_at', d));
+  const signups = days.map((d) => inDay(users, 'created_at', d));
   const byStatus = APP_STATUSES.map((s) => ({ s, n: applications.filter((a) => a.status === s).length }));
-  const totalApps = Math.max(1, applications.length);
+  const svc = Object.entries(messages.reduce((a, m) => { const k = m.service || 'General'; a[k] = (a[k] || 0) + 1; return a; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const svcMax = Math.max(1, ...svc.map(([, n]) => n));
   return (
-    <Panel title={`${greeting}, ${(user?.name || 'Admin').split(' ')[0]}`} subtitle="Here is what is happening on your website today.">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+    <Panel title={`${greeting}, ${(user?.name || 'Admin').split(' ')[0]}`} subtitle="Website activity at a glance.">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-7">
         {STAT_CARDS.map((c, i) => (
-          <button key={c.key} type="button" onClick={() => goto(c.tab)} style={{ animationDelay: `${i * 60}ms` }}
-            className="adm-glass adm-in group relative overflow-hidden rounded-2xl p-5 text-left transition hover:-translate-y-1 hover:border-white/25">
-            <span className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${c.tone} opacity-30 blur-xl transition group-hover:opacity-60`} />
-            <span className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${c.tone} text-white shadow-lg`}><c.icon size={20} /></span>
-            <p className="mt-4 text-3xl font-extrabold tracking-tight text-white"><CountUp to={Number(stats?.[c.key] || 0)} /></p>
-            <p className="mt-0.5 text-xs font-bold uppercase tracking-wider text-white/50">{c.label}</p>
+          <button key={c.key} type="button" onClick={() => goto(c.tab)} style={{ animationDelay: `${i * 40}ms` }} className="adm-glass adm-in flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition hover:-translate-y-0.5">
+            <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br ${c.tone} text-white`}><c.icon size={15} /></span>
+            <span className="min-w-0"><span className="block text-lg font-extrabold leading-none"><CountUp to={Number(stats?.[c.key] || 0)} /></span><span className="mt-1 block truncate text-[.62rem] font-bold uppercase tracking-wider opacity-55">{c.label}</span></span>
           </button>
         ))}
       </div>
 
-      <div className="mt-6 grid gap-5 xl:grid-cols-[1.6fr_1fr]">
-        <div className="adm-glass rounded-2xl p-6">
-          <div className="flex items-center justify-between"><h3 className="font-bold">Messages · last 14 days</h3><span className="adm-chip bg-emerald-400/15 text-emerald-200">{counts.reduce((a, b) => a + b, 0)} received</span></div>
-          <div className="mt-4"><Sparkline values={counts} /></div>
-          <div className="mt-1 flex justify-between text-[.7rem] text-white/40"><span>{days[0].toLocaleDateString([], { month: 'short', day: 'numeric' })}</span><span>Today</span></div>
+      <div className="mt-4 grid gap-3 xl:grid-cols-[1.5fr_1fr]">
+        <div className="adm-glass rounded-xl p-4">
+          <div className="flex items-center justify-between"><h3 className="text-sm font-bold">Messages · 14 days</h3><span className="adm-chip bg-emerald-400/15 text-emerald-300">{counts.reduce((a, b) => a + b, 0)}</span></div>
+          <Sparkline values={counts} />
+          <div className="flex justify-between text-[.65rem] opacity-45"><span>{days[0].toLocaleDateString([], { month: 'short', day: 'numeric' })}</span><span>Today</span></div>
         </div>
-        <div className="adm-glass rounded-2xl p-6">
-          <h3 className="font-bold">Applications pipeline</h3>
-          <div className="mt-5 space-y-3.5">
-            {byStatus.map(({ s, n }) => (
-              <div key={s}>
-                <div className="mb-1 flex justify-between text-xs"><span className="font-semibold capitalize text-white/75">{s}</span><span className="text-white/50">{n}</span></div>
-                <div className="h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300 transition-all duration-700" style={{ width: `${(n / totalApps) * 100}%` }} /></div>
-              </div>
-            ))}
+        <div className="adm-glass rounded-xl p-4">
+          <h3 className="text-sm font-bold">Applications by status</h3>
+          <div className="mt-3 flex items-center gap-4">
+            <Donut data={byStatus} />
+            <ul className="flex-1 space-y-1.5 text-xs">{byStatus.map(({ s, n }) => <li key={s} className="flex items-center gap-2"><i className="h-2 w-2 rounded-full" style={{ background: STATUS_COLOR[s] }} /><span className="capitalize opacity-75">{s}</span><b className="ml-auto">{n}</b></li>)}</ul>
           </div>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-2">
-        <div className="adm-glass rounded-2xl p-6">
-          <div className="mb-3 flex items-center justify-between"><h3 className="font-bold">Latest messages</h3><button type="button" onClick={() => goto('messages')} className="text-xs font-bold text-orange-300 hover:underline">View all</button></div>
-          {messages.length === 0 ? <Empty icon={Inbox} text="No messages yet." /> : messages.slice(0, 5).map((m) => (
-            <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 text-sm font-semibold">{m.name}{!m.is_read && <i className="h-2 w-2 rounded-full bg-orange-400" />}</span><span className="block truncate text-xs text-white/50">{m.message}</span></span>
-            </button>
-          ))}
-        </div>
-        <div className="adm-glass rounded-2xl p-6">
-          <h3 className="mb-3 font-bold">Quick actions</h3>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[['Add a project', FolderKanban, 'projects'], ['Post a job opening', Briefcase, 'openings'], ['Review applications', FileText, 'applications'], ['Change password', KeyRound, 'settings']].map(([label, Icon, tab]) => (
-              <button key={label} type="button" onClick={() => goto(tab)} className="adm-btn-ghost !justify-start !py-4"><Icon size={17} className="text-orange-300" />{label}</button>
+      <div className="mt-3 grid gap-3 lg:grid-cols-3">
+        <div className="adm-glass rounded-xl p-4">
+          <h3 className="text-sm font-bold">Enquiries by service</h3>
+          <div className="mt-3 space-y-2.5">
+            {svc.length === 0 ? <p className="text-xs opacity-50">No data yet.</p> : svc.map(([k, n]) => (
+              <div key={k}><div className="mb-1 flex justify-between text-xs"><span className="truncate opacity-75">{k}</span><b>{n}</b></div><div className="h-1.5 overflow-hidden rounded-full bg-current/10" style={{ background: 'rgba(127,127,127,.18)' }}><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300" style={{ width: `${(n / svcMax) * 100}%` }} /></div></div>
             ))}
           </div>
+        </div>
+        <div className="adm-glass rounded-xl p-4">
+          <div className="flex items-center justify-between"><h3 className="text-sm font-bold">New sign-ups · 14 days</h3><span className="adm-chip bg-violet-400/15 text-violet-300">{signups.reduce((a, b) => a + b, 0)}</span></div>
+          <div className="mt-3 flex h-24 items-end gap-1">{signups.map((n, i) => <div key={i} title={`${n}`} className="flex-1 rounded-t bg-gradient-to-t from-violet-500 to-indigo-300" style={{ height: `${Math.max(6, (n / Math.max(1, ...signups)) * 100)}%`, opacity: n ? 1 : 0.25 }} />)}</div>
+        </div>
+        <div className="adm-glass rounded-xl p-4">
+          <div className="mb-2 flex items-center justify-between"><h3 className="text-sm font-bold">Latest messages</h3><button type="button" onClick={() => goto('messages')} className="text-xs font-bold text-orange-400 hover:underline">All</button></div>
+          {messages.length === 0 ? <p className="text-xs opacity-50">No messages yet.</p> : messages.slice(0, 4).map((m) => (
+            <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left">
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xs font-bold text-white">{initials(m.name)}</span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-1.5 w-1.5 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
+            </button>
+          ))}
         </div>
       </div>
     </Panel>
@@ -1298,20 +1539,13 @@ function MessagesPanel({ items, setItems, ctx, focusId }) {
   const [filter, setFilter] = useState('all');
   const [selectedId, setSelectedId] = useState(focusId || null);
   const [checked, setChecked] = useState([]);
-  const [reply, setReply] = useState('');
+  const [reply, setReply] = useState(() => items.find((m) => m.id === focusId)?.reply_text || '');
   const q = search.trim().toLowerCase();
   const matches = (m) => !q || [m.name, m.email, m.organization, m.service, m.message].some((v) => (v || '').toLowerCase().includes(q));
   const counts = { all: items.length, unread: items.filter((m) => !m.is_read).length, starred: items.filter((m) => m.starred).length };
   const shown = items.filter((m) => matches(m) && (filter === 'all' || (filter === 'unread' && !m.is_read) || (filter === 'starred' && m.starred)));
   const current = items.find((m) => m.id === selectedId) || null;
   const patch = (id, changes) => setItems((list) => list.map((m) => (m.id === id ? { ...m, ...changes } : m)));
-
-  useEffect(() => { // open the message that was clicked from the Overview
-    if (!focusId) return;
-    const m = items.find((x) => x.id === focusId);
-    if (m) { setSelectedId(m.id); setReply(m.reply_text || ''); }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusId]);
 
   const setRead = (m, value, quiet) => run(`read-${m.id}`, async () => {
     await call(`/api/admin/messages/${m.id}`, { method: 'PATCH', body: { is_read: value } });
@@ -1702,12 +1936,13 @@ function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
 }
 
 /* ----- The dashboard shell ----- */
-function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
+function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setTheme }) {
   const [tab, setTab] = useState('overview');
   const [focusMessage, setFocusMessage] = useState(null);
   const [stats, setStats] = useState(null);
   const [messages, setMessages] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
   const [openings, setOpenings] = useState([]);
   const [applications, setApplications] = useState([]);
   const [users, setUsers] = useState([]);
@@ -1745,12 +1980,12 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
   const refresh = async (manual = false) => {
     if (manual) setRefreshing(true);
     try {
-      const [me, st, ms, pr, op, ap, us] = await Promise.all([
+      const [me, st, ms, pr, tm, op, ap, us] = await Promise.all([
         call('/api/auth/me'), call('/api/admin/stats'), call('/api/admin/messages'),
-        call('/api/admin/content?kind=project'), call('/api/admin/content?kind=opening'),
+        call('/api/admin/content?kind=project'), call('/api/admin/content?kind=team'), call('/api/admin/content?kind=opening'),
         call('/api/admin/applications'), call('/api/admin/users'),
       ]);
-      setUser(me.user); setStats(st); setMessages(ms.items); setProjects(pr.items); setOpenings(op.items); setApplications(ap.items); setUsers(us.items);
+      setUser(me.user); setStats(st); setMessages(ms.items); setProjects(pr.items); setTeamMembers(tm.items); setOpenings(op.items); setApplications(ap.items); setUsers(us.items);
       if (manual) toast('Dashboard refreshed');
     } catch (e) {
       handleError(e);
@@ -1758,7 +1993,8 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
       setLoading(false); setRefreshing(false);
     }
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // This effect starts the initial API load; state updates happen after the request resolves.
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
   useEffect(() => { refresh(); }, [token]);
 
   // Keep the badge numbers live without another request.
@@ -1779,15 +2015,16 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
   const ctx = { call, run, busy, toast, search };
 
   let content = null;
-  if (tab === 'overview') content = <Overview stats={liveStats} messages={messages} applications={applications} goto={goto} user={user} />;
+  if (tab === 'overview') content = <Overview stats={liveStats} messages={messages} applications={applications} users={users} goto={goto} user={user} />;
   if (tab === 'messages') content = <MessagesPanel items={messages} setItems={setMessages} ctx={ctx} focusId={focusMessage} />;
   if (tab === 'projects') content = <ContentManager kind="project" title="Projects" singular="Project" subtitle="Projects shown in the “Recent projects” section of the website." items={projects} setItems={setProjects} fields={PROJECT_FIELDS} meta={['category']} ctx={ctx} />;
+  if (tab === 'team') content = <ContentManager kind="team" title="Team profiles" singular="Team profile" subtitle="Add and manage the people shown in the website leadership section." items={teamMembers} setItems={setTeamMembers} fields={TEAM_FIELDS} meta={['role']} ctx={ctx} />;
   if (tab === 'openings') content = <ContentManager kind="opening" title="Careers" singular="Opening" subtitle="Open positions that candidates can apply for." items={openings} setItems={setOpenings} fields={OPENING_FIELDS} meta={['type', 'location', 'deadline']} ctx={ctx} />;
   if (tab === 'applications') content = <ApplicationsPanel items={applications} setItems={setApplications} ctx={ctx} token={token} />;
   if (tab === 'users') content = <UsersPanel items={users} setItems={setUsers} ctx={ctx} />;
   if (tab === 'settings') content = <SettingsPanel user={user} ctx={ctx} messages={messages} applications={applications} onLogout={onLogout} />;
 
-  const NavButtons = ({ horizontal }) => ADMIN_TABS.map((tb) => (
+  const navButtons = (horizontal = false) => ADMIN_TABS.map((tb) => (
     <button key={tb.id} type="button" data-active={tab === tb.id} onClick={() => goto(tb.id)} className={`adm-nav ${horizontal ? '!w-auto shrink-0 !px-4' : ''}`}>
       <tb.icon size={18} />{tb.label}
       {badge[tb.id] > 0 && <span className="ml-auto rounded-full bg-orange-500 px-2 py-0.5 text-[.65rem] font-extrabold text-white">{badge[tb.id]}</span>}
@@ -1801,7 +2038,7 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
           <span className="grid h-12 w-12 place-items-center rounded-full bg-white p-1.5"><img src={logo} alt="" className="h-full w-full object-contain" /></span>
           <div><p className="text-lg font-extrabold leading-tight">REL4D</p><p className="text-[.65rem] font-bold uppercase tracking-[.2em] text-orange-300">Admin console</p></div>
         </div>
-        <NavButtons />
+        {navButtons()}
         <div className="mt-auto rounded-2xl border border-white/10 bg-black/25 p-3">
           <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 font-bold">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
           <button type="button" onClick={onLogout} className="adm-btn-danger mt-3 w-full !py-2"><LogOut size={14} />Sign out</button>
@@ -1815,13 +2052,13 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
             <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search in this section…" aria-label="Search" className="adm-input !pl-10" />
           </div>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2"><ThemeToggle theme={theme} setTheme={setTheme} />
             <Btn type="button" loading={refreshing} onClick={() => refresh(true)} className="adm-btn-ghost">{!refreshing && <RefreshCw size={15} />}<span className="hidden sm:inline">Refresh</span></Btn>
             <button type="button" onClick={onClose} className="adm-btn-ghost"><X size={15} /><span className="hidden sm:inline">Close</span></button>
             <button type="button" onClick={onLogout} className="adm-btn-danger lg:hidden" aria-label="Sign out"><LogOut size={15} /></button>
           </div>
         </header>
-        <nav className="flex gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 lg:hidden" aria-label="Admin sections"><NavButtons horizontal /></nav>
+        <nav className="flex gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 lg:hidden" aria-label="Admin sections">{navButtons(true)}</nav>
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {loading ? (
             <div className="grid h-full min-h-[50vh] place-items-center"><div className="flex flex-col items-center gap-4 text-white/70"><Spinner size={46} className="text-orange-300" /><p className="text-sm font-semibold">Loading your dashboard…</p></div></div>
@@ -1841,9 +2078,11 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
 }
 
 /* ----- Portal: renders the console above the whole website ----- */
-function AdminPortal({ onClose }) {
+function AdminPortal({ onClose, notice }) {
   const [token, setToken] = useState(readToken);
   const [user, setUser] = useState(null);
+  const [admTheme, setAdmTheme] = useState(() => { try { return localStorage.getItem('rel4d-admin-theme') || 'light'; } catch { return 'light'; } });
+  const changeTheme = (v) => { setAdmTheme(v); try { localStorage.setItem('rel4d-admin-theme', v); } catch { /* storage unavailable */ } };
   const logout = () => { saveToken(''); setToken(''); setUser(null); };
   const loggedIn = (newToken, newUser) => { saveToken(newToken); setToken(newToken); setUser(newUser); };
 
@@ -1855,12 +2094,12 @@ function AdminPortal({ onClose }) {
   }, [token, onClose]);
 
   return createPortal(
-    <div className="adm fixed inset-0 z-[200] overflow-hidden" role="dialog" aria-modal="true" aria-label="Admin console">
-      <style>{ADMIN_CSS}</style>
+    <div className="adm fixed inset-0 z-[200] overflow-hidden" data-t={admTheme} role="dialog" aria-modal="true" aria-label="Admin console">
+      <style>{ADMIN_CSS + ADMIN_CSS_EXTRA}</style>
       <AdminBackdrop />
       {token
-        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} />
-        : <AdminLogin onLoggedIn={loggedIn} onClose={onClose} />}
+        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} theme={admTheme} setTheme={changeTheme} />
+        : <AdminLogin onLoggedIn={loggedIn} onClose={onClose} notice={notice} />}
     </div>,
     document.body,
   );
@@ -1911,6 +2150,8 @@ body{background:var(--paper)}
 .r4d-app[data-theme="dark"] textarea::placeholder{color:#9eafa2}
 section[id]{scroll-margin-top:90px}
 @keyframes r4d-spin{to{transform:rotate(360deg)}}
+@keyframes r4d-blob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.15)}}
+@keyframes r4d-shine{to{background-position:200% center}}
 @keyframes r4d-spinner{to{transform:rotate(360deg)}}
 @keyframes r4d-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes r4d-fill{from{width:0}to{width:100%}}
@@ -1918,7 +2159,16 @@ section[id]{scroll-margin-top:90px}
 @keyframes r4d-pop{from{opacity:0;transform:scale(.97) translateY(6px)}to{opacity:1;transform:none}}
 @keyframes r4d-marquee{to{transform:translateX(-50%)}}
 @keyframes r4d-letter-bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}60%{transform:translateY(0)}}
+.r4d-portrait-ring{isolation:isolate;position:relative;background:rgba(255,255,255,.08);box-shadow:0 16px 48px -24px rgba(0,0,0,.7)}
+.r4d-portrait-ring::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:conic-gradient(from 0deg,#4ade80,#f3a044,#a7f3d0,#f3a044,#4ade80);animation:r4d-ring-spin 8s linear infinite}
+.r4d-orbit{animation:r4d-orbit-spin 30s linear infinite}
+.r4d-orbit-dot{animation:r4d-dot-pulse 2.4s ease-in-out infinite alternate}
+@keyframes r4d-ring-spin{to{rotate:360deg}}
+@keyframes r4d-orbit-spin{to{rotate:360deg}}
+@keyframes r4d-dot-pulse{to{scale:1.55;opacity:.65}}
 .r4d-spin{animation:r4d-spin 6s linear infinite}
+.r4d-blob{animation:r4d-blob 16s ease-in-out infinite}
+.r4d-shine{background-size:200% auto;animation:r4d-shine 6s linear infinite}
 .r4d-spinner{animation:r4d-spinner .7s linear infinite}
 .r4d-float{animation:r4d-float 4s ease-in-out infinite}
 .r4d-fill{animation:r4d-fill 1.8s ease forwards}
@@ -1927,20 +2177,57 @@ section[id]{scroll-margin-top:90px}
 .r4d-marquee-track{animation:r4d-marquee 44s linear infinite;will-change:transform}
 .r4d-marquee-viewport:hover .r4d-marquee-track,.r4d-marquee-viewport:focus-within .r4d-marquee-track{animation-play-state:paused}
 .r4d-letter-bounce{animation:r4d-letter-bounce 10s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.r4d-spin,.r4d-float,.r4d-marquee-track,.r4d-letter-bounce,.r4d-rise{animation:none;opacity:1}.r4d-fill{animation:none;width:100%}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.r4d-spin,.r4d-float,.r4d-marquee-track,.r4d-letter-bounce,.r4d-rise,.r4d-blob,.r4d-shine,.r4d-portrait-ring::before,.r4d-orbit,.r4d-orbit-dot{animation:none;opacity:1}.r4d-fill{animation:none;width:100%}}
 `;
 
 /* ------------------------------- Page --------------------------------- */
 export default function Home() {
   const [loading, setLoading] = useState(true);
-  const [adminOpen, setAdminOpen] = useState(() => typeof window !== 'undefined' && window.location.hash === '#admin');
+  const [adminOpen, setAdminOpen] = useState(() => typeof window !== 'undefined' && (
+    window.location.hash === '#admin'
+    || (() => {
+      const callback = new URLSearchParams(window.location.hash.slice(1));
+      return callback.has('auth_admin_token') || callback.get('auth_intent') === 'admin';
+    })()
+  ));
   const [theme, setTheme] = useState(() => {
     try { return localStorage.getItem('rel4d-theme') || 'light'; } catch { return 'light'; }
   });
+  const [authMode, setAuthMode] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    const callback = new URLSearchParams(window.location.hash.slice(1));
+    return callback.has('auth_error') && callback.get('auth_intent') !== 'admin' ? 'login' : null;
+  });
+  const [authNotice, setAuthNotice] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return new URLSearchParams(window.location.hash.slice(1)).get('auth_error') || '';
+  });
+  const [account, setAccount] = useState(() => { try { return JSON.parse(localStorage.getItem('rel4d-user') || 'null'); } catch { return null; } });
+  const accountDone = (token, u) => { try { localStorage.setItem('rel4d-user-token', token); localStorage.setItem('rel4d-user', JSON.stringify(u)); } catch { /* storage unavailable */ } setAccount(u); setAuthMode(null); };
+  const accountOut = () => { try { localStorage.removeItem('rel4d-user-token'); localStorage.removeItem('rel4d-user'); } catch { /* storage unavailable */ } setAccount(null); };
   const [language, setLanguage] = useState(() => {
     try { return UI_COPY[localStorage.getItem('rel4d-language')] ? localStorage.getItem('rel4d-language') : 'en'; } catch { return 'en'; }
   });
   const t = UI_COPY[language] || UI_COPY.en;
+
+  useEffect(() => {
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const socialToken = hash.get('auth_token');
+    const adminToken = hash.get('auth_admin_token');
+    const socialError = hash.get('auth_error');
+    if (adminToken) {
+      saveToken(adminToken);
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    } else if (socialToken) {
+      try { localStorage.setItem('rel4d-user-token', socialToken); } catch { /* storage unavailable */ }
+      apiRequest('/api/auth/me', { token: socialToken })
+        .then((data) => { setAccount(data.user); try { localStorage.setItem('rel4d-user', JSON.stringify(data.user)); } catch { /* storage unavailable */ } })
+        .catch(() => {})
+        .finally(() => { window.history.replaceState(null, '', window.location.pathname + window.location.search); });
+    } else if (socialError) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }, []);
 
   const openAdmin = () => {
     setAdminOpen(true);
@@ -1948,6 +2235,7 @@ export default function Home() {
   };
   const closeAdmin = () => {
     setAdminOpen(false);
+    setAuthNotice('');
     try { window.history.replaceState(null, '', window.location.pathname + window.location.search); } catch { /* ignore */ }
   };
 
@@ -1978,7 +2266,8 @@ export default function Home() {
         <style>{CSS}</style>
         <Loader done={!loading} />
         <LangTab language={language} setLanguage={setLanguage} t={t} />
-        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} />
+        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} onAuth={setAuthMode} account={account} onLogout={accountOut} />
+        {authMode && <AuthModal mode={authMode} setMode={(mode) => { setAuthNotice(''); setAuthMode(mode); }} onClose={() => { setAuthMode(null); setAuthNotice(''); }} onDone={accountDone} notice={authNotice} />}
         <main>
           <Hero />
           <Stats />
@@ -1989,12 +2278,13 @@ export default function Home() {
           <Expertise />
           <Experience />
           <Projects />
+          <Careers />
           <Credentials />
           <Team />
           <Contact t={t} />
         </main>
         <Footer onAdmin={openAdmin} />
-        {adminOpen && <AdminPortal onClose={closeAdmin} />}
+        {adminOpen && <AdminPortal onClose={closeAdmin} notice={authNotice} />}
       </div>
     </LanguageContext.Provider>
   );
