@@ -1236,7 +1236,47 @@ function Empty({ icon: Icon, text }) {
   );
 }
 
-function AuthModal({ mode, setMode, onClose, onDone }
+function AuthModal({ mode, setMode, onClose, onDone }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    setError('');
+    try {
+      const data = await apiRequest(`/api/auth/${mode}`, {
+        method: 'POST',
+        body: { ...(mode === 'register' ? { name } : {}), email, password },
+      });
+      onDone(data.token, data.user);
+    } catch (err) {
+      setError(err.message || 'Unable to continue. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-black/70 p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+      <div className="relative w-full max-w-md rounded-2xl bg-white p-7 shadow-2xl dark:bg-slate-900">
+        <button type="button" onClick={onClose} aria-label="Close" className="absolute right-4 top-4"><X size={20} /></button>
+        <h2 id="auth-title" className="text-2xl font-bold">{mode === 'register' ? 'Create account' : 'Sign in'}</h2>
+        <form onSubmit={submit} className="mt-5 space-y-4">
+          {mode === 'register' && <input required value={name} onChange={(e) => setName(e.target.value)} className="w-full rounded-lg border p-3" placeholder="Name" autoComplete="name" />}
+          <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border p-3" placeholder="Email" autoComplete="email" />
+          <input required type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-lg border p-3" placeholder="Password" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} />
+          {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+          <button type="submit" disabled={loading} className="w-full rounded-lg bg-green-700 p-3 font-semibold text-white disabled:opacity-60">{loading ? 'Please wait…' : mode === 'register' ? 'Create account' : 'Sign in'}</button>
+        </form>
+        <button type="button" onClick={() => setMode(mode === 'register' ? 'login' : 'register')} className="mt-4 text-sm underline">{mode === 'register' ? 'Already have an account? Sign in' : 'Create an account'}</button>
+      </div>
+    </div>
+  );
+}
 
 /* ----- Overview: stats, 14-day chart, quick actions ----- */
 function Sparkline({ values }) {
