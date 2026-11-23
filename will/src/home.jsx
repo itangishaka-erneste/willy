@@ -1622,7 +1622,6 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
   const unreadCount = Number(stats?.unread_messages || 0);
   const newAppCount = Number(stats?.new_applications || 0);
   const badge = { messages: unreadCount, applications: newAppCount };
-  const goto = (id, messageId = null) => { setTab(id); setFocusMessage(messageId); setSearch(''); };
   const ctx = { call, run, busy, toast, search };
 
   let content = null;
