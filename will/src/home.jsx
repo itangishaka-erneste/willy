@@ -1237,7 +1237,9 @@ function Empty({ icon: Icon, text }) {
   );
 }
 
-function AuthModal({ mode, setMode, onClose, onDone }
+function AuthModal({ mode, setMode, onClose, onDone }) {
+  return null;
+}
 
 /* ----- Overview: stats, 14-day chart, quick actions ----- */
 function Sparkline({ values }) {
