@@ -7,7 +7,6 @@ import {
   ArrowUpRight, Send, CheckCircle2, Award, Briefcase, BadgeCheck, Star, LockKeyhole,
   LayoutDashboard, MessageSquare, FolderKanban, Users, Settings, Trash2, Pencil, Eye, EyeOff, Search,
   Reply, Download, RefreshCw, LogOut, Plus, ShieldCheck, Inbox, Check, KeyRound, Bell, FileText, ImagePlus,
-  UserPlus, UserRound, Sparkles, TrendingUp,
 } from 'lucide-react';
 
 /* =====================================================================
@@ -354,7 +353,7 @@ function LangTab({ language, setLanguage, t }) {
 }
 
 /* ------------------------------ Navbar -------------------------------- */
-function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
+function Navbar({ theme, setTheme, t, onAdmin }) {
   const tr = useTranslate();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState(null);
@@ -458,67 +457,64 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
 /* ------------------------------ Sections ------------------------------ */
 function Hero() {
   const tr = useTranslate();
-  const accent = tr('development excellence.');
+  const accentText = tr('development excellence.');
   return (
-    <section id="home" className="relative isolate overflow-hidden bg-[#0c2a1c] pb-28 pt-[68px] text-white">
-      {/* animated aurora + grid */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="r4d-blob absolute -left-24 top-10 h-96 w-96 rounded-full bg-emerald-500/40 blur-[110px]" />
-        <div className="r4d-blob absolute right-0 top-1/3 h-[28rem] w-[28rem] rounded-full bg-orange-500/30 blur-[120px]" style={{ animationDelay: '-6s' }} />
-        <div className="absolute inset-0 opacity-60" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)', backgroundSize: '48px 48px', WebkitMaskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)', maskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)' }} />
-        <Spiral className="r4d-float absolute left-[46%] top-28 hidden w-16 text-[var(--o)]/70 lg:block" />
+    <section id="home" className="relative isolate overflow-hidden bg-[#f8faf6] pb-32 pt-36 text-[var(--gd)] sm:pb-40 lg:pt-44">
+      {/* Layered, softly animated canvas inspired by evidence and data. */}
+      <div className="pointer-events-none absolute inset-0 -z-10" style={{ backgroundImage: 'radial-gradient(ellipse at 78% 30%, rgba(77,138,108,.18), transparent 40%), radial-gradient(ellipse at 8% 14%, rgba(243,160,68,.16), transparent 32%), linear-gradient(rgba(40,86,64,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(40,86,64,.035) 1px, transparent 1px)', backgroundSize: 'auto, auto, 46px 46px, 46px 46px' }} />
+      <div className="pointer-events-none absolute right-0 top-0 -z-10 h-[68%] w-[56%] rounded-bl-[48%] bg-gradient-to-bl from-white/80 via-emerald-100/45 to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-24 hidden h-52 w-60 rotate-[-8deg] rounded-3xl border border-white/80 bg-white/35 shadow-[0_24px_70px_rgba(39,88,58,.10)] sm:block lg:right-[12%] lg:top-32">
+        <div className="absolute inset-x-5 top-5 flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[var(--o)]/70" /><i className="h-2 w-2 rounded-full bg-[var(--g)]/60" /><span className="ml-auto h-1.5 w-12 rounded-full bg-[var(--g)]/15" /></div>
+        <div className="absolute inset-x-5 bottom-5 top-14 border-b border-l border-[var(--gd)]/10" style={{ backgroundImage: 'linear-gradient(to top, rgba(39,88,58,.05) 1px, transparent 1px)' }}>
+          <div className="absolute inset-x-2 bottom-0 h-[78%]" style={{ clipPath: 'polygon(0 76%, 18% 58%, 35% 67%, 53% 34%, 70% 45%, 87% 14%, 100% 23%, 100% 100%, 0 100%)', background: 'linear-gradient(180deg, rgba(120,185,138,.3), rgba(120,185,138,.025))' }} />
+          <svg viewBox="0 0 220 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible"><polyline points="0,72 40,54 78,63 116,33 154,43 192,14 220,22" fill="none" stroke="var(--g)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="192" cy="14" r="4" fill="var(--o)" /></svg>
+        </div>
       </div>
+      <DashedArrow className="pointer-events-none absolute left-[9%] top-32 hidden w-56 text-[var(--g)] lg:block" />
+      <Spiral className="r4d-float pointer-events-none absolute right-[7%] top-28 hidden w-24 text-[var(--o)] lg:block" />
 
-      <div className="mx-auto grid min-h-[calc(100vh-68px)] max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.1fr_1fr] lg:px-8">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-2 lg:px-8 xl:grid-cols-[130px_1.1fr_1fr]">
+        {/* medal + ladder illustration */}
+        <div className="r4d-float hidden flex-col items-center gap-4 self-end xl:flex" aria-hidden="true">
+          <Medal className="w-28 text-[var(--g)]/30" star="var(--o)" />
+          <Ladder className="-mb-24 w-28 text-[var(--gd)]/20" rung="white" />
+        </div>
+
         <div>
-          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur" style={{ animationDelay: '1.9s' }}>
-            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--o)] opacity-75" /><span className="relative h-2 w-2 rounded-full bg-[var(--o)]" /></span>
-            {tr('Evidence drives change and transformation')}
+          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-emerald-800/15 bg-white/75 px-4 py-1.5 text-sm font-medium text-emerald-900 shadow-sm" style={{ animationDelay: '1.9s' }}>
+            <span className="h-2 w-2 rounded-full bg-[var(--o)]" /> {tr('Evidence drives change and transformation')}
           </p>
-          <h1 className="r4d-rise mt-6 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.6rem]" style={{ animationDelay: '2s' }}>
-            {tr('Research & learning for')}{' '}
-            <span className="bg-gradient-to-r from-emerald-300 via-[var(--o)] to-emerald-300 bg-clip-text text-transparent r4d-shine" aria-label={accent}>
-              {Array.from(accent).map((c, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${i * 55}ms` }}>{c === ' ' ? '\u00a0' : c}</span>)}
-            </span>
+          <h1 className="r4d-rise mt-6 text-3xl font-bold leading-[1.12] sm:text-4xl lg:text-[2.8rem]" style={{ animationDelay: '2s' }}>
+            <span className="text-[var(--gd)]">{tr('Research & learning for')} </span><span className="inline-block text-[var(--o)]" aria-label={accentText}>{Array.from(accentText).map((letter, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${i * 55}ms` }}>{letter === ' ' ? '\u00a0' : letter}</span>)}</span>
           </h1>
-          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg" style={{ animationDelay: '2.15s' }}>
+          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-slate-700 sm:text-[1.05rem]" style={{ animationDelay: '2.15s' }}>
             {tr('REL4D is a registered consultancy in Kigali that conducts research and evaluations and supports learning for international development programmes, using data analytics, machine learning and AI to get the most from evidence.')}
           </p>
-          <div className="r4d-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: '2.3s' }}>
-            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-7 py-3.5 font-semibold text-white shadow-lg shadow-orange-900/30 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
-            <a href="#contact" className="rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 font-semibold backdrop-blur transition hover:bg-white hover:text-[var(--gd)]">{tr('Request a proposal')}</a>
-          </div>
-          {/* mini trust row */}
-          <div className="r4d-rise mt-10 grid max-w-lg grid-cols-3 gap-3" style={{ animationDelay: '2.45s' }}>
-            {[[50, '+', 'Projects'], [15, '+', 'Sectors'], [10, '+', 'Years']].map(([v, s, l]) => (
-              <div key={l} className="rounded-2xl border border-white/10 bg-white/[.07] px-4 py-3 backdrop-blur">
-                <p className="text-2xl font-extrabold"><CountUp to={v} suffix={s} /></p>
-                <p className="text-xs text-white/60">{tr(l)}</p>
-              </div>
-            ))}
+          <div className="r4d-rise mt-9 flex flex-wrap gap-3" style={{ animationDelay: '2.3s' }}>
+            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-8 py-4 font-semibold text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
+            <a href="#contact" className="rounded-xl border-2 border-[var(--gd)]/20 bg-white/70 px-8 py-4 font-semibold text-[var(--gd)] transition hover:border-[var(--gd)] hover:bg-[var(--gd)] hover:text-white">{tr('Request a proposal')}</a>
           </div>
         </div>
 
-        {/* photo on the RIGHT, arch shape with floating dashboard cards */}
-        <div className="r4d-rise relative mx-auto w-full max-w-[420px] lg:max-w-[470px]" style={{ animationDelay: '2.2s' }}>
-          <div className="absolute -inset-4 rounded-t-[999px] rounded-b-[2.5rem] bg-gradient-to-br from-emerald-400/50 via-transparent to-orange-400/50 blur-2xl" />
-          <div className="relative overflow-hidden rounded-t-[999px] rounded-b-[2.5rem] border border-white/20 bg-white/10 p-2 shadow-2xl">
-            <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="aspect-[4/5] w-full rounded-t-[999px] rounded-b-[2rem] object-cover object-[center_20%] transition duration-700 hover:scale-105" />
-            <div className="absolute inset-x-6 bottom-6 rounded-2xl border border-white/20 bg-black/40 px-4 py-3 backdrop-blur-md">
-              <p className="font-bold">Jean Willy ULIHO</p><p className="text-xs text-white/70">{tr('Managing Director')} · REL4D Ltd</p>
+        {/* circular hero photo with orange ring + quarter-circle accent */}
+        <div className="r4d-rise relative mx-auto w-full max-w-[300px] sm:max-w-[440px] lg:max-w-[500px]" style={{ animationDelay: '2.2s' }}>
+          <div className="absolute -inset-5 animate-pulse rounded-[46%] bg-gradient-to-br from-[var(--g)]/35 via-white/65 to-[var(--o)]/35 blur-md [animation-duration:6s] sm:-inset-7" />
+          <div className="absolute -bottom-5 -right-5 h-32 w-32 rounded-full bg-[var(--o)] shadow-xl shadow-orange-900/15 sm:-bottom-7 sm:-right-7 sm:h-40 sm:w-40" />
+          <div className="absolute -left-5 top-12 h-20 w-20 rounded-full border border-[var(--g)]/25 sm:-left-10 sm:h-28 sm:w-28" />
+          <div className="relative aspect-[.94/1] rotate-2 rounded-[46%] bg-white p-2 shadow-2xl shadow-emerald-950/20 ring-1 ring-[var(--gd)]/10 sm:aspect-square">
+            <div className="h-full w-full -rotate-2 overflow-hidden rounded-[46%] border-[6px] border-white">
+              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full object-cover object-[center_28%] transition duration-700 hover:scale-105" />
             </div>
           </div>
-          <div className="r4d-float absolute -left-6 top-16 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/90 px-4 py-3 text-[var(--gd)] shadow-xl">
+          <div className="r4d-float absolute -left-3 bottom-10 flex items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 text-[var(--gd)] shadow-xl sm:-left-8">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--g)] text-white"><BadgeCheck size={20} /></span>
             <span className="text-sm font-bold leading-tight">{tr('50+ projects')}<span className="block text-xs font-medium text-black/50">{tr('delivered across Rwanda')}</span></span>
           </div>
-          <div className="r4d-float absolute -right-4 top-1/2 w-40 rounded-2xl border border-white/20 bg-white/90 p-3 text-[var(--gd)] shadow-xl" style={{ animationDelay: '-2s' }}>
-            <div className="flex items-center justify-between text-[.65rem] font-bold uppercase text-black/50"><span>Impact</span><TrendingUp size={13} className="text-[var(--o)]" /></div>
-            <svg viewBox="0 0 120 40" className="mt-1 h-10 w-full"><polyline points="0,32 20,24 40,28 60,14 80,18 100,6 120,10" fill="none" stroke="var(--g)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="100" cy="6" r="3" fill="var(--o)" /></svg>
-          </div>
         </div>
       </div>
-      <Curve className="text-[var(--paper)]" />
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-0 h-20 rounded-t-[55%] bg-white sm:h-28" />
+      <Curve />
     </section>
   );
 }
@@ -1114,41 +1110,6 @@ select.adm-input option{background:#0d1d15;color:#f1f7f2}
 @media (prefers-reduced-motion:reduce){.adm-blob,.adm-title,.adm-pulse,.adm-line{animation:none}}
 `;
 
-const ADMIN_CSS_EXTRA = `
-.adm{transition:background .25s,color .25s}
-.adm[data-t="light"]{color:#17261d;background:#eef3ef}
-.adm[data-t="light"] .adm-blob{opacity:.22}
-.adm[data-t="light"] .adm-grid{background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px)}
-.adm[data-t="light"] .adm-glass{background:#fff;border-color:rgba(20,40,28,.1);box-shadow:0 10px 30px -18px rgba(20,40,28,.35)}
-.adm[data-t="light"] .adm-input{background:#fff;color:#17261d;border-color:rgba(20,40,28,.18)}
-.adm[data-t="light"] .adm-input::placeholder{color:rgba(23,38,29,.4)}
-.adm[data-t="light"] select.adm-input option{background:#fff;color:#17261d}
-.adm[data-t="light"] .adm-label{color:rgba(23,38,29,.6)}
-.adm[data-t="light"] .adm-btn-ghost{color:#17261d;border-color:rgba(20,40,28,.16);background:rgba(20,40,28,.04)}
-.adm[data-t="light"] .adm-btn-ghost:hover:not(:disabled){background:rgba(20,40,28,.1)}
-.adm[data-t="light"] .adm-btn-danger{color:#b91c1c;background:rgba(239,68,68,.08)}
-.adm[data-t="light"] .adm-nav{color:rgba(23,38,29,.7)}
-.adm[data-t="light"] .adm-nav:hover{background:rgba(20,40,28,.06);color:#000}
-.adm[data-t="light"] .adm-nav[data-active="true"]{color:#0b2616;background:linear-gradient(120deg,rgba(74,222,128,.3),rgba(243,160,68,.28))}
-.adm[data-t="light"] .adm-title{background-image:linear-gradient(90deg,#14532d,#15803d,#d9822e,#14532d);background-size:200% auto;-webkit-background-clip:text;background-clip:text}
-.adm[data-t="light"] .adm-row:hover{background:rgba(20,40,28,.05)}
-.adm[data-t="light"] [class*="text-white"]{color:rgba(23,38,29,.72)!important}
-.adm[data-t="light"] [class*="bg-black/"]{background-color:rgba(20,40,28,.05)!important}
-.adm[data-t="light"] [class*="border-white/"]{border-color:rgba(20,40,28,.1)!important}
-.adm[data-t="light"] .text-emerald-200,.adm[data-t="light"] .text-emerald-300{color:#15803d!important}
-.adm[data-t="light"] .text-orange-200,.adm[data-t="light"] .text-orange-300{color:#c2410c!important}
-.adm[data-t="light"] .text-red-200,.adm[data-t="light"] .text-red-100{color:#b91c1c!important}
-.adm[data-t="light"] .adm-btn,.adm[data-t="light"] .adm-btn *,.adm[data-t="light"] .bg-gradient-to-br *{color:#fff!important}
-`;
-
-function ThemeToggle({ theme, setTheme }) {
-  return (
-    <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="adm-btn-ghost" aria-label="Toggle admin theme">
-      {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}<span className="hidden sm:inline">{theme === 'dark' ? 'Light' : 'Dark'}</span>
-    </button>
-  );
-}
-
 function AdminBackdrop() {
   return (
     <div className="adm-bg" aria-hidden="true">
@@ -1237,10 +1198,6 @@ function Empty({ icon: Icon, text }) {
   );
 }
 
-function AuthModal({ mode, setMode, onClose, onDone }) {
-  return null;
-}
-
 /* ----- Overview: stats, 14-day chart, quick actions ----- */
 function Sparkline({ values }) {
   const w = 640, h = 170, pad = 14;
@@ -1272,7 +1229,7 @@ const STAT_CARDS = [
   { key: 'openings', label: 'Open positions', icon: Briefcase, tone: 'from-rose-500 to-orange-400', tab: 'openings' },
 ];
 
-function Overview({ stats, messages, applications, users = [], goto, user }) {
+function Overview({ stats, messages, applications, goto, user }) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
   const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - i)); return d; });
@@ -1745,7 +1702,7 @@ function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
 }
 
 /* ----- The dashboard shell ----- */
-function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setTheme }) {
+function AdminDashboard({ token, user, setUser, onLogout, onClose }) {
   const [tab, setTab] = useState('overview');
   const [focusMessage, setFocusMessage] = useState(null);
   const [stats, setStats] = useState(null);
@@ -1822,7 +1779,7 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
   const ctx = { call, run, busy, toast, search };
 
   let content = null;
-  if (tab === 'overview') content = <Overview stats={liveStats} messages={messages} applications={applications} users={users} goto={goto} user={user} />;
+  if (tab === 'overview') content = <Overview stats={liveStats} messages={messages} applications={applications} goto={goto} user={user} />;
   if (tab === 'messages') content = <MessagesPanel items={messages} setItems={setMessages} ctx={ctx} focusId={focusMessage} />;
   if (tab === 'projects') content = <ContentManager kind="project" title="Projects" singular="Project" subtitle="Projects shown in the “Recent projects” section of the website." items={projects} setItems={setProjects} fields={PROJECT_FIELDS} meta={['category']} ctx={ctx} />;
   if (tab === 'openings') content = <ContentManager kind="opening" title="Careers" singular="Opening" subtitle="Open positions that candidates can apply for." items={openings} setItems={setOpenings} fields={OPENING_FIELDS} meta={['type', 'location', 'deadline']} ctx={ctx} />;
@@ -1858,7 +1815,7 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
             <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search in this section…" aria-label="Search" className="adm-input !pl-10" />
           </div>
-          <div className="ml-auto flex items-center gap-2"><ThemeToggle theme={theme} setTheme={setTheme} />
+          <div className="ml-auto flex items-center gap-2">
             <Btn type="button" loading={refreshing} onClick={() => refresh(true)} className="adm-btn-ghost">{!refreshing && <RefreshCw size={15} />}<span className="hidden sm:inline">Refresh</span></Btn>
             <button type="button" onClick={onClose} className="adm-btn-ghost"><X size={15} /><span className="hidden sm:inline">Close</span></button>
             <button type="button" onClick={onLogout} className="adm-btn-danger lg:hidden" aria-label="Sign out"><LogOut size={15} /></button>
@@ -1898,11 +1855,11 @@ function AdminPortal({ onClose }) {
   }, [token, onClose]);
 
   return createPortal(
-    <div className="adm fixed inset-0 z-[200] overflow-hidden" data-t={admTheme} role="dialog" aria-modal="true" aria-label="Admin console">
-      <style>{ADMIN_CSS + ADMIN_CSS_EXTRA}</style>
+    <div className="adm fixed inset-0 z-[200] overflow-hidden" role="dialog" aria-modal="true" aria-label="Admin console">
+      <style>{ADMIN_CSS}</style>
       <AdminBackdrop />
       {token
-        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} theme={admTheme} setTheme={changeTheme} />
+        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} />
         : <AdminLogin onLoggedIn={loggedIn} onClose={onClose} />}
     </div>,
     document.body,
@@ -1954,8 +1911,6 @@ body{background:var(--paper)}
 .r4d-app[data-theme="dark"] textarea::placeholder{color:#9eafa2}
 section[id]{scroll-margin-top:90px}
 @keyframes r4d-spin{to{transform:rotate(360deg)}}
-@keyframes r4d-blob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.15)}}
-@keyframes r4d-shine{to{background-position:200% center}}
 @keyframes r4d-spinner{to{transform:rotate(360deg)}}
 @keyframes r4d-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes r4d-fill{from{width:0}to{width:100%}}
@@ -1964,8 +1919,6 @@ section[id]{scroll-margin-top:90px}
 @keyframes r4d-marquee{to{transform:translateX(-50%)}}
 @keyframes r4d-letter-bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}60%{transform:translateY(0)}}
 .r4d-spin{animation:r4d-spin 6s linear infinite}
-.r4d-blob{animation:r4d-blob 16s ease-in-out infinite}
-.r4d-shine{background-size:200% auto;animation:r4d-shine 6s linear infinite}
 .r4d-spinner{animation:r4d-spinner .7s linear infinite}
 .r4d-float{animation:r4d-float 4s ease-in-out infinite}
 .r4d-fill{animation:r4d-fill 1.8s ease forwards}
@@ -1974,7 +1927,7 @@ section[id]{scroll-margin-top:90px}
 .r4d-marquee-track{animation:r4d-marquee 44s linear infinite;will-change:transform}
 .r4d-marquee-viewport:hover .r4d-marquee-track,.r4d-marquee-viewport:focus-within .r4d-marquee-track{animation-play-state:paused}
 .r4d-letter-bounce{animation:r4d-letter-bounce 10s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.r4d-spin,.r4d-float,.r4d-marquee-track,.r4d-letter-bounce,.r4d-rise,.r4d-blob,.r4d-shine{animation:none;opacity:1}.r4d-fill{animation:none;width:100%}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.r4d-spin,.r4d-float,.r4d-marquee-track,.r4d-letter-bounce,.r4d-rise{animation:none;opacity:1}.r4d-fill{animation:none;width:100%}}
 `;
 
 /* ------------------------------- Page --------------------------------- */
@@ -1984,10 +1937,6 @@ export default function Home() {
   const [theme, setTheme] = useState(() => {
     try { return localStorage.getItem('rel4d-theme') || 'light'; } catch { return 'light'; }
   });
-  const [authMode, setAuthMode] = useState(null);
-  const [account, setAccount] = useState(() => { try { return JSON.parse(localStorage.getItem('rel4d-user') || 'null'); } catch { return null; } });
-  const accountDone = (token, u) => { try { localStorage.setItem('rel4d-user-token', token); localStorage.setItem('rel4d-user', JSON.stringify(u)); } catch {} setAccount(u); setAuthMode(null); };
-  const accountOut = () => { try { localStorage.removeItem('rel4d-user-token'); localStorage.removeItem('rel4d-user'); } catch {} setAccount(null); };
   const [language, setLanguage] = useState(() => {
     try { return UI_COPY[localStorage.getItem('rel4d-language')] ? localStorage.getItem('rel4d-language') : 'en'; } catch { return 'en'; }
   });
@@ -2029,8 +1978,7 @@ export default function Home() {
         <style>{CSS}</style>
         <Loader done={!loading} />
         <LangTab language={language} setLanguage={setLanguage} t={t} />
-        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} onAuth={setAuthMode} account={account} onLogout={accountOut} />
-        {authMode && <AuthModal mode={authMode} setMode={setAuthMode} onClose={() => setAuthMode(null)} onDone={accountDone} />}
+        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} />
         <main>
           <Hero />
           <Stats />
