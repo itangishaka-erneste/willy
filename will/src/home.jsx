@@ -366,7 +366,7 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <nav aria-label={tr('Main')} className={`transition-all duration-300 ${scrolled ? 'bg-white/90 shadow-md backdrop-blur-xl' : 'bg-white/70 backdrop-blur-md'} border-b border-black/5`}>
-        <div className="mx-auto flex h-[68px] max-w-7xl items-center gap-4 px-4 lg:px-8">
+        <div className="mx-auto flex min-h-[68px] max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-4 lg:px-8">
           {/* left: logo */}
           <a href="#home" onClick={close} className="flex shrink-0 items-center gap-2.5">
             <img src={logo} alt="" className="h-11 w-11 object-contain" />
@@ -374,8 +374,8 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
           </a>
 
           {/* centre: links */}
-          <ul className="mx-auto hidden items-center gap-0.5 lg:flex">
-            {NAV.map((item) => (
+          <ul className="mx-auto hidden min-w-0 items-center gap-0.5 xl:flex">
+            {NAV.slice(0, 3).map((item) => (
               <li key={item.label} className="relative" onMouseEnter={() => item.children && setDrop(item.label)} onMouseLeave={() => setDrop(null)}>
                 {item.children ? (
                   <>
@@ -393,10 +393,20 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
                 ) : <a href={item.href} className={link(isActive(item))}>{t.nav[item.label] || item.label}</a>}
               </li>
             ))}
+            <li className="relative" onMouseEnter={() => setDrop('More')} onMouseLeave={() => setDrop(null)}>
+              <button type="button" className={link(NAV.slice(3).some(isActive))} onClick={() => setDrop(drop === 'More' ? null : 'More')} aria-expanded={drop === 'More'}>
+                More <ChevronDown size={14} className={`transition-transform ${drop === 'More' ? 'rotate-180' : ''}`} />
+              </button>
+              {drop === 'More' && <div className="absolute right-0 top-full z-20 w-60 pt-2"><ul className="r4d-pop max-h-[70vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-2 shadow-xl">
+                {NAV.slice(3).flatMap((item) => item.children ? item.children.map((child) => ({ ...child, group: item.label })) : [item]).map((entry) => (
+                  <li key={`${entry.group || ''}-${entry.label}`}><a href={entry.href} onClick={close} className="block rounded-xl px-4 py-2.5 text-sm text-[var(--gd)] hover:bg-[var(--gs)] hover:text-[var(--o)]">{entry.group ? <span className="mr-1 text-black/45">{t.nav[entry.group] || entry.group} ·</span> : null}{t.nav[entry.label] || entry.label}</a></li>
+                ))}
+              </ul></div>}
+            </li>
           </ul>
 
           {/* right: language, theme, admin (small), account */}
-          <div className="ml-auto flex items-center gap-1.5 lg:ml-0">
+          <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1.5 lg:ml-0">
             <div className="relative">
               <button type="button" onClick={() => setLanguageOpen((v) => !v)} aria-label={t.chooseLanguage} aria-expanded={languageOpen}
                 className="flex h-10 items-center gap-1 rounded-full px-2.5 text-xs font-bold text-[var(--gd)] transition hover:bg-[var(--gs)]">
@@ -430,13 +440,13 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
                 <button type="button" onClick={() => onAuth('register')} className="hidden items-center gap-1.5 rounded-full bg-[var(--gd)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--o)] sm:inline-flex"><UserPlus size={15} />Create account</button>
               </>
             )}
-            <button className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>{open ? <X /> : <Menu />}</button>
+            <button className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] xl:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>{open ? <X /> : <Menu />}</button>
           </div>
         </div>
       </nav>
 
       {open && (
-        <div className="r4d-pop max-h-[78vh] overflow-y-auto border-b border-black/5 bg-white px-5 pb-5 shadow-xl lg:hidden">
+        <div className="r4d-pop max-h-[78vh] overflow-y-auto border-b border-black/5 bg-white px-5 pb-5 shadow-xl xl:hidden">
           {NAV.map((item) => (
             <div key={item.label} className="border-b border-black/5 py-1">
               {item.children ? (
