@@ -341,7 +341,7 @@ function Loader({ done }) {
 function LangTab({ language, setLanguage, t }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="fixed left-3 top-1/2 z-40 -translate-y-1/2">
+    <div className="fixed left-3 top-24 z-40">
       <button onClick={() => setOpen((v) => !v)} aria-label={t.chooseLanguage} aria-expanded={open} aria-haspopup="menu"
         className="flex items-center gap-2 rounded-xl bg-[var(--gd)] px-3 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-[var(--g)]">
         {language.toUpperCase()} <ChevronDown size={16} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -478,8 +478,8 @@ function Hero() {
           </p>
           <h1 className="r4d-rise mt-6 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.6rem]" style={{ animationDelay: '2s' }}>
             {tr('Research & learning for')}{' '}
-            <span className="bg-gradient-to-r from-emerald-300 via-[var(--o)] to-emerald-300 bg-clip-text text-transparent r4d-shine" aria-label={accent}>
-              {Array.from(accent).map((c, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${i * 55}ms` }}>{c === ' ' ? '\u00a0' : c}</span>)}
+            <span className="text-[var(--o)]" aria-label={accent}>
+              {Array.from(accent).map((c, i) => <span key={i} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ color: 'var(--o)', animationDelay: `${i * 55}ms` }}>{c === ' ' ? '\u00a0' : c}</span>)}
             </span>
           </h1>
           <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg" style={{ animationDelay: '2.15s' }}>
@@ -505,19 +505,19 @@ function Hero() {
           <div className="r4d-portrait-ring relative mx-auto aspect-square w-full max-w-[360px] rounded-full p-[7px]">
             <div className="absolute inset-[8px] rounded-full border border-white/35" />
             <div className="relative h-full w-full overflow-hidden rounded-full border-[5px] border-[#0c2a1c] bg-white/10 shadow-[0_30px_90px_-20px_rgba(0,0,0,.7)] ring-1 ring-white/35">
-              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full rounded-full object-cover object-[center_20%] transition duration-700 hover:scale-105" />
-              <div className="absolute inset-x-6 bottom-5 rounded-2xl border border-white/25 bg-[#07140d]/65 px-4 py-3 text-center backdrop-blur-md">
+              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full rounded-full object-cover object-[center_12%] transition duration-700 hover:scale-105" />
+              <div className="absolute inset-x-6 bottom-3 rounded-2xl border border-white/25 bg-[#07140d]/65 px-4 py-2 text-center backdrop-blur-md">
                 <p className="font-bold">Jean Willy ULIHO</p><p className="text-xs text-white/75">{tr('Managing Director')} · REL4D Ltd</p>
               </div>
             </div>
           </div>
           <span className="r4d-orbit-dot absolute left-[13%] top-[24%] h-3 w-3 rounded-full bg-[var(--o)] shadow-[0_0_22px_rgba(243,160,68,.9)]" />
           <span className="r4d-orbit-dot absolute bottom-[13%] right-[17%] h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_20px_rgba(110,231,183,.9)]" />
-          <div className="r4d-float absolute -left-1 top-16 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/95 px-3 py-2.5 text-[var(--gd)] shadow-xl sm:-left-3">
+          <div className="r4d-float absolute -left-1 bottom-0 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/95 px-3 py-2.5 text-[var(--gd)] shadow-xl sm:-left-3">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--g)] text-white"><BadgeCheck size={20} /></span>
             <span className="text-sm font-bold leading-tight">{tr('50+ projects')}<span className="block text-xs font-medium text-black/50">{tr('delivered across Rwanda')}</span></span>
           </div>
-          <div className="r4d-float absolute -right-1 top-1/2 w-36 rounded-2xl border border-white/20 bg-white/95 p-3 text-[var(--gd)] shadow-xl sm:-right-3" style={{ animationDelay: '-2s' }}>
+          <div className="r4d-float absolute -right-1 bottom-0 w-36 rounded-2xl border border-white/20 bg-white/95 p-3 text-[var(--gd)] shadow-xl sm:-right-3" style={{ animationDelay: '-2s' }}>
             <div className="flex items-center justify-between text-[.65rem] font-bold uppercase text-black/50"><span>Impact</span><TrendingUp size={13} className="text-[var(--o)]" /></div>
             <svg viewBox="0 0 120 40" className="mt-1 h-10 w-full"><polyline points="0,32 20,24 40,28 60,14 80,18 100,6 120,10" fill="none" stroke="var(--g)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="100" cy="6" r="3" fill="var(--o)" /></svg>
           </div>
@@ -1178,11 +1178,10 @@ const ADMIN_TABS = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'messages', label: 'Messages', icon: MessageSquare },
   { id: 'projects', label: 'Projects', icon: FolderKanban },
-  { id: 'team', label: 'Team', icon: UserRound },
+  { id: 'team', label: 'Users', icon: UserRound },
   { id: 'openings', label: 'Careers', icon: Briefcase },
   { id: 'applications', label: 'Applications', icon: FileText },
-  { id: 'users', label: 'Users', icon: Users },
-  { id: 'settings', label: 'Settings', icon: Settings },
+  { id: 'users', label: 'Settings', icon: Settings },
 ];
 
 const ADMIN_CSS = `
@@ -1240,26 +1239,15 @@ const ADMIN_CSS_EXTRA = `
 .adm[data-t="light"] .adm-nav{color:rgba(23,38,29,.7)}
 .adm[data-t="light"] .adm-nav:hover{background:rgba(20,40,28,.06);color:#000}
 .adm[data-t="light"] .adm-nav[data-active="true"]{color:#0b2616;background:linear-gradient(120deg,rgba(74,222,128,.3),rgba(243,160,68,.28))}
-.adm[data-t="light"] .adm-title{background-image:linear-gradient(90deg,#14532d,#15803d,#d9822e,#14532d);background-size:200% auto;-webkit-background-clip:text;background-clip:text}
-.adm[data-t="light"] .adm-row:hover{background:rgba(20,40,28,.05)}
-.adm[data-t="light"] [class*="text-white"]{color:rgba(23,38,29,.72)!important}
-.adm[data-t="light"] [class*="bg-black/"]{background-color:rgba(20,40,28,.05)!important}
-.adm[data-t="light"] [class*="border-white/"]{border-color:rgba(20,40,28,.1)!important}
-.adm[data-t="light"] .text-emerald-200,.adm[data-t="light"] .text-emerald-300{color:#15803d!important}
-.adm[data-t="light"] .text-orange-200,.adm[data-t="light"] .text-orange-300{color:#c2410c!important}
-.adm[data-t="light"] .text-red-200,.adm[data-t="light"] .text-red-100{color:#b91c1c!important}
-.adm[data-t="light"] .adm-btn,.adm[data-t="light"] .adm-btn *,.adm[data-t="light"] .bg-gradient-to-br *{color:#fff!important}
-.adm[data-t="light"]{background:#f5f7f5!important}
-.adm[data-t="light"] .adm-bg{background:linear-gradient(145deg,#f8faf8,#eef3ef)}
 .adm[data-t="light"] .adm-title{color:#285640!important}
 .adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09)!important}
 .adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)!important}
 
 /* Welcome banner on the dashboard overview (plain CSS so the light-theme overrides never touch it) */
 .adm-hero{position:relative;isolation:isolate;overflow:hidden;border-radius:1.25rem;padding:1.5rem 1.6rem;margin-bottom:1rem;color:#fff;background:linear-gradient(120deg,#0b2417 0%,#285640 62%,#3d7556 100%);box-shadow:0 22px 50px -26px rgba(12,42,28,.8)}
-.adm-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(380px 240px at 100% 0%,rgba(243,160,68,.42),transparent 70%),radial-gradient(300px 220px at 0% 100%,rgba(74,222,128,.22),transparent 70%)}
+.adm-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(380px 240px at 100% 0%,rgba(243,160,68,.42),transparent 70%),radial-gradient(360px 300px at -10% 105%,rgba(74,222,128,.25),transparent 70%)}
 .adm-hero small{display:block;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.7)}
-.adm-hero h3{margin-top:.25rem;font-size:1.65rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;color:#fff}
+.adm-hero h3{margin-top:.25rem;font-size:1.65rem;font-weight:800;letter-spacing:-.01em;line-height:1.15;color:#fff}
 .adm-hero p{margin-top:.4rem;max-width:34rem;font-size:.86rem;line-height:1.5;color:rgba(255,255,255,.78)}
 .adm-hero-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}
 .adm-hero-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;border-radius:9999px;font-size:.78rem;font-weight:700;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);transition:background .2s,transform .2s}
@@ -1419,10 +1407,14 @@ function AdminLogin({ onLoggedIn, onClose, notice }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const submit = async (e) => {
-    e.preventDefault(); if (loading) return;
-    setError(''); setLoading(true);
-    try { const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds }); onLoggedIn(data.token, data.user); }
-    catch (err) { setError(err.message); setLoading(false); }
+    e.preventDefault(); setError(''); setLoading(true);
+    try {
+      const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds });
+      onLoggedIn(data.token, data.user);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
   };
   return (
     <div className="r4d-auth-stage" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -1636,549 +1628,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
   const svcMax = Math.max(1, ...svc.map(([, n]) => n));
   const unreadCount = Number(stats?.unread_messages || 0);
   const newAppCount = Number(stats?.new_applications || 0);
-  return (
-    <Panel title="Overview" subtitle="Website activity at a glance.">
-      <div className="adm-hero adm-in">
-        <small>{new Date().toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</small>
-        <h3>{greeting}, {firstName}</h3>
-        <p>Welcome back to the REL4D admin console. Here is what needs your attention today.</p>
-        <div className="adm-hero-actions">
-          <button type="button" className="adm-hero-chip" onClick={() => goto('messages')}><Inbox size={14} />Unread messages{unreadCount > 0 && <b>{unreadCount}</b>}</button>
-          <button type="button" className="adm-hero-chip" onClick={() => goto('applications')}><FileText size={14} />New applications{newAppCount > 0 && <b>{newAppCount}</b>}</button>
-          <button type="button" className="adm-hero-chip" onClick={() => goto('projects')}><Plus size={14} />Add a project</button>
-          <button type="button" className="adm-hero-chip" onClick={() => goto('openings')}><Briefcase size={14} />Post a job</button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-7">
-        {STAT_CARDS.map((c, i) => (
-          <button key={c.key} type="button" onClick={() => goto(c.tab)} style={{ animationDelay: `${i * 40}ms` }} className="adm-glass adm-in flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition hover:-translate-y-0.5">
-            <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br ${c.tone} text-white`}><c.icon size={15} /></span>
-            <span className="min-w-0"><span className="block text-lg font-extrabold leading-none"><CountUp to={Number(stats?.[c.key] || 0)} /></span><span className="mt-1 block truncate text-[.62rem] font-bold uppercase tracking-wider opacity-55">{c.label}</span></span>
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-4 grid gap-3 xl:grid-cols-[1.5fr_1fr]">
-        <div className="adm-glass rounded-xl p-4">
-          <div className="flex items-center justify-between"><h3 className="text-sm font-bold">Messages · 14 days</h3><span className="adm-chip bg-emerald-400/15 text-emerald-300">{counts.reduce((a, b) => a + b, 0)}</span></div>
-          <Sparkline values={counts} />
-          <div className="flex justify-between text-[.65rem] opacity-45"><span>{days[0].toLocaleDateString([], { month: 'short', day: 'numeric' })}</span><span>Today</span></div>
-        </div>
-        <div className="adm-glass rounded-xl p-4">
-          <h3 className="text-sm font-bold">Applications by status</h3>
-          <div className="mt-3 flex items-center gap-4">
-            <Donut data={byStatus} />
-            <ul className="flex-1 space-y-1.5 text-xs">{byStatus.map(({ s, n }) => <li key={s} className="flex items-center gap-2"><i className="h-2 w-2 rounded-full" style={{ background: STATUS_COLOR[s] }} /><span className="capitalize opacity-75">{s}</span><b className="ml-auto">{n}</b></li>)}</ul>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-3 grid gap-3 lg:grid-cols-3">
-        <div className="adm-glass rounded-xl p-4">
-          <h3 className="text-sm font-bold">Enquiries by service</h3>
-          <div className="mt-3 space-y-2.5">
-            {svc.length === 0 ? <p className="text-xs opacity-50">No data yet.</p> : svc.map(([k, n]) => (
-              <div key={k}><div className="mb-1 flex justify-between text-xs"><span className="truncate opacity-75">{k}</span><b>{n}</b></div><div className="h-1.5 overflow-hidden rounded-full bg-current/10" style={{ background: 'rgba(127,127,127,.18)' }}><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300" style={{ width: `${(n / svcMax) * 100}%` }} /></div></div>
-            ))}
-          </div>
-        </div>
-        <div className="adm-glass rounded-xl p-4">
-          <div className="flex items-center justify-between"><h3 className="text-sm font-bold">New sign-ups · 14 days</h3><span className="adm-chip bg-violet-400/15 text-violet-300">{signups.reduce((a, b) => a + b, 0)}</span></div>
-          <div className="mt-3 flex h-24 items-end gap-1">{signups.map((n, i) => <div key={i} title={`${n}`} className="flex-1 rounded-t bg-gradient-to-t from-violet-500 to-indigo-300" style={{ height: `${Math.max(6, (n / Math.max(1, ...signups)) * 100)}%`, opacity: n ? 1 : 0.25 }} />)}</div>
-        </div>
-        <div className="adm-glass rounded-xl p-4">
-          <div className="mb-2 flex items-center justify-between"><h3 className="text-sm font-bold">Latest messages</h3><button type="button" onClick={() => goto('messages')} className="text-xs font-bold text-orange-400 hover:underline">All</button></div>
-          {messages.length === 0 ? <p className="text-xs opacity-50">No messages yet.</p> : messages.slice(0, 4).map((m) => (
-            <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left">
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xs font-bold text-white">{initials(m.name)}</span>
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-1.5 w-1.5 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
-            </button>
-          ))}
-        </div>
-      </div>
-    </Panel>
-  );
-}
-
-/* ----- Messages: inbox, read/unread, star, bulk actions, reply ----- */
-function MessagesPanel({ items, setItems, ctx, focusId }) {
-  const { call, run, busy, search } = ctx;
-  const [filter, setFilter] = useState('all');
-  const [selectedId, setSelectedId] = useState(focusId || null);
-  const [checked, setChecked] = useState([]);
-  const [reply, setReply] = useState(() => items.find((m) => m.id === focusId)?.reply_text || '');
-  const q = search.trim().toLowerCase();
-  const matches = (m) => !q || [m.name, m.email, m.organization, m.service, m.message].some((v) => (v || '').toLowerCase().includes(q));
-  const counts = { all: items.length, unread: items.filter((m) => !m.is_read).length, starred: items.filter((m) => m.starred).length };
-  const shown = items.filter((m) => matches(m) && (filter === 'all' || (filter === 'unread' && !m.is_read) || (filter === 'starred' && m.starred)));
-  const current = items.find((m) => m.id === selectedId) || null;
-  const patch = (id, changes) => setItems((list) => list.map((m) => (m.id === id ? { ...m, ...changes } : m)));
-
-  const setRead = (m, value, quiet) => run(`read-${m.id}`, async () => {
-    await call(`/api/admin/messages/${m.id}`, { method: 'PATCH', body: { is_read: value } });
-    patch(m.id, { is_read: value });
-  }, quiet ? null : value ? 'Marked as read' : 'Marked as unread');
-
-  const open = (m) => { setSelectedId(m.id); setReply(m.reply_text || ''); if (!m.is_read) setRead(m, true, true); };
-  const toggleStar = (m) => run(`star-${m.id}`, async () => {
-    await call(`/api/admin/messages/${m.id}`, { method: 'PATCH', body: { starred: !m.starred } });
-    patch(m.id, { starred: !m.starred });
-  });
-  const remove = (m) => {
-    if (!window.confirm(`Delete the message from ${m.name}?`)) return;
-    run(`del-${m.id}`, async () => {
-      await call(`/api/admin/messages/${m.id}`, { method: 'DELETE' });
-      setItems((l) => l.filter((x) => x.id !== m.id));
-      if (selectedId === m.id) setSelectedId(null);
-    }, 'Message deleted');
-  };
-  const sendReply = (m) => run(`reply-${m.id}`, async () => {
-    const r = await call(`/api/admin/messages/${m.id}/reply`, { method: 'POST', body: { reply } });
-    patch(m.id, { reply_text: reply, replied_at: new Date().toISOString(), is_read: true });
-    if (!r.emailed) { // server has no SMTP: open the admin's own mail app with the text filled in
-      window.location.href = `mailto:${m.email}?subject=${encodeURIComponent('Re: your message to REL4D Ltd')}&body=${encodeURIComponent(reply)}`;
-    }
-    return r;
-  }, 'Reply saved');
-  const bulk = (action) => run(`bulk-${action}`, async () => {
-    if (action === 'delete' && !window.confirm(`Delete ${checked.length} message(s)?`)) return;
-    await call('/api/admin/messages/bulk', { method: 'POST', body: { ids: checked, action } });
-    if (action === 'delete') setItems((l) => l.filter((m) => !checked.includes(m.id)));
-    else setItems((l) => l.map((m) => (checked.includes(m.id) ? { ...m, is_read: action === 'read' } : m)));
-    setChecked([]);
-  }, 'Done');
-
-  return (
-    <Panel title="Messages" subtitle="Everything visitors send through the contact form lands here."
-      actions={<button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-messages.csv', items, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'organization', label: 'Organization' }, { key: 'service', label: 'Service' }, { key: 'message', label: 'Message' }, { key: 'is_read', label: 'Read' }])}><Download size={15} />Export CSV</button>}>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        {['all', 'unread', 'starred'].map((f) => (
-          <button key={f} type="button" onClick={() => setFilter(f)} className={`adm-chip capitalize transition ${filter === f ? 'bg-emerald-400/20 text-emerald-100 ring-1 ring-emerald-300/40' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}>{f} · {counts[f]}</button>
-        ))}
-        {checked.length > 0 && (
-          <div className="ml-auto flex flex-wrap items-center gap-2">
-            <span className="text-xs text-white/55">{checked.length} selected</span>
-            <Btn type="button" loading={busy === 'bulk-read'} onClick={() => bulk('read')} className="adm-btn-ghost !py-1.5"><Check size={14} />Mark read</Btn>
-            <Btn type="button" loading={busy === 'bulk-unread'} onClick={() => bulk('unread')} className="adm-btn-ghost !py-1.5">Unread</Btn>
-            <Btn type="button" loading={busy === 'bulk-delete'} onClick={() => bulk('delete')} className="adm-btn-danger !py-1.5"><Trash2 size={14} />Delete</Btn>
-          </div>
-        )}
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-[390px_1fr]">
-        <div className="adm-glass max-h-[68vh] overflow-y-auto rounded-2xl">
-          {shown.length === 0 ? <Empty icon={Inbox} text="Nothing here." /> : (
-            <>
-              <label className="flex items-center gap-3 border-b border-white/10 px-4 py-2.5 text-xs font-semibold text-white/55">
-                <input type="checkbox" checked={checked.length === shown.length && shown.length > 0} onChange={(e) => setChecked(e.target.checked ? shown.map((m) => m.id) : [])} className="h-4 w-4 accent-emerald-400" />Select all
-              </label>
-              {shown.map((m) => (
-                <div key={m.id} onClick={() => open(m)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') open(m); }}
-                  className={`adm-row flex cursor-pointer items-start gap-3 border-b border-white/5 px-4 py-3.5 ${selectedId === m.id ? 'bg-white/[.07]' : ''}`}>
-                  <input type="checkbox" checked={checked.includes(m.id)} onClick={(e) => e.stopPropagation()} onChange={(e) => setChecked((c) => (e.target.checked ? [...c, m.id] : c.filter((id) => id !== m.id)))} className="mt-2 h-4 w-4 accent-emerald-400" aria-label={`Select ${m.name}`} />
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-2"><span className={`truncate text-sm ${m.is_read ? 'font-medium text-white/80' : 'font-bold text-white'}`}>{m.name}</span>{!m.is_read && <i className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}{m.starred && <Star size={13} className="shrink-0 text-amber-300" fill="currentColor" />}{m.replied_at && <Reply size={13} className="shrink-0 text-emerald-300" />}</span>
-                    <span className="block truncate text-xs text-white/50">{m.service || 'General enquiry'} · {fmtDate(m.created_at)}</span>
-                    <span className="mt-1 block truncate text-xs text-white/60">{m.message}</span>
-                  </span>
-                </div>
-              ))}
-            </>
-          )}
-        </div>
-
-        <div className="adm-glass rounded-2xl p-6">
-          {!current ? <Empty icon={MessageSquare} text="Select a message to read it and reply." /> : (
-            <div key={current.id} className="adm-in">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-lg font-bold">{initials(current.name)}</span>
-                  <div><p className="text-lg font-bold">{current.name}</p><a href={`mailto:${current.email}`} className="text-sm text-emerald-300 hover:underline">{current.email}</a>{current.organization && <p className="text-xs text-white/50">{current.organization}</p>}</div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Btn type="button" loading={busy === `star-${current.id}`} onClick={() => toggleStar(current)} className="adm-btn-ghost !py-2"><Star size={15} fill={current.starred ? 'currentColor' : 'none'} className={current.starred ? 'text-amber-300' : ''} />{current.starred ? 'Starred' : 'Star'}</Btn>
-                  <Btn type="button" loading={busy === `read-${current.id}`} onClick={() => setRead(current, !current.is_read)} className="adm-btn-ghost !py-2">{current.is_read ? 'Mark unread' : 'Mark read'}</Btn>
-                  <Btn type="button" loading={busy === `del-${current.id}`} onClick={() => remove(current)} className="adm-btn-danger !py-2"><Trash2 size={15} />Delete</Btn>
-                </div>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {current.service && <span className="adm-chip bg-orange-400/15 text-orange-200">{current.service}</span>}
-                <span className="adm-chip bg-white/5 text-white/55">{fmtDate(current.created_at)}</span>
-                {current.replied_at && <span className="adm-chip bg-emerald-400/15 text-emerald-200"><Reply size={12} />Replied {fmtDate(current.replied_at)}</span>}
-              </div>
-              <p className="mt-5 whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/25 p-5 text-sm leading-relaxed text-white/85">{current.message}</p>
-
-              <div className="mt-6">
-                <label className="adm-label" htmlFor="adm-reply">Your reply</label>
-                <textarea id="adm-reply" rows={5} value={reply} onChange={(e) => setReply(e.target.value)} className="adm-input resize-y" placeholder={`Write a reply to ${current.name}…`} />
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                  <p className="text-xs text-white/45">Sent by e-mail when SMTP is set up; otherwise your mail app opens with the text ready.</p>
-                  <Btn type="button" loading={busy === `reply-${current.id}`} disabled={reply.trim().length < 2} onClick={() => sendReply(current)} className="adm-btn"><Send size={15} className={busy === `reply-${current.id}` ? 'hidden' : ''} />Send reply</Btn>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </Panel>
-  );
-}
-
-/* ----- Projects & Careers: one reusable create / edit / hide / delete manager ----- */
-function ContentManager({ kind, title, singular, subtitle, items, setItems, fields, meta, ctx }) {
-  const { call, run, busy, toast, search } = ctx;
-  const empty = Object.fromEntries(fields.map((f) => [f.name, '']));
-  const [form, setForm] = useState(empty);
-  const [published, setPublished] = useState(true);
-  const [order, setOrder] = useState('');
-  const [editing, setEditing] = useState(null); // null | 'new' | item id
-  const q = search.trim().toLowerCase();
-  const shown = items.filter((it) => !q || JSON.stringify(it.data).toLowerCase().includes(q));
-
-  const startNew = () => { setForm(empty); setPublished(true); setOrder(''); setEditing('new'); };
-  const startEdit = (it) => { setForm({ ...empty, ...it.data }); setPublished(it.published); setOrder(String(it.sort_order)); setEditing(it.id); };
-  const set = (name) => (e) => setForm((f) => ({ ...f, [name]: e.target.value }));
-
-  const pickImage = async (e, name) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    try { setForm((f) => ({ ...f, [name]: '' })); const url = await fileToDataUrl(file); setForm((f) => ({ ...f, [name]: url })); }
-    catch (err) { toast(err.message, 'err'); }
-  };
-
-  const save = (e) => {
-    e.preventDefault();
-    run(`save-${kind}`, async () => {
-      const body = { data: form, published, sort_order: order === '' ? undefined : Number(order) };
-      if (editing === 'new') {
-        const r = await call('/api/admin/content', { method: 'POST', body: { kind, ...body } });
-        setItems((l) => [...l, r.item]);
-      } else {
-        const r = await call(`/api/admin/content/${editing}`, { method: 'PUT', body });
-        setItems((l) => l.map((x) => (x.id === editing ? r.item : x)));
-      }
-      setEditing(null);
-    }, `${singular} saved`);
-  };
-  const togglePublish = (it) => run(`pub-${it.id}`, async () => {
-    const r = await call(`/api/admin/content/${it.id}`, { method: 'PUT', body: { published: !it.published } });
-    setItems((l) => l.map((x) => (x.id === it.id ? r.item : x)));
-  }, it.published ? 'Hidden from the website' : 'Now visible on the website');
-  const remove = (it) => {
-    if (!window.confirm(`Delete "${it.data.title || singular}"? This cannot be undone.`)) return;
-    run(`del-${it.id}`, async () => {
-      await call(`/api/admin/content/${it.id}`, { method: 'DELETE' });
-      setItems((l) => l.filter((x) => x.id !== it.id));
-    }, `${singular} deleted`);
-  };
-
-  return (
-    <Panel title={title} subtitle={subtitle} actions={<button type="button" className="adm-btn" onClick={startNew}><Plus size={16} />Add {singular.toLowerCase()}</button>}>
-      {editing !== null && (
-        <form onSubmit={save} className="adm-glass adm-in mb-6 rounded-2xl p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-bold">{editing === 'new' ? `New ${singular.toLowerCase()}` : `Edit ${singular.toLowerCase()}`}</h3>
-            <button type="button" onClick={() => setEditing(null)} aria-label="Close form" className="grid h-9 w-9 place-items-center rounded-full text-white/60 hover:bg-white/10"><X size={18} /></button>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {fields.map((f) => (
-              <div key={f.name} className={f.type === 'textarea' || f.type === 'image' ? 'md:col-span-2' : ''}>
-                <label className="adm-label" htmlFor={`f-${kind}-${f.name}`}>{f.label}{f.required && ' *'}</label>
-                {f.type === 'textarea' ? (
-                  <textarea id={`f-${kind}-${f.name}`} rows={4} required={f.required} value={form[f.name] || ''} onChange={set(f.name)} className="adm-input resize-y" />
-                ) : f.type === 'image' ? (
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <div className="grid h-24 w-40 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/10 bg-black/30">
-                      {form[f.name] ? <img src={form[f.name]} alt="" className="h-full w-full object-cover" /> : <ImagePlus size={24} className="text-white/30" />}
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <input id={`f-${kind}-${f.name}`} type="text" value={form[f.name]?.startsWith('data:') ? '(uploaded image)' : form[f.name] || ''} onChange={set(f.name)} readOnly={form[f.name]?.startsWith('data:')} placeholder="Paste an image URL…" className="adm-input" />
-                      <div className="flex gap-2">
-                        <label className="adm-btn-ghost cursor-pointer"><ImagePlus size={15} />Upload image<input type="file" accept="image/*" className="sr-only" onChange={(e) => pickImage(e, f.name)} /></label>
-                        {form[f.name] && <button type="button" className="adm-btn-ghost" onClick={() => setForm((x) => ({ ...x, [f.name]: '' }))}>Remove</button>}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <input id={`f-${kind}-${f.name}`} type="text" required={f.required} value={form[f.name] || ''} onChange={set(f.name)} list={f.type === 'combo' ? `dl-${kind}-${f.name}` : undefined} className="adm-input" />
-                    {f.type === 'combo' && <datalist id={`dl-${kind}-${f.name}`}>{f.options.map((o) => <option key={o} value={o} />)}</datalist>}
-                  </>
-                )}
-              </div>
-            ))}
-            <div>
-              <label className="adm-label" htmlFor={`f-${kind}-order`}>Display order</label>
-              <input id={`f-${kind}-order`} type="number" value={order} onChange={(e) => setOrder(e.target.value)} placeholder="Auto" className="adm-input" />
-            </div>
-            <label className="flex items-center gap-3 self-end rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm font-semibold">
-              <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} className="h-4 w-4 accent-emerald-400" />Visible on the website
-            </label>
-          </div>
-          <div className="mt-5 flex flex-wrap justify-end gap-2">
-            <button type="button" className="adm-btn-ghost" onClick={() => setEditing(null)}>Cancel</button>
-            <Btn type="submit" loading={busy === `save-${kind}`} className="adm-btn"><Check size={16} className={busy === `save-${kind}` ? 'hidden' : ''} />Save {singular.toLowerCase()}</Btn>
-          </div>
-        </form>
-      )}
-
-      {shown.length === 0 ? <div className="adm-glass rounded-2xl"><Empty icon={FolderKanban} text={`No ${title.toLowerCase()} yet. Press “Add ${singular.toLowerCase()}”.`} /></div> : (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {shown.map((it, i) => (
-            <article key={it.id} style={{ animationDelay: `${i * 55}ms` }} className={`adm-glass adm-in group overflow-hidden rounded-2xl transition hover:-translate-y-1 ${it.published ? '' : 'opacity-60'}`}>
-              {it.data.image !== undefined && (
-                <div className="relative h-40 overflow-hidden bg-gradient-to-br from-emerald-700 to-emerald-950">
-                  {it.data.image && <img src={it.data.image} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />}
-                  <span className={`adm-chip absolute left-3 top-3 ${it.published ? 'bg-emerald-500/90 text-white' : 'bg-black/70 text-white/80'}`}>{it.published ? 'Live' : 'Hidden'}</span>
-                </div>
-              )}
-              <div className="p-5">
-                {it.data.image === undefined && <span className={`adm-chip mb-2 ${it.published ? 'bg-emerald-400/15 text-emerald-200' : 'bg-white/10 text-white/60'}`}>{it.published ? 'Live' : 'Hidden'}</span>}
-                <h3 className="font-bold leading-snug">{it.data.title || 'Untitled'}</h3>
-                <div className="mt-2 flex flex-wrap gap-1.5">{meta.map((k) => it.data[k] && <span key={k} className="adm-chip bg-white/8 text-white/65" style={{ background: 'rgba(255,255,255,.07)' }}>{it.data[k]}</span>)}</div>
-                <p className="mt-3 line-clamp-3 text-sm text-white/60">{it.data.description}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <button type="button" onClick={() => startEdit(it)} className="adm-btn-ghost !px-3 !py-1.5"><Pencil size={14} />Edit</button>
-                  <Btn type="button" loading={busy === `pub-${it.id}`} onClick={() => togglePublish(it)} className="adm-btn-ghost !px-3 !py-1.5">{it.published ? <EyeOff size={14} /> : <Eye size={14} />}{it.published ? 'Hide' : 'Publish'}</Btn>
-                  <Btn type="button" loading={busy === `del-${it.id}`} onClick={() => remove(it)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} />Delete</Btn>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      )}
-    </Panel>
-  );
-}
-
-/* ----- Applications ----- */
-function ApplicationsPanel({ items, setItems, ctx, token }) {
-  const { call, run, busy, search } = ctx;
-  const [openId, setOpenId] = useState(null);
-  const q = search.trim().toLowerCase();
-  const shown = items.filter((a) => !q || [a.name, a.email, a.position, a.phone, a.message].some((v) => (v || '').toLowerCase().includes(q)));
-
-  const setStatus = (a, status) => run(`st-${a.id}`, async () => {
-    await call(`/api/admin/applications/${a.id}`, { method: 'PATCH', body: { status } });
-    setItems((l) => l.map((x) => (x.id === a.id ? { ...x, status } : x)));
-  }, `Marked as ${status}`);
-  const remove = (a) => {
-    if (!window.confirm(`Delete the application from ${a.name}?`)) return;
-    run(`del-${a.id}`, async () => {
-      await call(`/api/admin/applications/${a.id}`, { method: 'DELETE' });
-      setItems((l) => l.filter((x) => x.id !== a.id));
-    }, 'Application deleted');
-  };
-  const downloadCv = (a) => run(`cv-${a.id}`, async () => {
-    const res = await apiRequest(`/api/admin/applications/${a.id}/cv`, { token, raw: true });
-    const url = URL.createObjectURL(await res.blob());
-    const link = document.createElement('a');
-    link.href = url; link.download = a.cv_filename || 'cv.pdf'; link.click();
-    URL.revokeObjectURL(url);
-  });
-
-  return (
-    <Panel title="Applications" subtitle="Candidates who applied for a role or sent an open application."
-      actions={<button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-applications.csv', items, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }, { key: 'position', label: 'Position' }, { key: 'status', label: 'Status' }])}><Download size={15} />Export CSV</button>}>
-      <div className="adm-glass overflow-x-auto rounded-2xl">
-        {shown.length === 0 ? <Empty icon={FileText} text="No applications yet." /> : (
-          <table className="w-full min-w-[760px] text-left text-sm">
-            <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">Candidate</th><th className="px-3 py-3">Position</th><th className="px-3 py-3">Applied</th><th className="px-3 py-3">Status</th><th className="px-5 py-3 text-right">Actions</th></tr></thead>
-            <tbody>
-              {shown.map((a) => (
-                <Fragment key={a.id}>
-                  <tr className="adm-row border-b border-white/5">
-                    <td className="px-5 py-3.5"><p className="font-bold">{a.name}</p><p className="text-xs text-white/50">{a.email}{a.phone ? ` · ${a.phone}` : ''}</p></td>
-                    <td className="px-3 py-3.5 text-white/75">{a.position}</td>
-                    <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(a.created_at)}</td>
-                    <td className="px-3 py-3.5">
-                      <div className="flex items-center gap-2">
-                        {busy === `st-${a.id}` ? <Spinner size={16} className="text-orange-300" /> : <span className={`adm-chip capitalize ring-1 ${APP_STATUS_STYLE[a.status]}`}>{a.status}</span>}
-                        <select value={a.status} onChange={(e) => setStatus(a, e.target.value)} className="adm-input !w-auto !py-1.5 !text-xs" aria-label={`Status for ${a.name}`}>{APP_STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
-                      </div>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <div className="flex justify-end gap-2">
-                        {a.message && <button type="button" onClick={() => setOpenId(openId === a.id ? null : a.id)} className="adm-btn-ghost !px-3 !py-1.5"><Eye size={14} />Note</button>}
-                        {a.has_cv && <Btn type="button" loading={busy === `cv-${a.id}`} onClick={() => downloadCv(a)} className="adm-btn-ghost !px-3 !py-1.5"><Download size={14} />CV</Btn>}
-                        {a.cv_url && <a href={a.cv_url} target="_blank" rel="noreferrer" className="adm-btn-ghost !px-3 !py-1.5"><ArrowUpRight size={14} />Link</a>}
-                        <Btn type="button" loading={busy === `del-${a.id}`} onClick={() => remove(a)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} /></Btn>
-                      </div>
-                    </td>
-                  </tr>
-                  {openId === a.id && <tr className="border-b border-white/5 bg-black/20"><td colSpan={5} className="whitespace-pre-wrap px-5 py-4 text-sm text-white/75">{a.message}</td></tr>}
-                </Fragment>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </Panel>
-  );
-}
-
-/* ----- Users ----- */
-function UsersPanel({ items, setItems, ctx }) {
-  const { call, run, busy, search } = ctx;
-  const q = search.trim().toLowerCase();
-  const shown = items.filter((u) => !q || [u.name, u.email, u.provider].some((v) => (v || '').toLowerCase().includes(q)));
-  const remove = (u) => {
-    if (!window.confirm(`Delete the account of ${u.name}?`)) return;
-    run(`del-${u.id}`, async () => {
-      await call(`/api/admin/users/${u.id}`, { method: 'DELETE' });
-      setItems((l) => l.filter((x) => x.id !== u.id));
-    }, 'User deleted');
-  };
-  return (
-    <Panel title="Users" subtitle="People who created an account on the website.">
-      <div className="adm-glass overflow-x-auto rounded-2xl">
-        {shown.length === 0 ? <Empty icon={Users} text="No users found." /> : (
-          <table className="w-full min-w-[680px] text-left text-sm">
-            <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">User</th><th className="px-3 py-3">Role</th><th className="px-3 py-3">Sign-in</th><th className="px-3 py-3">Joined</th><th className="px-3 py-3">Last login</th><th className="px-5 py-3" /></tr></thead>
-            <tbody>
-              {shown.map((u) => (
-                <tr key={u.id} className="adm-row border-b border-white/5">
-                  <td className="px-5 py-3.5"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(u.name)}</span><span><span className="block font-bold">{u.name}</span><span className="text-xs text-white/50">{u.email}</span></span></div></td>
-                  <td className="px-3 py-3.5"><span className={`adm-chip ${u.role === 'admin' ? 'bg-orange-400/20 text-orange-200' : 'bg-white/8 text-white/65'}`}>{u.role}</span></td>
-                  <td className="px-3 py-3.5 capitalize text-white/65">{u.provider}</td>
-                  <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.created_at)}</td>
-                  <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.last_login)}</td>
-                  <td className="px-5 py-3.5 text-right">{u.role !== 'admin' && <Btn type="button" loading={busy === `del-${u.id}`} onClick={() => remove(u)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} /></Btn>}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </Panel>
-  );
-}
-
-/* ----- Settings: password, exports, sign out ----- */
-function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
-  const { call, run, busy, toast } = ctx;
-  const [pw, setPw] = useState({ current: '', next: '', confirm: '' });
-  const [show, setShow] = useState(false);
-  const change = (e) => {
-    e.preventDefault();
-    if (pw.next !== pw.confirm) return toast('The new passwords do not match.', 'err');
-    run('pwd', async () => {
-      await call('/api/admin/password', { method: 'POST', body: { current: pw.current, next: pw.next } });
-      setPw({ current: '', next: '', confirm: '' });
-    }, 'Password updated');
-  };
-  return (
-    <Panel title="Settings" subtitle="Your account, security and data exports.">
-      <div className="grid gap-5 lg:grid-cols-2">
-        <form onSubmit={change} className="adm-glass rounded-2xl p-6">
-          <h3 className="flex items-center gap-2 text-lg font-bold"><KeyRound size={18} className="text-orange-300" />Change password</h3>
-          <div className="mt-4 space-y-4">
-            {[['current', 'Current password', 'current-password'], ['next', 'New password (10+ characters)', 'new-password'], ['confirm', 'Repeat new password', 'new-password']].map(([k, label, ac]) => (
-              <div key={k}><label className="adm-label" htmlFor={`pw-${k}`}>{label}</label><input id={`pw-${k}`} required type={show ? 'text' : 'password'} autoComplete={ac} minLength={k === 'current' ? 1 : 10} value={pw[k]} onChange={(e) => setPw((p) => ({ ...p, [k]: e.target.value }))} className="adm-input" /></div>
-            ))}
-            <label className="flex items-center gap-2 text-xs text-white/60"><input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} className="accent-emerald-400" />Show passwords</label>
-            <Btn type="submit" loading={busy === 'pwd'} className="adm-btn w-full">Update password</Btn>
-          </div>
-        </form>
-        <div className="space-y-5">
-          <div className="adm-glass rounded-2xl p-6">
-            <h3 className="flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-emerald-300" />Signed in as</h3>
-            <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold">{initials(user?.name)}</span><div><p className="font-bold">{user?.name}</p><p className="text-sm text-white/55">{user?.email}</p></div></div>
-            <p className="mt-4 text-xs text-white/45">Admin sessions expire automatically after 12 hours.</p>
-            <button type="button" onClick={onLogout} className="adm-btn-danger mt-4"><LogOut size={15} />Sign out</button>
-          </div>
-          <div className="adm-glass rounded-2xl p-6">
-            <h3 className="flex items-center gap-2 text-lg font-bold"><Download size={18} className="text-sky-300" />Export data</h3>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-messages.csv', messages, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'organization', label: 'Organization' }, { key: 'service', label: 'Service' }, { key: 'message', label: 'Message' }])}>Messages (CSV)</button>
-              <button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-applications.csv', applications, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }, { key: 'position', label: 'Position' }, { key: 'status', label: 'Status' }])}>Applications (CSV)</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Panel>
-  );
-}
-
-/* ----- The dashboard shell ----- */
-function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setTheme }) {
-  const [tab, setTab] = useState('overview');
-  const [focusMessage, setFocusMessage] = useState(null);
-  const [stats, setStats] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [teamMembers, setTeamMembers] = useState([]);
-  const [openings, setOpenings] = useState([]);
-  const [applications, setApplications] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [busy, setBusy] = useState('');
-  const [toasts, setToasts] = useState([]);
-  const [search, setSearch] = useState('');
-
-  const call = (path, opts = {}) => apiRequest(path, { token, ...opts });
-  const toast = (text, type = 'ok') => {
-    const id = Date.now() + Math.random();
-    setToasts((t) => [...t, { id, text, type }]);
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4200);
-  };
-  const handleError = (e) => {
-    if (e.status === 401 || e.status === 403) { onLogout(); return; }
-    toast(e.message, 'err');
-  };
-  // Runs one action with a spinner on the button whose key matches `busy`.
-  const run = async (key, fn, okMessage) => {
-    setBusy(key);
-    try {
-      const result = await fn();
-      if (okMessage) toast(okMessage);
-      return result;
-    } catch (e) {
-      handleError(e);
-      return undefined;
-    } finally {
-      setBusy('');
-    }
-  };
-
-  const refresh = async (manual = false) => {
-    if (manual) setRefreshing(true);
-    try {
-      const [me, st, ms, pr, tm, op, ap, us] = await Promise.all([
-        call('/api/auth/me'), call('/api/admin/stats'), call('/api/admin/messages'),
-        call('/api/admin/content?kind=project'), call('/api/admin/content?kind=team'), call('/api/admin/content?kind=opening'),
-        call('/api/admin/applications'), call('/api/admin/users'),
-      ]);
-      setUser(me.user); setStats(st); setMessages(ms.items); setProjects(pr.items); setTeamMembers(tm.items); setOpenings(op.items); setApplications(ap.items); setUsers(us.items);
-      if (manual) toast('Dashboard refreshed');
-    } catch (e) {
-      handleError(e);
-    } finally {
-      setLoading(false); setRefreshing(false);
-    }
-  };
-  // This effect starts the initial API load; state updates happen after the request resolves.
-  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
-  useEffect(() => { refresh(); }, [token]);
-
-  // Keep the badge numbers live without another request.
-  const liveStats = stats && {
-    ...stats,
-    unread_messages: messages.filter((m) => !m.is_read).length,
-    messages: messages.length,
-    applications: applications.length,
-    new_applications: applications.filter((a) => a.status === 'new').length,
-    users: users.filter((u) => u.role === 'user').length,
-    projects: projects.length,
-    openings: openings.length,
-  };
-  const unread = messages.filter((m) => !m.is_read).length;
-  const newApps = applications.filter((a) => a.status === 'new').length;
-  const badge = { messages: unread, applications: newApps };
+  const badge = { messages: unreadCount, applications: newAppCount };
   const goto = (id, messageId = null) => { setTab(id); setFocusMessage(messageId); setSearch(''); };
   const ctx = { call, run, busy, toast, search };
 
@@ -2245,44 +1695,27 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
   );
 }
 
-/* ----- Portal: renders the console above the whole website ----- */
-function AdminPortal({ onClose, notice }) {
-  const [token, setToken] = useState(readToken);
-  const [user, setUser] = useState(null);
-  const [admTheme, setAdmTheme] = useState(() => { try { return localStorage.getItem('rel4d-admin-theme') || 'light'; } catch { return 'light'; } });
-  const changeTheme = (v) => { setAdmTheme(v); try { localStorage.setItem('rel4d-admin-theme', v); } catch { /* storage unavailable */ } };
-  const logout = () => { saveToken(''); setToken(''); setUser(null); };
-  const loggedIn = (newToken, newUser) => { saveToken(newToken); setToken(newToken); setUser(newUser); };
-
-  useEffect(() => {
-    if (token) return undefined;
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [token, onClose]);
-
-  return createPortal(
-    <div className="adm fixed inset-0 z-[200] overflow-hidden" data-t={admTheme} role="dialog" aria-modal="true" aria-label="Admin console">
-      <style>{ADMIN_CSS + ADMIN_CSS_EXTRA}</style>
-      <AdminBackdrop />
-      {token
-        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} theme={admTheme} setTheme={changeTheme} />
-        : <AdminLogin onLoggedIn={loggedIn} onClose={onClose} notice={notice} />}
-    </div>,
-    document.body,
-  );
-}
-
 /* ------------------------- Theme + animations ------------------------- */
 const CSS = `
 :root{
   --g:#4D8A6C; --gd:#285640; --gs:#F1F6F0;
   --o:#F3A044; --od:#D9822E; --os:#FFF4E7;
-  --earth:#65513B; --paper:#FBFAF6;
+  --earth:#65513B; --paper:#FFFFFF;
 }
 html{scroll-behavior:smooth}
-body{background:var(--paper)}
-.r4d-app{min-height:100vh;background:var(--paper);color:#24372c;transition:background-color .25s ease,color .25s ease}
+body{background:#FFFFFF}
+.r4d-app{min-height:100vh;background:#FFFFFF;color:#24372c;transition:background-color .25s ease,color .25s ease}
+.r4d-app[data-theme="light"]{--paper:#FFFFFF;--gs:#F1F6F0;background:#FFFFFF}
+.r4d-app[data-theme="light"] #home{background-color:#FFFFFF!important;background-image:none!important;color:#24372c!important}
+.r4d-app[data-theme="light"] header nav{background:rgba(255,255,255,.98)!important}
+.r4d-app[data-theme="light"] #home [aria-hidden="true"]{opacity:.12}
+.r4d-app[data-theme="light"] #home h1,
+.r4d-app[data-theme="light"] #home p,
+.r4d-app[data-theme="light"] #home .text-white,
+.r4d-app[data-theme="light"] #home [class*="text-white/"]{color:#24372c!important}
+.r4d-app[data-theme="light"] #home [class*="border-white/"]{border-color:rgba(40,86,64,.18)!important}
+.r4d-app[data-theme="light"] #home [class*="bg-white/"]{background-color:rgba(241,246,240,.9)!important}
+.r4d-app[data-theme="light"] #home [class*="text-[var(--gd)]"]{color:var(--gd)!important}
 .r4d-app[data-theme="dark"]{--paper:#14231c;--gs:#20362a;--os:#3a3123;--g:#75ad83;--gd:#285640;--o:#f3a044;--od:#f3a044;color:#e6eee7;color-scheme:dark}
 .r4d-app[data-theme="dark"] #home{background-color:#14231c!important;color:#edf4ee}
 .r4d-app[data-theme="dark"] #home .bg-white,
@@ -2317,111 +1750,6 @@ body{background:var(--paper)}
 .r4d-app[data-theme="dark"] input::placeholder,
 .r4d-app[data-theme="dark"] textarea::placeholder{color:#9eafa2}
 section[id]{scroll-margin-top:90px}
-@keyframes r4d-spin{to{transform:rotate(360deg)}}
-@keyframes r4d-blob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.15)}}
-@keyframes r4d-shine{to{background-position:200% center}}
-@keyframes r4d-spinner{to{transform:rotate(360deg)}}
-@keyframes r4d-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@keyframes r4d-fill{from{width:0}to{width:100%}}
-@keyframes r4d-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-@keyframes r4d-pop{from{opacity:0;transform:scale(.97) translateY(6px)}to{opacity:1;transform:none}}
-@keyframes r4d-marquee{to{transform:translateX(-50%)}}
-@keyframes r4d-letter-bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}60%{transform:translateY(0)}}
-.r4d-portrait-ring{isolation:isolate;position:relative;background:rgba(255,255,255,.08);box-shadow:0 16px 48px -24px rgba(0,0,0,.7)}
-.r4d-portrait-ring::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:conic-gradient(from 0deg,#4ade80,#f3a044,#a7f3d0,#f3a044,#4ade80);animation:r4d-ring-spin 8s linear infinite}
-.r4d-orbit{animation:r4d-orbit-spin 30s linear infinite}
-.r4d-orbit-dot{animation:r4d-dot-pulse 2.4s ease-in-out infinite alternate}
-@keyframes r4d-ring-spin{to{rotate:360deg}}
-@keyframes r4d-orbit-spin{to{rotate:360deg}}
-@keyframes r4d-dot-pulse{to{scale:1.55;opacity:.65}}
-.r4d-spin{animation:r4d-spin 6s linear infinite}
-.r4d-blob{animation:r4d-blob 16s ease-in-out infinite}
-.r4d-shine{background-size:200% auto;animation:r4d-shine 6s linear infinite}
-.r4d-spinner{animation:r4d-spinner .7s linear infinite}
-.r4d-float{animation:r4d-float 4s ease-in-out infinite}
-.r4d-fill{animation:r4d-fill 1.8s ease forwards}
-.r4d-rise{opacity:0;animation:r4d-rise .8s ease forwards}
-.r4d-pop{animation:r4d-pop .35s ease both}
-.r4d-marquee-track{animation:r4d-marquee 44s linear infinite;will-change:transform}
-.r4d-marquee-viewport:hover .r4d-marquee-track,.r4d-marquee-viewport:focus-within .r4d-marquee-track{animation-play-state:paused}
-.r4d-letter-bounce{animation:r4d-letter-bounce 10s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.r4d-spin,.r4d-float,.r4d-marquee-track,.r4d-letter-bounce,.r4d-rise,.r4d-blob,.r4d-shine,.r4d-portrait-ring::before,.r4d-orbit,.r4d-orbit-dot{animation:none;opacity:1}.r4d-fill{animation:none;width:100%}}
-
-/* ===== Sign-in screens: visitor sign in, create account and admin sign in ===== */
-.r4d-auth-overlay{position:fixed;inset:0;z-index:150;display:grid;place-items:center;overflow-y:auto;padding:1rem;background:rgba(6,20,13,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.r4d-auth-stage{position:absolute;inset:0;z-index:1;display:grid;place-items:center;overflow-y:auto;padding:1rem;background:linear-gradient(145deg,#f4f7f4,#e4ede7)}
-.r4d-auth-card{width:100%;max-width:960px;display:grid;grid-template-columns:1fr;overflow:hidden;border-radius:1.75rem;background:#fff;color:#24372c;box-shadow:0 40px 100px -34px rgba(6,20,13,.7);margin:auto}
-@media(min-width:860px){.r4d-auth-card{grid-template-columns:.95fr 1.05fr}}
-
-.r4d-auth-side{position:relative;isolation:isolate;display:none;flex-direction:column;justify-content:space-between;gap:2rem;padding:2.4rem 2.4rem 2rem;color:#fff;overflow:hidden;background:linear-gradient(155deg,#0b2417 0%,#285640 58%,#1f4a34 100%)}
-@media(min-width:860px){.r4d-auth-side{display:flex}}
-.r4d-auth-side::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(420px 300px at 105% -5%,rgba(243,160,68,.38),transparent 70%),radial-gradient(360px 300px at -10% 105%,rgba(74,222,128,.25),transparent 70%)}
-.r4d-auth-side::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:38px 38px;-webkit-mask-image:radial-gradient(ellipse at 30% 30%,#000 10%,transparent 75%);mask-image:radial-gradient(ellipse at 30% 30%,#000 10%,transparent 75%)}
-.r4d-auth-brand,.r4d-auth-mobilebar{display:flex;align-items:center;gap:.8rem}
-.r4d-auth-mobilebar{padding:.9rem 1.25rem;color:#fff;background:linear-gradient(120deg,#0b2417,#285640)}
-@media(min-width:860px){.r4d-auth-mobilebar{display:none}}
-.r4d-auth-logo{display:grid;place-items:center;flex:none;width:2.9rem;height:2.9rem;border-radius:9999px;background:#fff;padding:.3rem;box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
-.r4d-auth-logo img{width:100%;height:100%;object-fit:contain}
-.r4d-auth-brand strong,.r4d-auth-mobilebar strong{display:block;font-size:1.25rem;font-weight:800;letter-spacing:-.01em;line-height:1.1;color:#fff}
-.r4d-auth-brand strong i,.r4d-auth-mobilebar strong i{font-style:normal;color:#F3A044}
-.r4d-auth-brand small,.r4d-auth-mobilebar small{display:block;margin-top:.2rem;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#F3A044}
-.r4d-auth-copy h2{font-size:2rem;font-weight:800;line-height:1.12;letter-spacing:-.02em;color:#fff}
-.r4d-auth-copy>p{margin-top:.8rem;font-size:.92rem;line-height:1.6;color:rgba(255,255,255,.78)}
-.r4d-auth-copy ul{margin:1.6rem 0 0;padding:0;display:grid;gap:.95rem;list-style:none}
-.r4d-auth-copy li{display:flex;gap:.8rem;align-items:flex-start}
-.r4d-auth-copy li>span{display:grid;place-items:center;flex:none;width:2.25rem;height:2.25rem;border-radius:.75rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#F3A044}
-.r4d-auth-copy li b{display:block;font-size:.88rem;font-weight:700;color:#fff}
-.r4d-auth-copy li em{display:block;font-style:normal;font-size:.78rem;line-height:1.45;color:rgba(255,255,255,.68)}
-.r4d-auth-foot{font-size:.72rem;color:rgba(255,255,255,.58)}
-
-.r4d-auth-main{position:relative;padding:1.75rem 1.4rem 1.6rem}
-@media(min-width:860px){.r4d-auth-main{padding:2.5rem 2.6rem 2rem;max-height:min(92vh,760px);overflow-y:auto}}
-.r4d-auth-close{position:absolute;top:1rem;right:1rem;display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:9999px;color:#5d7064;border:1px solid #e1e8e3;background:#fff;transition:background .2s,color .2s}
-.r4d-auth-close:hover{background:#F1F6F0;color:#285640}
-.r4d-auth-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .7rem;border-radius:9999px;font-size:.72rem;font-weight:700;color:#D9822E;background:#FFF4E7}
-.r4d-auth-title{margin-top:.85rem;font-size:1.8rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;color:#285640}
-.r4d-auth-sub{margin-top:.4rem;font-size:.88rem;line-height:1.5;color:#66796d}
-.r4d-auth-form{display:grid;gap:1rem;margin-top:1.4rem}
-.r4d-tabs{display:grid;grid-template-columns:1fr 1fr;gap:.2rem;margin-top:1.3rem;padding:.3rem;border-radius:.95rem;background:#eef3ef}
-.r4d-tabs button{padding:.6rem .5rem;border-radius:.7rem;font-size:.85rem;font-weight:700;color:#5d7064;transition:background .2s,color .2s,box-shadow .2s}
-.r4d-tabs button:hover{color:#285640}
-.r4d-tabs button[aria-selected="true"]{background:#fff;color:#285640;box-shadow:0 4px 12px -6px rgba(0,0,0,.35)}
-
-.r4d-label{display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:700;color:#3f5547}
-.r4d-field{position:relative}
-.r4d-field .lead{position:absolute;left:.95rem;top:50%;transform:translateY(-50%);color:#7b8d82;pointer-events:none;transition:color .2s}
-.r4d-field:focus-within .lead{color:#285640}
-.r4d-input{width:100%;border:1.5px solid #d9e2dc;background:#f8faf8;border-radius:.9rem;padding:.8rem 1rem .8rem 2.8rem;font-size:.9rem;color:#17261d;outline:none;transition:border-color .2s,box-shadow .2s,background .2s}
-.r4d-input.noicon{padding-left:1rem}
-.r4d-input.has-right{padding-right:2.9rem}
-.r4d-input:hover{border-color:#a9bfb1}
-.r4d-input:focus{border-color:#4D8A6C;background:#fff;box-shadow:0 0 0 4px rgba(77,138,108,.16)}
-.r4d-input::placeholder{color:#93a59a}
-.r4d-eye{position:absolute;right:.45rem;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:2.1rem;height:2.1rem;border-radius:.6rem;color:#7b8d82;transition:background .2s,color .2s}
-.r4d-eye:hover{background:#eef3ef;color:#285640}
-.r4d-strength{display:flex;align-items:center;gap:.7rem;margin-top:.55rem;font-size:.74rem;font-weight:700}
-.r4d-strength .bars{display:flex;flex:1;gap:.3rem}
-.r4d-strength .bars i{height:.28rem;flex:1;border-radius:9999px;transition:background .25s}
-
-.r4d-auth-btn{display:inline-flex;width:100%;align-items:center;justify-content:center;gap:.55rem;border-radius:.9rem;padding:.9rem 1.2rem;font-size:.92rem;font-weight:700;color:#fff;background:linear-gradient(120deg,#285640,#3d7556);box-shadow:0 16px 30px -16px rgba(40,86,64,.85);transition:background .25s,transform .25s,box-shadow .25s}
-.r4d-auth-btn:hover:not(:disabled){background:linear-gradient(120deg,#D9822E,#F3A044);transform:translateY(-1px);box-shadow:0 18px 32px -16px rgba(217,130,46,.9)}
-.r4d-auth-btn:focus-visible{outline:3px solid rgba(243,160,68,.55);outline-offset:2px}
-.r4d-auth-btn:disabled{opacity:.75;cursor:wait}
-.r4d-divider{display:flex;align-items:center;gap:.8rem;margin:1.25rem 0 1rem;font-size:.74rem;font-weight:600;color:#8a9b90}
-.r4d-divider::before,.r4d-divider::after{content:"";flex:1;height:1px;background:#e2e9e4}
-.r4d-social-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-.r4d-social{display:flex;align-items:center;justify-content:center;gap:.55rem;padding:.72rem .6rem;border:1.5px solid #dbe4de;border-radius:.85rem;background:#fff;font-size:.82rem;font-weight:600;color:#24372c;transition:border-color .2s,background .2s,transform .2s}
-.r4d-social:hover{border-color:#4D8A6C;background:#F1F6F0;transform:translateY(-1px)}
-.r4d-social:focus-visible{outline:3px solid rgba(77,138,108,.35);outline-offset:2px}
-.r4d-alert{display:flex;align-items:flex-start;gap:.6rem;border-radius:.85rem;padding:.75rem .9rem;font-size:.82rem;line-height:1.45}
-.r4d-alert.err{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
-.r4d-alert.warn{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
-.r4d-auth-switch{margin-top:1.3rem;text-align:center;font-size:.84rem;color:#66796d}
-.r4d-auth-link{font-weight:700;color:#285640;transition:color .2s}
-.r4d-auth-link:hover{color:#D9822E;text-decoration:underline}
-.r4d-auth-back{display:flex;align-items:center;justify-content:center;gap:.4rem;margin:1.3rem auto 0;font-size:.84rem;font-weight:600;color:#66796d;transition:color .2s}
-.r4d-auth-back:hover{color:#285640}
-@media (prefers-reduced-motion:reduce){.r4d-auth-btn,.r4d-social{transition:none}}
 `;
 
 /* ------------------------------- Page --------------------------------- */
