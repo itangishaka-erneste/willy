@@ -540,8 +540,8 @@ function Stats() {
     <section className="relative z-10 -mt-16 pb-16 sm:-mt-20">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-5 sm:gap-6 lg:grid-cols-4 lg:px-8">
         {STATS.map((s, i) => (
-          <Reveal key={s.label} delay={i * 90}>
-            <div className="group relative h-full overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-br from-white via-white to-emerald-50 p-5 shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-900/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6">
+          <Reveal key={s.label} delay={i * 90}> {/* curved stats keep the hero flow */}
+            <div className="group relative h-full overflow-hidden rounded-3xl rounded-tr-[2.5rem] border border-emerald-100 bg-gradient-to-br from-white via-white to-emerald-50 p-5 shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-900/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6">
               <span className="absolute -right-7 -top-8 h-24 w-24 rounded-full bg-emerald-100/70 transition-transform duration-500 group-hover:scale-150" />
               <div className="relative">
                 <p className="text-4xl font-extrabold tracking-tight text-emerald-700 lg:text-5xl"><CountUp to={s.value} suffix={s.suffix} /></p>
@@ -577,20 +577,21 @@ function Marquee({ t }) {
 function About() {
   const tr = useTranslate();
   return (
-    <section id="about" className="relative overflow-hidden py-24">
-      <Medal className="pointer-events-none absolute -right-12 top-8 hidden w-72 text-[var(--gs)] lg:block" star="#fff" />
-      <Ladder className="pointer-events-none absolute -right-4 bottom-0 hidden w-40 text-[var(--gs)] lg:block" rung="#fff" />
+    <section id="about" className="relative overflow-hidden bg-[var(--gs)] py-24">
+      <Curve flip className="text-white" />
+      <Medal className="pointer-events-none absolute -right-12 top-8 hidden w-72 text-white/50 lg:block" star="var(--gs)" />
+      <Ladder className="pointer-events-none absolute -right-4 bottom-0 hidden w-40 text-white/50 lg:block" rung="var(--gs)" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2 lg:px-8">
         <Reveal className="relative pb-24 sm:pb-28">
-          <div className="relative overflow-hidden rounded-[2.5rem] rounded-br-xl rounded-tr-xl">
+          <div className="relative overflow-hidden rounded-[2.5rem] rounded-br-xl rounded-tr-[3.5rem]">
             <img src={ABOUT_IMAGE_MAIN} alt={tr('Colleagues collaborating on a project')} className="aspect-[4/4.4] w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--gd)]/70 via-transparent to-transparent" />
             <span className="absolute right-5 top-5 inline-flex items-center gap-2 rounded-full bg-[var(--o)] px-4 py-2 text-sm font-semibold text-white">
               <BadgeCheck size={16} /> {tr('Registered consultancy')}
             </span>
           </div>
-          <div className="absolute bottom-0 left-4 w-[62%] overflow-hidden rounded-[2rem] border-[10px] border-[var(--gs)] bg-[var(--gs)] shadow-2xl sm:left-8">
+          <div className="absolute bottom-0 left-4 w-[62%] overflow-hidden rounded-[2rem] rounded-tr-[3rem] border-[10px] border-white bg-white shadow-2xl sm:left-8">
             <img src={ABOUT_IMAGE_INSET} alt={tr('Analyst reviewing programme data')} className="aspect-[4/3] w-full rounded-[1.4rem] object-cover" />
           </div>
         </Reveal>
@@ -620,33 +621,7 @@ function About() {
           </div>
         </Reveal>
       </div>
-    </section>
-  );
-}
-
-function Mission() {
-  const tr = useTranslate();
-  return (
-    <section id="mission" className="relative overflow-hidden bg-[var(--gd)] py-28 text-white sm:py-36">
-      <Curve flip />
-      <div className="pointer-events-none absolute -left-20 top-1/3 h-72 w-72 rounded-full bg-[var(--g)]/40 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 bottom-1/4 h-72 w-72 rounded-full bg-[var(--o)]/15 blur-3xl" />
-      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
-        <Heading title="Mission &" accent="vision" text="The principles behind everything we do." light />
-        <div className="grid gap-6 md:grid-cols-2">
-          <Reveal className="rounded-3xl border border-white/15 bg-white/5 p-9 backdrop-blur transition hover:border-[var(--o)]">
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-[var(--o)]"><Star size={22} /></span>
-            <p className="mt-5 text-2xl font-bold text-[var(--o)]">{tr('Our mission')}</p>
-            <p className="mt-4 leading-relaxed text-white/80">{tr('To strengthen development outcomes through a rigorous, robust, evidence-based model of scientific inquiry and collaborative learning partnerships.')}</p>
-          </Reveal>
-          <Reveal delay={120} className="rounded-3xl border border-white/15 bg-white/5 p-9 backdrop-blur transition hover:border-[#4ADE80]">
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-[var(--g)]"><Star size={22} /></span>
-            <p className="mt-5 text-2xl font-bold text-[#4ADE80]">{tr('Our vision')}</p>
-            <p className="mt-4 leading-relaxed text-white/80">{tr('Evidence-informed policies, resilient communities and locally sustained development outcomes, achieved through collaborative learning partnerships.')}</p>
-          </Reveal>
-        </div>
-      </div>
-      <Curve />
+      <Curve className="text-[var(--gd)]" />
     </section>
   );
 }
@@ -657,7 +632,8 @@ function Services() {
   const s = SERVICES.find((x) => x.id === active);
   const Icon = s.icon;
   return (
-    <section id="services" className="relative overflow-hidden py-24">
+    <section id="services" className="relative overflow-hidden bg-[var(--gs)] py-24">
+      <Curve flip className="text-[var(--gd)]" />
       <DashedArrow className="pointer-events-none absolute left-4 top-10 hidden w-48 text-[var(--g)]/40 lg:block" />
       <Spiral className="pointer-events-none absolute right-8 top-10 hidden w-20 text-[var(--o)]/60 lg:block" />
       <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
@@ -666,26 +642,27 @@ function Services() {
           <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
             {SERVICES.map((x) => (
               <button key={x.id} onClick={() => setActive(x.id)}
-                className={`flex shrink-0 items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left font-semibold transition ${active === x.id ? 'border-[var(--gd)] bg-[var(--gd)] text-white shadow-lg' : 'border-black/10 bg-white hover:border-[var(--g)]'}`}>
+                className={`flex shrink-0 items-center gap-3 rounded-2xl rounded-tr-[1.25rem] border-2 px-5 py-4 text-left font-semibold transition ${active === x.id ? 'border-[var(--gd)] bg-[var(--gd)] text-white shadow-lg' : 'border-black/10 bg-white hover:border-[var(--g)]'}`}>
                 <x.icon size={20} className={active === x.id ? 'text-[var(--o)]' : 'text-[var(--g)]'} />{tr(x.title)}
               </button>
             ))}
           </div>
-          <div key={s.id} className="r4d-pop overflow-hidden rounded-[2.5rem] rounded-tr-xl bg-[var(--gs)] shadow-sm">
+          <div key={s.id} className="r4d-pop overflow-hidden rounded-[2.5rem] rounded-tr-[3.5rem] bg-white shadow-sm">
             <div className="h-48 bg-cover bg-center sm:h-60" style={{ backgroundImage: `url(${s.image})` }} />
             <div className="px-8 pb-8 lg:px-10 lg:pb-10">
-              <span className={`-mt-8 grid h-16 w-16 place-items-center rounded-2xl border-4 border-[var(--gs)] text-white shadow-lg ${s.color === 'orange' ? 'bg-[var(--o)]' : 'bg-[var(--g)]'}`}><Icon size={26} /></span>
+              <span className={`-mt-8 grid h-16 w-16 place-items-center rounded-2xl rounded-tr-xl border-4 border-white text-white shadow-lg ${s.color === 'orange' ? 'bg-[var(--o)]' : 'bg-[var(--g)]'}`}><Icon size={26} /></span>
               <h3 className="mt-5 text-2xl font-bold text-[var(--gd)]">{tr(s.title)}</h3>
               <p className="mt-3 max-w-xl text-black/70">{tr(s.text)}</p>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                 {s.points.map((pt) => (
-                    <li key={pt} className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-medium"><Star size={14} className="shrink-0 text-[var(--o)]" fill="currentColor" />{tr(pt)}</li>
+                    <li key={pt} className="flex items-center gap-3 rounded-xl rounded-tr-2xl bg-[var(--gs)] px-4 py-3 text-sm font-medium"><Star size={14} className="shrink-0 text-[var(--o)]" fill="currentColor" />{tr(pt)}</li>
                 ))}
               </ul>
             </div>
           </div>
         </div>
       </div>
+      <Curve className="text-white" />
     </section>
   );
 }
@@ -693,13 +670,13 @@ function Services() {
 function Expertise() {
   const tr = useTranslate();
   return (
-    <section id="expertise" className="relative bg-[var(--gs)] py-24">
+    <section id="expertise" className="relative bg-white py-24">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <Heading title="Technical" accent="expertise" text="Methods and tools our team applies on every assignment." />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {EXPERTISE.map((e, i) => (
             <Reveal key={e.title} delay={i * 70}>
-              <div className="group h-full rounded-3xl rounded-tr-xl bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+              <div className="group h-full rounded-3xl rounded-tr-[2.5rem] bg-[var(--gs)] p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <span className="grid h-12 w-12 place-items-center rounded-full bg-[var(--gd)] text-sm font-bold text-white transition group-hover:bg-[var(--o)]">{String(i + 1).padStart(2, '0')}</span>
                 <h3 className="mt-5 text-lg font-bold text-[var(--gd)]">{tr(e.title)}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-black/65">{tr(e.text)}</p>
@@ -709,7 +686,7 @@ function Expertise() {
         </div>
         <Reveal className="mt-10 flex flex-wrap justify-center gap-2">
           {TOOLS.map((t) => (
-            <span key={t} className="rounded-full border border-[var(--g)]/30 bg-white px-4 py-1.5 text-sm font-medium text-[var(--gd)]">{t}</span>
+            <span key={t} className="rounded-full border border-[var(--g)]/30 bg-[var(--gs)] px-4 py-1.5 text-sm font-medium text-[var(--gd)]">{t}</span>
           ))}
         </Reveal>
       </div>
@@ -1898,7 +1875,7 @@ function UsersPanel({ items, setItems, ctx }) {
             <tbody>
               {shown.map((u) => (
                 <tr key={u.id} className="adm-row border-b border-white/5">
-                  <td className="px-5 py-3.5"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(u.name)}</span><span><span className="block font-bold">{u.name}</span><span className="text-xs text-white/50">{u.email}</span></span></div></td>
+                  <td className="px-5 py-3.5"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(u.name)}</span><span><span className="block font-bold">{u.name}</span><span className="text-xs text-white/45">{u.email}</span></span></div></td>
                   <td className="px-3 py-3.5"><span className={`adm-chip ${u.role === 'admin' ? 'bg-orange-400/20 text-orange-200' : 'bg-white/8 text-white/65'}`}>{u.role}</span></td>
                   <td className="px-3 py-3.5 capitalize text-white/65">{u.provider}</td>
                   <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.created_at)}</td>
