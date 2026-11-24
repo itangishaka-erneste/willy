@@ -866,7 +866,7 @@ function Careers() {
         <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) { setApplicationOpen(false); setSelected(null); } }}>
           <div className="r4d-pop w-full max-w-lg rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
             <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D Careers</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); }} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5"><X size={18} /></button></div>
-            {status === 'sent' ? <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]"/><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); setStatus('idle'); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white">Close</button></div> : (
+            {status === 'sent' ? <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]"/><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); setStatus('idle'); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold textwhite">Close</button></div> : (
               <form onSubmit={apply} className="mt-5 space-y-3"><input required placeholder="Full name" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}/><input required type="email" placeholder="Email address" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}/><input placeholder="Phone number" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}/><textarea placeholder="Short cover note" rows="4" className="w-full resize-y rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}/><input type="url" placeholder="CV link (Google Drive, Dropbox, LinkedIn…)" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.cvUrl} onChange={(e) => setForm({ ...form, cvUrl: e.target.value })}/><div><label className="block text-xs font-bold text-black/55">Or attach CV (PDF or Word, max 2.5 MB)</label><input type="file" accept=".pdf,.doc,.docx" className="mt-2 block w-full text-sm" onChange={(e) => setCv(e.target.files?.[0] || null)}/></div>{error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}<Btn type="submit" loading={status === 'sending'} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3.5 font-bold text-white transition hover:bg-[var(--o)]">Submit application <Send size={16}/></Btn></form>
             )}
           </div>
@@ -911,6 +911,8 @@ const DEFAULT_TEAM_MEMBERS = [
     bio: 'Data scientist and MERL specialist with more than 10 years of experience across education, early childhood, youth, OVC, health systems and social protection programmes. Holds a Postgraduate Diploma in Public Health Research from James Lind Institute and a BSc in Clinical Psychology from the University of Rwanda. Fluent in English, French and Kinyarwanda.' },
   { name: 'Research Team', role: 'Technical experts',
     bio: 'Specialists in survey design, field data collection, analysis and distilling insights across development sectors.' },
+  { name: 'Ngendahimana Joseph', role: 'Research Team',
+    bio: 'Specialist in survey design, field data collection, analysis and distilling insights across development sectors.' },
   { name: 'Data Analytics Team', role: 'Data scientists',
     bio: 'Experts in machine learning, AI for development, predictive modelling and data visualisation systems.' },
 ];
@@ -1048,7 +1050,7 @@ function Contact({ t }) {
               </div>
               <label className="block space-y-1.5 text-sm font-medium text-[var(--gd)]"><span>{t.details} *</span><textarea className={`${input} resize-y`} rows={5} placeholder={t.details} value={form.message} onChange={set('message')} required minLength={5} /></label>
               {status === 'sent' && <p role="status" className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm text-[var(--g)]"><CheckCircle2 size={18} /> {t.sent}</p>}
-              {status === 'error' && <p role="alert" className="rounded-xl bg-white px-4 py-2.5 text-sm text-red-700">{t.sendError}</p>}
+              {status === 'error' && <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{t.sendError}</p>}
               <Btn type="submit" loading={status === 'sending'} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:cursor-wait disabled:opacity-70">
                 {status !== 'sending' && <Send size={17} />}{status === 'sending' ? t.sending : t.send}
               </Btn>
@@ -1339,8 +1341,8 @@ function AdminLogin({ onLoggedIn, onClose, notice }) {
   return (
     <div className="absolute inset-0 grid place-items-center overflow-y-auto bg-[#eef3ef] p-4"
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="adm-in w-full max-w-md overflow-hidden rounded-3xl border border-black/[.07] bg-white shadow-[0_24px_70px_-24px_rgba(23,38,29,.45)]">
-        <div className="flex justify-end px-5 pt-5"><button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-black/55 transition hover:bg-[var(--gs)] hover:text-[var(--gd)]"><X size={18}/></button></div>
+      <div className="adm-in w-full max-w-md overflow-hidden rounded-3xl border border-black/[.07] bg-[var(--paper)] shadow-[0_24px_70px_-24px_rgba(23,38,29,.45)]">
+        <div className="flex justify-end px-5 pt-5"><button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-black/55 transition hover:bg-black/5"><X size={18}/></button></div>
         <div className="px-8 pb-8">
           <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-black/[.06] bg-[var(--gs)] p-2"><img src={logo} alt="REL4D" className="h-full w-full object-contain"/></div>
           <p className="mt-5 text-center text-[.68rem] font-extrabold uppercase tracking-[.22em] text-[var(--o)]">REL4D administration</p>
@@ -1353,8 +1355,8 @@ function AdminLogin({ onLoggedIn, onClose, notice }) {
           </div>
           <form onSubmit={submit} className="mt-7 space-y-4">
             <div><label className="adm-label" htmlFor="adm-email">Email address</label><input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com"/></div>
-            <div><label className="adm-label" htmlFor="adm-pass">Password</label><div className="relative"><input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="Enter your password"/><button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-black/45 hover:bg-black/5">{show ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div></div>
-            {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            <div><label className="adm-label" htmlFor="adm-pass">Password</label><div className="relative"><input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="Enter your password"/><button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-black/45 hover:bg-black/5">{show ? <EyeOff size={17} /> : <Eye size={17} />}</button></div></div>
+            {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
             <Btn type="submit" loading={loading} className="adm-btn w-full !rounded-xl !bg-[var(--gd)] !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''}/>{loading ? 'Signing in…' : 'Sign in'}</Btn>
           </form>
           <button type="button" onClick={onClose} className="mx-auto mt-5 block text-sm font-semibold text-black/45 transition hover:text-[var(--gd)]">← Back to website</button>
@@ -1414,7 +1416,7 @@ function AuthModal({ mode, setMode, onClose, onDone, notice }) {
         </div>
         {reg && <p className="mt-4 text-sm leading-relaxed text-black/55">Create a REL4D account to stay connected. If you are interested in joining the team, you can then submit your CV through Careers.</p>}
         <div className="mt-5"><SocialAuthButtons intent="user" /></div>
-        <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10"/>or continue with email<span className="h-px flex-1 bg-black/10"/></div>
+        <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10" />or continue with email<span className="h-px flex-1 bg-black/10" /></div>
         {notice && <p role="alert" className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
         <form onSubmit={submit} className="mt-5 space-y-3">
           {reg && <input required className="w-full rounded-lg border border-black/15 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Full name" autoComplete="name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
@@ -1545,7 +1547,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
           <div className="mb-2 flex items-center justify-between"><h3 className="text-sm font-bold">Latest messages</h3><button type="button" onClick={() => goto('messages')} className="text-xs font-bold text-orange-400 hover:underline">All</button></div>
           {messages.length === 0 ? <p className="text-xs opacity-50">No messages yet.</p> : messages.slice(0, 4).map((m) => (
             <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left">
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xs font-bold text-white">{initials(m.name)}</span>
+              <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
               <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-1.5 w-1.5 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
             </button>
           ))}
@@ -1631,7 +1633,7 @@ function MessagesPanel({ items, setItems, ctx, focusId }) {
                 <div key={m.id} onClick={() => open(m)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') open(m); }}
                   className={`adm-row flex cursor-pointer items-start gap-3 border-b border-white/5 px-4 py-3.5 ${selectedId === m.id ? 'bg-white/[.07]' : ''}`}>
                   <input type="checkbox" checked={checked.includes(m.id)} onClick={(e) => e.stopPropagation()} onChange={(e) => setChecked((c) => (e.target.checked ? [...c, m.id] : c.filter((id) => id !== m.id)))} className="mt-2 h-4 w-4 accent-emerald-400" aria-label={`Select ${m.name}`} />
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-2"><span className={`truncate text-sm ${m.is_read ? 'font-medium text-white/80' : 'font-bold text-white'}`}>{m.name}</span>{!m.is_read && <i className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}{m.starred && <Star size={13} className="shrink-0 text-amber-300" fill="currentColor" />}{m.replied_at && <Reply size={13} className="shrink-0 text-emerald-300" />}</span>
                     <span className="block truncate text-xs text-white/50">{m.service || 'General enquiry'} · {fmtDate(m.created_at)}</span>
@@ -1646,10 +1648,11 @@ function MessagesPanel({ items, setItems, ctx, focusId }) {
         <div className="adm-glass rounded-2xl p-6">
           {!current ? <Empty icon={MessageSquare} text="Select a message to read it and reply." /> : (
             <div key={current.id} className="adm-in">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-lg font-bold">{initials(current.name)}</span>
-                  <div><p className="text-lg font-bold">{current.name}</p><a href={`mailto:${current.email}`} className="text-sm text-emerald-300 hover:underline">{current.email}</a>{current.organization && <p className="text-xs text-white/50">{current.organization}</p>}</div>
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <h3 className="text-lg font-semibold text-white">{current.name}</h3>
+                  <a href={`mailto:${current.email}`} className="text-sm text-emerald-300 hover:underline">{current.email}</a>
+                  {current.organization && <p className="text-xs text-white/50">{current.organization}</p>}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Btn type="button" loading={busy === `star-${current.id}`} onClick={() => toggleStar(current)} className="adm-btn-ghost !py-2"><Star size={15} fill={current.starred ? 'currentColor' : 'none'} className={current.starred ? 'text-amber-300' : ''} />{current.starred ? 'Starred' : 'Star'}</Btn>
@@ -1854,7 +1857,7 @@ function ApplicationsPanel({ items, setItems, ctx, token }) {
                         <select value={a.status} onChange={(e) => setStatus(a, e.target.value)} className="adm-input !w-auto !py-1.5 !text-xs" aria-label={`Status for ${a.name}`}>{APP_STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5 text-right">
                       <div className="flex justify-end gap-2">
                         {a.message && <button type="button" onClick={() => setOpenId(openId === a.id ? null : a.id)} className="adm-btn-ghost !px-3 !py-1.5"><Eye size={14} />Note</button>}
                         {a.has_cv && <Btn type="button" loading={busy === `cv-${a.id}`} onClick={() => downloadCv(a)} className="adm-btn-ghost !px-3 !py-1.5"><Download size={14} />CV</Btn>}
@@ -1940,7 +1943,7 @@ function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
         <div className="space-y-5">
           <div className="adm-glass rounded-2xl p-6">
             <h3 className="flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-emerald-300" />Signed in as</h3>
-            <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold">{initials(user?.name)}</span><div><p className="font-bold">{user?.name}</p><p className="text-sm text-white/55">{user?.email}</p></div></div>
+            <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
             <p className="mt-4 text-xs text-white/45">Admin sessions expire automatically after 12 hours.</p>
             <button type="button" onClick={onLogout} className="adm-btn-danger mt-4"><LogOut size={15} />Sign out</button>
           </div>
@@ -2108,34 +2111,6 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
   );
 }
 
-/* ----- Portal: renders the console above the whole website ----- */
-function AdminPortal({ onClose, notice }) {
-  const [token, setToken] = useState(readToken);
-  const [user, setUser] = useState(null);
-  const [admTheme, setAdmTheme] = useState(() => { try { return localStorage.getItem('rel4d-admin-theme') || 'light'; } catch { return 'light'; } });
-  const changeTheme = (v) => { setAdmTheme(v); try { localStorage.setItem('rel4d-admin-theme', v); } catch { /* storage unavailable */ } };
-  const logout = () => { saveToken(''); setToken(''); setUser(null); };
-  const loggedIn = (newToken, newUser) => { saveToken(newToken); setToken(newToken); setUser(newUser); };
-
-  useEffect(() => {
-    if (token) return undefined;
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [token, onClose]);
-
-  return createPortal(
-    <div className="adm fixed inset-0 z-[200] overflow-hidden" data-t={admTheme} role="dialog" aria-modal="true" aria-label="Admin console">
-      <style>{ADMIN_CSS + ADMIN_CSS_EXTRA}</style>
-      <AdminBackdrop />
-      {token
-        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} theme={admTheme} setTheme={changeTheme} />
-        : <AdminLogin onLoggedIn={loggedIn} onClose={onClose} notice={notice} />}
-    </div>,
-    document.body,
-  );
-}
-
 /* ------------------------- Theme + animations ------------------------- */
 const CSS = `
 :root{
@@ -2267,7 +2242,7 @@ export default function Home() {
       try { localStorage.setItem('rel4d-user-token', socialToken); } catch { /* storage unavailable */ }
       apiRequest('/api/auth/me', { token: socialToken })
         .then((data) => { setAccount(data.user); try { localStorage.setItem('rel4d-user', JSON.stringify(data.user)); } catch { /* storage unavailable */ } })
-        .catch(() => {})
+        .catch(() => { /* A failed profile lookup should not prevent callback cleanup. */ })
         .finally(() => { window.history.replaceState(null, '', window.location.pathname + window.location.search); });
     } else if (socialError) {
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
@@ -2276,7 +2251,7 @@ export default function Home() {
 
   const openAdmin = () => {
     setAdminOpen(true);
-    try { window.history.replaceState(null, '', '#admin'); } catch { /* ignore */ }
+    try { window.history.replaceState(null, '', window.location.pathname + window.location.search + '#admin'); } catch { /* ignore */ }
   };
   const closeAdmin = () => {
     setAdminOpen(false);
