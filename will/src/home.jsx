@@ -1618,17 +1618,58 @@ const STAT_CARDS = [
   { key: 'openings', label: 'Open positions', icon: Briefcase, tone: 'from-rose-500 to-orange-400', tab: 'openings' },
 ];
 
-function Overview({ stats, messages, applications, users = [], goto, user }) {
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-  const firstName = (user?.name || 'Admin').split(' ')[0];
-  const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - i)); return d; });
-  const inDay = (list, key, d) => list.filter((m) => { const t = new Date(m[key]).getTime(); return t >= d.getTime() && t.getTime() < d.getTime() + 86400000; }).length;
-  const counts = days.map((d) => inDay(messages, 'created_at', d));
-  const signups = days.map((d) => inDay(users, 'created_at', d));
-  const byStatus = APP_STATUSES.map((s) => ({ s, n: applications.filter((a) => a.status === s).length }));
-  const svc = Object.entries(messages.reduce((a, m) => { const k = m.service || 'General'; a[k] = (a[k] || 0) + 1; return a; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  const svcMax = Math.max(1, ...svc.map(([, n]) => n));
+function AdminPortal({ onClose, notice }) {
+  const [token, setToken] = useState(readToken);
+  const [user, setUser] = useState(null);
+  const [tab, setTab] = useState('overview');
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [theme, setTheme] = useState('dark');
+  const [liveStats, setLiveStats] = useState({});
+  const [messages, setMessages] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [openings, setOpenings] = useState([]);
+  const [focusMessage] = useState(null);
+  const toast = (text, type = 'ok') => {
+    const id = Date.now() + Math.random();
+    setToasts((items) => [...items, { id, text, type }]);
+    setTimeout(() => setToasts((items) => items.filter((item) => item.id !== id)), 4000);
+  };
+  const call = (path, options = {}) => apiRequest(path, { ...options, token });
+  const run = async (fn) => {
+    setBusy(true);
+    try { return await fn(); } catch (error) { toast(error.message, 'err'); return null; } finally { setBusy(false); }
+  };
+  const goto = (next) => { setTab(next); setSearch(''); };
+  const onLogout = () => { saveToken(''); setToken(''); setUser(null); };
+  const refresh = async (showFeedback = false) => {
+    if (!token) return;
+    setRefreshing(true);
+    try {
+      const [me, stats, msg, content, apps, accountUsers] = await Promise.all([
+        call('/api/admin/me'), call('/api/admin/stats'), call('/api/admin/messages'),
+        call('/api/admin/content'), call('/api/admin/applications'), call('/api/admin/users'),
+      ]);
+      setUser(me.user || me); setLiveStats(stats || {});
+      setMessages(Array.isArray(msg) ? msg : (msg.messages || []));
+      setProjects(content.projects || []); setTeamMembers(content.team || []); setOpenings(content.openings || []);
+      setApplications(Array.isArray(apps) ? apps : (apps.applications || []));
+      setUsers(Array.isArray(accountUsers) ? accountUsers : (accountUsers.users || []));
+      if (showFeedback) toast('Dashboard refreshed.');
+    } catch (error) {
+      if (error.status === 401 || error.status === 403) onLogout();
+      else toast(error.message, 'err');
+    } finally { setLoading(false); setRefreshing(false); }
+  };
+  useEffect(() => { if (token) refresh(); else setLoading(false); }, [token]);
+  if (!token) return <AdminLogin onLoggedIn={(value, account) => { saveToken(value); setUser(account); setToken(value); }} onClose={onClose} notice={notice} />;
+  const stats = liveStats;
   const unreadCount = Number(stats?.unread_messages || 0);
   const newAppCount = Number(stats?.new_applications || 0);
   const badge = { messages: unreadCount, applications: newAppCount };
