@@ -1,4 +1,4 @@
-import { Fragment, createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import logo from './assets/logo.PNG';
 import { translate } from './translations.js';
@@ -7,7 +7,7 @@ import {
   ArrowUpRight, Send, CheckCircle2, Award, Briefcase, BadgeCheck, Star, LockKeyhole,
   LayoutDashboard, MessageSquare, FolderKanban, Users, Settings, Trash2, Pencil, Eye, EyeOff, Search,
   Reply, Download, RefreshCw, LogOut, Plus, ShieldCheck, Inbox, Check, KeyRound, Bell, FileText, ImagePlus,
-  UserPlus, UserRound, TrendingUp, AlertCircle, ArrowLeft,
+  UserPlus, UserRound, TrendingUp,
 } from 'lucide-react';
 
 /* =====================================================================
@@ -134,16 +134,19 @@ const TRAINING = [
 /* `ids` = the page sections that highlight this menu item while you scroll */
 const NAV = [
   { label: 'Home', href: '#home', ids: ['home'] },
-  { label: 'About', ids: ['about', 'mission', 'team'], children: [
+  { label: 'About', ids: ['about', 'mission', 'expertise', 'experience', 'credentials', 'team'], children: [
     { label: 'Our story', href: '#about' },
     { label: 'Mission & vision', href: '#mission' },
+    { label: 'Expertise', href: '#expertise' },
+    { label: 'Experience', href: '#experience' },
+    { label: 'Credentials', href: '#credentials' },
     { label: 'Leadership', href: '#team' },
   ] },
   { label: 'Services', ids: ['services'], children: SERVICES.map((s) => ({ label: s.title, href: '#services' })) },
-  { label: 'Expertise', href: '#expertise', ids: ['expertise'] },
-  { label: 'Experience', href: '#experience', ids: ['experience'] },
-  { label: 'Projects', href: '#projects', ids: ['projects'] },
-  { label: 'Careers', href: '#careers', ids: ['careers'] },
+  { label: 'Work', ids: ['projects', 'careers'], children: [
+    { label: 'Projects', href: '#projects' },
+    { label: 'Careers', href: '#careers' },
+  ] },
   { label: 'Contact', href: '#contact', ids: ['contact'] },
 ];
 
@@ -152,19 +155,19 @@ const SECTION_IDS = ['home', 'about', 'mission', 'services', 'expertise', 'exper
 const UI_COPY = {
   en: {
     label: 'English', chooseLanguage: 'Choose language', themeLight: 'Switch to light mode', themeDark: 'Switch to dark mode',
-    nav: { Home: 'Home', About: 'About', Services: 'Services', Expertise: 'Expertise', Experience: 'Experience', Projects: 'Projects', Careers: 'Careers', Contact: 'Contact', 'Our story': 'Our story', 'Mission & vision': 'Mission & vision', Leadership: 'Leadership', 'Model Building': 'Model Building', 'System Customization': 'System Customization', 'Research & Evaluation': 'Research & Evaluation', 'Capacity Building': 'Capacity Building' },
+    nav: { Home: 'Home', About: 'About', Services: 'Services', Work: 'Work', Expertise: 'Expertise', Experience: 'Experience', Projects: 'Projects', Careers: 'Careers', Contact: 'Contact', Credentials: 'Credentials', 'Our story': 'Our story', 'Mission & vision': 'Mission & vision', Leadership: 'Leadership', 'Model Building': 'Model Building', 'System Customization': 'System Customization', 'Research & Evaluation': 'Research & Evaluation', 'Capacity Building': 'Capacity Building' },
     talk: 'Let’s talk', join: 'Join REL4D', marquee: ['Endline', 'Impact', 'MEL systems', 'Analytics', 'Learning', 'Capacity', 'Baseline', 'Endline'],
     contactTitle: 'Request a proposal', name: 'Full name', email: 'Email address', organization: 'Organization (optional)', service: 'Service interested in', details: 'Project details', send: 'Send request', sending: 'Sending…', sent: 'Your request has been sent. We’ll be in touch soon.', sendError: 'We could not send your request. Please try again.', multipleServices: 'Multiple services',
   },
   fr: {
     label: 'Français', chooseLanguage: 'Choisir la langue', themeLight: 'Passer en mode clair', themeDark: 'Passer en mode sombre',
-    nav: { Home: 'Accueil', About: 'À propos', Services: 'Services', Expertise: 'Expertise', Experience: 'Parcours', Projects: 'Projets', Careers: 'Carrières', Contact: 'Contact', 'Our story': 'Notre histoire', 'Mission & vision': 'Mission et vision', Leadership: 'Direction', 'Model Building': 'Élaboration de modèles', 'System Customization': 'Personnalisation des systèmes', 'Research & Evaluation': 'Recherche et évaluation', 'Capacity Building': 'Renforcement des capacités' },
+    nav: { Home: 'Accueil', About: 'À propos', Services: 'Services', Work: 'Projets', Expertise: 'Expertise', Experience: 'Parcours', Projects: 'Projets', Careers: 'Carrières', Contact: 'Contact', Credentials: 'Qualifications', 'Our story': 'Notre histoire', 'Mission & vision': 'Mission et vision', Leadership: 'Direction', 'Model Building': 'Élaboration de modèles', 'System Customization': 'Personnalisation des systèmes', 'Research & Evaluation': 'Recherche et évaluation', 'Capacity Building': 'Renforcement des capacités' },
     talk: 'Parlons-en', join: 'Contacter REL4D', marquee: ['Évaluation finale', 'Impact', 'Systèmes S&E', 'Analytique', 'Apprentissage', 'Capacités', 'Étude de référence', 'Évaluation finale'],
     contactTitle: 'Demander une proposition', name: 'Nom complet', email: 'Adresse e-mail', organization: 'Organisation (facultatif)', service: 'Service souhaité', details: 'Détails du projet', send: 'Envoyer la demande', sending: 'Envoi en cours…', sent: 'Votre demande a été envoyée. Nous vous contacterons bientôt.', sendError: 'Votre demande n’a pas pu être envoyée. Veuillez réessayer.', multipleServices: 'Plusieurs services',
   },
   rw: {
     label: 'Kinyarwanda', chooseLanguage: 'Hitamo ururimi', themeLight: 'Hindura ujye ku mucyo', themeDark: 'Hindura ujye mu mwijima',
-    nav: { Home: 'Ahabanza', About: 'Ibitwerekeye', Services: 'Serivisi', Expertise: 'Ubumenyi', Experience: 'Uburambe', Projects: 'Imishinga', Careers: 'Akazi', Contact: 'Twandikire', 'Our story': 'Amateka yacu', 'Mission & vision': 'Intego n’icyerekezo', Leadership: 'Ubuyobozi', 'Model Building': 'Gukora imiterere', 'System Customization': 'Gutunganya sisitemu', 'Research & Evaluation': 'Ubushakashatsi n’isuzuma', 'Capacity Building': 'Kongera ubushobozi' },
+    nav: { Home: 'Ahabanza', About: 'Ibitwerekeye', Services: 'Serivisi', Work: 'Imirimo', Expertise: 'Ubumenyi', Experience: 'Uburambe', Projects: 'Imishinga', Careers: 'Akazi', Contact: 'Twandikire', Credentials: 'Impamyabumenyi', 'Our story': 'Amateka yacu', 'Mission & vision': 'Intego n’icyerekezo', Leadership: 'Ubuyobozi', 'Model Building': 'Gukora imiterere', 'System Customization': 'Gutunganya sisitemu', 'Research & Evaluation': 'Ubushakashatsi n’isuzuma', 'Capacity Building': 'Kongera ubushobozi' },
     talk: 'Tuganire', join: 'Vugana na REL4D', marquee: ['Isuzuma rya nyuma', 'Ingaruka', 'Sisitemu za MEL', 'Isesengura', 'Kwiga', 'Kongera ubushobozi', 'Ibarura fatizo', 'Isuzuma rya nyuma'],
     contactTitle: 'Saba icyifuzo cy’akazi', name: 'Amazina yose', email: 'Aderesi ya imeyili', organization: 'Ikigo (si ngombwa)', service: 'Serivisi wifuza', details: 'Ibisobanuro by’umushinga', send: 'Ohereza ubusabe', sending: 'Birimo koherezwa…', sent: 'Ubusabe bwawe bwoherejwe. Turakuvugisha vuba.', sendError: 'Ubusabe bwawe ntibwoherejwe. Ongera ugerageze.', multipleServices: 'Serivisi nyinshi',
   },
@@ -339,16 +342,31 @@ function Loader({ done }) {
 
 /* --------------------- Language tab (fixed on the left) ---------------- */
 function LangTab({ language, setLanguage, t }) {
-  // Language selection is now placed inside the main navbar.
-  return null;
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="fixed left-3 top-1/2 z-40 -translate-y-1/2">
+      <button onClick={() => setOpen((v) => !v)} aria-label={t.chooseLanguage} aria-expanded={open} aria-haspopup="menu"
+        className="flex items-center gap-2 rounded-xl bg-[var(--gd)] px-3 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-[var(--g)]">
+        {language.toUpperCase()} <ChevronDown size={16} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <ul className="r4d-pop absolute left-0 top-full mt-2 w-48 overflow-hidden rounded-xl bg-white p-1.5 text-sm shadow-xl ring-1 ring-black/10" role="menu" aria-label={t.chooseLanguage}>
+          {Object.entries(UI_COPY).map(([code, labels]) => (
+            <li key={code} role="none"><button role="menuitemradio" aria-checked={language === code}
+              className={`w-full rounded-lg px-3 py-2 text-left font-semibold ${language === code ? 'bg-[var(--os)] text-[var(--od)]' : 'hover:bg-[var(--gs)]'}`}
+              onClick={() => { setLanguage(code); setOpen(false); }}>{labels.label}</button></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 /* ------------------------------ Navbar -------------------------------- */
-function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, language, setLanguage }) {
+function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
   const tr = useTranslate();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState(null);
-  const [languageOpen, setLanguageOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const active = useActiveSection(SECTION_IDS);
 
@@ -366,16 +384,16 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <nav aria-label={tr('Main')} className={`transition-all duration-300 ${scrolled ? 'bg-white/90 shadow-md backdrop-blur-xl' : 'bg-white/70 backdrop-blur-md'} border-b border-black/5`}>
-        <div className="mx-auto flex min-h-[68px] max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-4 lg:px-8">
+        <div className="mx-auto flex h-[68px] max-w-7xl items-center gap-4 px-4 lg:px-8">
           {/* left: logo */}
           <a href="#home" onClick={close} className="flex shrink-0 items-center gap-2.5">
             <img src={logo} alt="" className="h-11 w-11 object-contain" />
-            <span className="text-xl font-extrabold tracking-tight text-[var(--gd)]">REL4D</span>
+            <span className="text-xl font-extrabold tracking-tight text-[var(--gd)]">REL4D<span className="text-[var(--o)]">.</span></span>
           </a>
 
           {/* centre: links */}
-          <ul className="mx-auto hidden min-w-0 items-center gap-0.5 xl:flex">
-            {NAV.slice(0, 3).map((item) => (
+          <ul className="mx-auto hidden items-center gap-0.5 lg:flex">
+            {NAV.map((item) => (
               <li key={item.label} className="relative" onMouseEnter={() => item.children && setDrop(item.label)} onMouseLeave={() => setDrop(null)}>
                 {item.children ? (
                   <>
@@ -393,36 +411,10 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
                 ) : <a href={item.href} className={link(isActive(item))}>{t.nav[item.label] || item.label}</a>}
               </li>
             ))}
-            <li className="relative" onMouseEnter={() => setDrop('More')} onMouseLeave={() => setDrop(null)}>
-              <button type="button" className={link(NAV.slice(3).some(isActive))} onClick={() => setDrop(drop === 'More' ? null : 'More')} aria-expanded={drop === 'More'}>
-                More <ChevronDown size={14} className={`transition-transform ${drop === 'More' ? 'rotate-180' : ''}`} />
-              </button>
-              {drop === 'More' && <div className="absolute right-0 top-full z-20 w-60 pt-2"><ul className="r4d-pop max-h-[70vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-2 shadow-xl">
-                {NAV.slice(3).flatMap((item) => item.children ? item.children.map((child) => ({ ...child, group: item.label })) : [item]).map((entry) => (
-                  <li key={`${entry.group || ''}-${entry.label}`}><a href={entry.href} onClick={close} className="block rounded-xl px-4 py-2.5 text-sm text-[var(--gd)] hover:bg-[var(--gs)] hover:text-[var(--o)]">{entry.group ? <span className="mr-1 text-black/45">{t.nav[entry.group] || entry.group} ·</span> : null}{t.nav[entry.label] || entry.label}</a></li>
-                ))}
-              </ul></div>}
-            </li>
           </ul>
 
-          {/* right: language, theme, admin (small), account */}
-          <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1.5 lg:ml-0">
-            <div className="relative">
-              <button type="button" onClick={() => setLanguageOpen((v) => !v)} aria-label={t.chooseLanguage} aria-expanded={languageOpen}
-                className="flex h-10 items-center gap-1 rounded-full px-2.5 text-xs font-bold text-[var(--gd)] transition hover:bg-[var(--gs)]">
-                {language.toUpperCase()} <ChevronDown size={13} className={`transition-transform ${languageOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {languageOpen && (
-                <div className="r4d-pop absolute right-0 top-full mt-2 w-44 overflow-hidden rounded-xl border border-black/10 bg-white p-1.5 shadow-xl">
-                  {Object.entries(UI_COPY).map(([code, labels]) => (
-                    <button key={code} type="button" onClick={() => { setLanguage(code); setLanguageOpen(false); }}
-                      className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold ${language === code ? 'bg-[var(--os)] text-[var(--od)]' : 'text-[var(--gd)] hover:bg-[var(--gs)]'}`}>
-                      {labels.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* right: theme, admin (small), account */}
+          <div className="ml-auto flex items-center gap-1.5 lg:ml-0">
             <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? t.themeLight : t.themeDark}
               className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] transition hover:bg-[var(--gs)]">
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -440,13 +432,13 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
                 <button type="button" onClick={() => onAuth('register')} className="hidden items-center gap-1.5 rounded-full bg-[var(--gd)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--o)] sm:inline-flex"><UserPlus size={15} />Create account</button>
               </>
             )}
-            <button className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] xl:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>{open ? <X /> : <Menu />}</button>
+            <button className="grid h-10 w-10 place-items-center rounded-full text-[var(--gd)] hover:bg-[var(--gs)] lg:hidden" onClick={() => setOpen((v) => !v)} aria-label={tr('Toggle menu')} aria-expanded={open}>{open ? <X /> : <Menu />}</button>
           </div>
         </div>
       </nav>
 
       {open && (
-        <div className="r4d-pop max-h-[78vh] overflow-y-auto border-b border-black/5 bg-white px-5 pb-5 shadow-xl xl:hidden">
+        <div className="r4d-pop max-h-[78vh] overflow-y-auto border-b border-black/5 bg-white px-5 pb-5 shadow-xl lg:hidden">
           {NAV.map((item) => (
             <div key={item.label} className="border-b border-black/5 py-1">
               {item.children ? (
@@ -470,57 +462,68 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout, langua
 /* ------------------------------ Sections ------------------------------ */
 function Hero() {
   const tr = useTranslate();
+  const accent = tr('development excellence.');
   return (
-    <section id="home" className="relative isolate overflow-hidden bg-white pb-28 pt-[68px] text-[var(--gd)]">
+    <section id="home" className="r4d-hero relative isolate overflow-hidden bg-[var(--paper)] pb-28 pt-[68px] text-[#24372c]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute right-0 top-1/4 h-[22rem] w-[22rem] rounded-full bg-emerald-100/60 blur-[110px]" />
-        <div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(rgba(40,86,64,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(40,86,64,.035) 1px,transparent 1px)', backgroundSize: '48px 48px', WebkitMaskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)', maskImage: 'radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)' }} />
+        <div className="r4d-blob absolute -left-24 top-10 h-96 w-96 rounded-full bg-emerald-500/10 blur-[110px]" />
+        <div className="r4d-blob absolute right-0 top-1/3 h-[28rem] w-[28rem] rounded-full bg-orange-500/10 blur-[120px]" style={{ animationDelay: '-6s' }} />
+        <div className="r4d-hero-grid absolute inset-0" />
+        <Spiral className="r4d-float absolute left-[46%] top-28 hidden w-16 text-[var(--o)]/60 lg:block" />
       </div>
 
-      <div className="mx-auto grid min-h-[calc(100vh-68px)] max-w-7xl items-center gap-10 px-5 py-14 lg:grid-cols-[1.1fr_1fr] lg:px-8">
-        <div>
-          <p className="r4d-rise inline-flex items-center gap-2 rounded-full border border-[var(--g)]/20 bg-[var(--gs)] px-4 py-1.5 text-sm font-medium text-[var(--gd)]" style={{ animationDelay: '1.9s' }}>
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-14 lg:min-h-[calc(100vh-68px)] lg:grid-cols-[1.08fr_.92fr] lg:gap-8 lg:px-8">
+        <div className="mx-auto w-full max-w-2xl lg:mx-0">
+          <p className="r4d-hero-kicker r4d-rise inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/85 px-4 py-1.5 text-sm font-semibold text-[var(--gd)] shadow-sm backdrop-blur" style={{ animationDelay: '1.9s' }}>
+            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--o)] opacity-75" /><span className="relative h-2 w-2 rounded-full bg-[var(--o)]" /></span>
             {tr('Evidence drives change and transformation')}
           </p>
-          <h1 className="r4d-rise mt-6 text-4xl font-extrabold leading-[1.08] text-[var(--gd)] sm:text-5xl lg:text-[3.6rem]" style={{ animationDelay: '2s' }}>
-            {tr('Research & learning for')}{' '}<span className="text-[var(--o)]">{tr('development excellence.')}</span>
+          <h1 className="r4d-hero-title r4d-rise mt-6 max-w-[15ch] text-4xl font-extrabold leading-[1.08] tracking-[-.035em] sm:text-5xl lg:text-[3.75rem]" style={{ animationDelay: '2s' }}>
+            <span className="block">{tr('Research & learning for')}</span>{' '}
+            <span className="r4d-hero-accent text-[#df4c2b]" aria-label={accent}>
+              {accent.split(' ').map((word, wordIndex) => (
+                <span key={`${word}-${wordIndex}`} className="inline-block whitespace-nowrap">
+                  {Array.from(word).map((c, i) => <span key={`${c}-${i}`} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${(wordIndex * 7 + i) * 70}ms` }}>{c}</span>)}
+                  {wordIndex < accent.split(' ').length - 1 && <span aria-hidden="true">&nbsp;</span>}
+                </span>
+              ))}
+            </span>
           </h1>
-          <p className="r4d-rise mt-6 max-w-xl text-base leading-relaxed text-black/70 sm:text-lg" style={{ animationDelay: '2.15s' }}>
+          <p className="r4d-hero-description r4d-rise mt-6 max-w-xl text-base leading-relaxed text-[#53645a] sm:text-lg" style={{ animationDelay: '2.15s' }}>
             {tr('REL4D is a registered consultancy in Kigali that conducts research and evaluations and supports learning for international development programmes, using data analytics, machine learning and AI to get the most from evidence.')}
           </p>
           <div className="r4d-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: '2.3s' }}>
-            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-7 py-3.5 font-semibold text-white shadow-lg shadow-orange-900/30 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
-            <a href="#contact" className="rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 font-semibold backdrop-blur transition hover:bg-white hover:text-[var(--gd)]">{tr('Request a proposal')}</a>
+            <a href="#services" className="inline-flex items-center gap-2 rounded-xl bg-[var(--o)] px-7 py-3.5 font-semibold text-white shadow-lg shadow-orange-900/15 transition hover:-translate-y-0.5 hover:bg-[var(--od)]">{tr('Explore services')} <ArrowUpRight size={18} /></a>
+            <a href="#contact" className="r4d-hero-secondary rounded-xl border border-[var(--gd)]/20 bg-white/80 px-7 py-3.5 font-semibold text-[var(--gd)] shadow-sm backdrop-blur transition hover:border-[var(--o)] hover:text-[var(--od)]">{tr('Request a proposal')}</a>
           </div>
-          {/* mini trust row */}
           <div className="r4d-rise mt-10 grid max-w-lg grid-cols-3 gap-3" style={{ animationDelay: '2.45s' }}>
             {[[50, '+', 'Projects'], [15, '+', 'Sectors'], [10, '+', 'Years']].map(([v, s, l]) => (
-              <div key={l} className="rounded-2xl border border-white/10 bg-white/[.07] px-4 py-3 backdrop-blur">
-                <p className="text-2xl font-extrabold"><CountUp to={v} suffix={s} /></p>
-                <p className="text-xs text-white/60">{tr(l)}</p>
+              <div key={l} className="r4d-hero-stat rounded-2xl border border-[var(--gd)]/10 bg-white/80 px-4 py-3 shadow-sm backdrop-blur">
+                <p className="r4d-hero-stat-value text-2xl font-extrabold text-[var(--gd)]"><CountUp to={v} suffix={s} /></p>
+                <p className="r4d-hero-stat-label text-xs text-[#68766d]">{tr(l)}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="r4d-rise relative mx-auto w-full max-w-[420px] px-5 pb-5 pt-4 sm:px-8" style={{ animationDelay: '2.2s' }}>
-          <div className="r4d-orbit absolute left-1/2 top-1/2 aspect-square w-[94%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-emerald-200/30" />
-          <div className="r4d-portrait-ring relative mx-auto aspect-square w-full max-w-[360px] rounded-full p-[7px]">
-            <div className="absolute inset-[8px] rounded-full border border-white/35" />
-            <div className="relative h-full w-full overflow-hidden rounded-full border-[5px] border-[#0c2a1c] bg-white/10 shadow-[0_30px_90px_-20px_rgba(0,0,0,.7)] ring-1 ring-white/35">
-              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} className="h-full w-full rounded-full object-cover object-[center_12%] transition duration-700 hover:scale-105" />
-              <div className="absolute inset-x-6 bottom-3 rounded-2xl border border-white/25 bg-[#07140d]/65 px-4 py-2 text-center backdrop-blur-md">
-                <p className="font-bold">Jean Willy ULIHO</p><p className="text-xs text-white/75">{tr('Managing Director')} · REL4D Ltd</p>
+        <div className="r4d-rise relative mx-auto w-full max-w-[480px] px-5 pb-5 pt-4 sm:px-8" style={{ animationDelay: '2.2s' }}>
+          <div className="r4d-orbit absolute left-1/2 top-1/2 aspect-square w-[94%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[var(--o)]/35" />
+          <div className="r4d-portrait-ring relative mx-auto aspect-square w-full max-w-[390px] rounded-full p-[7px]">
+            <div className="absolute inset-[8px] rounded-full border border-white/70" />
+            <div className="relative h-full w-full overflow-hidden rounded-full border-[5px] border-[var(--paper)] bg-[#e8eee8] shadow-[0_30px_90px_-20px_rgba(31,53,39,.32)] ring-1 ring-black/10">
+              <img src={HERO_IMAGE} alt={tr('Portrait of Jean Willy ULIHO')} fetchPriority="high" className="h-full w-full rounded-full object-cover object-[center_20%] transition duration-700 hover:scale-105" />
+              <div className="absolute inset-x-6 bottom-5 rounded-2xl border border-white/35 bg-[#17261d]/80 px-4 py-3 text-center text-white shadow-lg backdrop-blur-md">
+                <p className="font-bold">Jean Willy ULIHO</p><p className="text-xs text-white/80">{tr('Managing Director')} · REL4D Ltd</p>
               </div>
             </div>
           </div>
-          <span className="r4d-orbit-dot absolute left-[13%] top-[24%] h-3 w-3 rounded-full bg-[var(--o)] shadow-[0_0_22px_rgba(243,160,68,.9)]" />
-          <span className="r4d-orbit-dot absolute bottom-[13%] right-[17%] h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_20px_rgba(110,231,183,.9)]" />
-          <div className="r4d-float absolute -left-1 bottom-0 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/95 px-3 py-2.5 text-[var(--gd)] shadow-xl sm:-left-3">
+          <span className="r4d-orbit-dot absolute left-[13%] top-[24%] h-3 w-3 rounded-full bg-[var(--o)] shadow-[0_0_22px_rgba(243,160,68,.45)]" />
+          <span className="r4d-orbit-dot absolute bottom-[13%] right-[17%] h-2.5 w-2.5 rounded-full bg-[var(--gd)] shadow-[0_0_20px_rgba(40,86,64,.25)]" />
+          <div className="r4d-float absolute -left-1 top-16 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/95 px-3 py-2.5 text-[var(--gd)] shadow-xl sm:-left-3">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--g)] text-white"><BadgeCheck size={20} /></span>
             <span className="text-sm font-bold leading-tight">{tr('50+ projects')}<span className="block text-xs font-medium text-black/50">{tr('delivered across Rwanda')}</span></span>
           </div>
-          <div className="r4d-float absolute -right-1 bottom-0 w-36 rounded-2xl border border-white/20 bg-white/95 p-3 text-[var(--gd)] shadow-xl sm:-right-3" style={{ animationDelay: '-2s' }}>
+          <div className="r4d-float absolute -right-1 top-1/2 w-36 rounded-2xl border border-white/20 bg-white/95 p-3 text-[var(--gd)] shadow-xl sm:-right-3" style={{ animationDelay: '-2s' }}>
             <div className="flex items-center justify-between text-[.65rem] font-bold uppercase text-black/50"><span>Impact</span><TrendingUp size={13} className="text-[var(--o)]" /></div>
             <svg viewBox="0 0 120 40" className="mt-1 h-10 w-full"><polyline points="0,32 20,24 40,28 60,14 80,18 100,6 120,10" fill="none" stroke="var(--g)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="100" cy="6" r="3" fill="var(--o)" /></svg>
           </div>
@@ -846,7 +849,7 @@ function Careers() {
             <div className="grid gap-5 md:grid-cols-2">
               {openings.map((opening, i) => {
                 const data = opening.data || opening;
-                return <Reveal key={opening.id || i} delay={i * 80} className="h-full"><article className="flex h-full flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm"><div className="flex flex-wrap gap-2 text-xs font-bold"><span className="rounded-full bg-[var(--os)] px-3 py-1 text-[var(--od)]">{tr(data.type || 'Consultancy')}</span><span className="rounded-full bg-[var(--gs)] px-3 py-1 text-[var(--gd)]">{tr(data.location || 'Kigali, Rwanda')}</span></div><h3 className="mt-5 text-xl font-bold text-[var(--gd)]">{data.title}</h3><p className="mt-3 flex-1 text-sm leading-relaxed text-black/65">{tr(data.description)}</p><button type="button" onClick={() => { setSelected(opening); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--o)]">Apply for this role <ArrowUpRight size={16} /></button></article></Reveal>;
+                return <Reveal key={opening.id || i} delay={i * 80} className="h-full"><article className="flex h-full flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm"><div className="flex flex-wrap gap-2 text-xs font-bold"><span className="rounded-full bg-[var(--os)] px-3 py-1 text-[var(--od)]">{tr(data.type || 'Consultancy')}</span><span className="rounded-full bg-[var(--gs)] px-3 py-1 text-[var(--gd)]">{tr(data.location || 'Kigali, Rwanda')}</span></div><h3 className="mt-5 text-xl font-bold text-[var(--gd)]">{data.title}</h3><p className="mt-3 flex-1 text-sm leading-relaxed text-black/65">{tr(data.description)}</p>{data.deadline && <p className="mt-4 text-xs font-semibold text-black/50">Deadline: {data.deadline}</p>}<button type="button" onClick={() => { setSelected(opening); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--o)]">Apply for this role <ArrowUpRight size={16} /></button></article></Reveal>;
               })}
             </div>
             <div className="mt-8 text-center">
@@ -1178,13 +1181,14 @@ const STATUS_COLOR = {
 const APP_STATUSES = ['new', 'reviewing', 'shortlisted', 'rejected', 'hired'];
 
 const ADMIN_TABS = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-  { id: 'messages', label: 'Messages', icon: MessageSquare },
-  { id: 'projects', label: 'Projects', icon: FolderKanban },
-  { id: 'team', label: 'Users', icon: UserRound },
-  { id: 'openings', label: 'Careers', icon: Briefcase },
-  { id: 'applications', label: 'Applications', icon: FileText },
-  { id: 'users', label: 'Settings', icon: Settings },
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard, group: 'Workspace' },
+  { id: 'messages', label: 'Messages', icon: MessageSquare, group: 'Workspace' },
+  { id: 'applications', label: 'Applications', icon: FileText, group: 'Workspace' },
+  { id: 'projects', label: 'Projects', icon: FolderKanban, group: 'Website' },
+  { id: 'team', label: 'Team', icon: UserRound, group: 'Website' },
+  { id: 'openings', label: 'Careers', icon: Briefcase, group: 'Website' },
+  { id: 'users', label: 'Users', icon: Users, group: 'People & account' },
+  { id: 'settings', label: 'Settings', icon: Settings, group: 'People & account' },
 ];
 
 const ADMIN_CSS = `
@@ -1210,6 +1214,7 @@ select.adm-input option{background:#0d1d15;color:#f1f7f2}
 .adm-btn:disabled,.adm-btn-ghost:disabled,.adm-btn-danger:disabled{opacity:.65;cursor:not-allowed}
 .adm-chip{display:inline-flex;align-items:center;gap:.35rem;border-radius:9999px;padding:.22rem .7rem;font-size:.7rem;font-weight:700}
 .adm-nav{display:flex;align-items:center;gap:.7rem;width:100%;border-radius:.9rem;padding:.72rem .9rem;font-size:.875rem;font-weight:600;color:rgba(232,241,234,.65);transition:all .2s;text-align:left}
+.adm-nav-group{padding:.2rem .85rem .45rem;font-size:.64rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:rgba(232,241,234,.38)}
 .adm-nav:hover{background:rgba(255,255,255,.06);color:#fff}
 .adm-nav[data-active="true"]{background:linear-gradient(120deg,rgba(74,222,128,.22),rgba(243,160,68,.2));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
 .adm-title{background:linear-gradient(90deg,#fff,#a7f3d0,#fdba74,#fff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:adm-shine 7s linear infinite}
@@ -1242,22 +1247,27 @@ const ADMIN_CSS_EXTRA = `
 .adm[data-t="light"] .adm-nav{color:rgba(23,38,29,.7)}
 .adm[data-t="light"] .adm-nav:hover{background:rgba(20,40,28,.06);color:#000}
 .adm[data-t="light"] .adm-nav[data-active="true"]{color:#0b2616;background:linear-gradient(120deg,rgba(74,222,128,.3),rgba(243,160,68,.28))}
+.adm[data-t="light"] .adm-title{background-image:linear-gradient(90deg,#14532d,#15803d,#d9822e,#14532d);background-size:200% auto;-webkit-background-clip:text;background-clip:text}
+.adm[data-t="light"] .adm-row:hover{background:rgba(20,40,28,.05)}
+.adm[data-t="light"] [class*="text-white"]{color:rgba(23,38,29,.72)!important}
+.adm[data-t="light"] [class*="bg-black/"]{background-color:rgba(20,40,28,.05)!important}
+.adm[data-t="light"] [class*="border-white/"]{border-color:rgba(20,40,28,.1)!important}
+.adm[data-t="light"] .text-emerald-200,.adm[data-t="light"] .text-emerald-300{color:#15803d!important}
+.adm[data-t="light"] .text-orange-200,.adm[data-t="light"] .text-orange-300{color:#c2410c!important}
+.adm[data-t="light"] .text-red-200,.adm[data-t="light"] .text-red-100{color:#b91c1c!important}
+.adm[data-t="light"] .adm-btn,.adm[data-t="light"] .adm-btn *,.adm[data-t="light"] .bg-gradient-to-br *{color:#fff!important}
+.adm[data-t="light"]{background:#f5f7f5!important}
+.adm[data-t="light"] .adm-bg{background:linear-gradient(145deg,#f8faf8,#eef3ef)}
 .adm[data-t="light"] .adm-title{color:#285640!important}
 .adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09)!important}
 .adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)!important}
-
-/* Welcome banner on the dashboard overview (plain CSS so the light-theme overrides never touch it) */
-.adm-hero{position:relative;isolation:isolate;overflow:hidden;border-radius:1.25rem;padding:1.5rem 1.6rem;margin-bottom:1rem;color:#fff;background:linear-gradient(120deg,#0b2417 0%,#285640 62%,#3d7556 100%);box-shadow:0 22px 50px -26px rgba(12,42,28,.8)}
-.adm-hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(380px 240px at 100% 0%,rgba(243,160,68,.42),transparent 70%),radial-gradient(360px 300px at -10% 105%,rgba(74,222,128,.25),transparent 70%)}
-.adm-hero small{display:block;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.7)}
-.adm-hero h3{margin-top:.25rem;font-size:1.65rem;font-weight:800;letter-spacing:-.01em;line-height:1.15;color:#fff}
-.adm-hero p{margin-top:.4rem;max-width:34rem;font-size:.86rem;line-height:1.5;color:rgba(255,255,255,.78)}
-.adm-hero-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}
-.adm-hero-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;border-radius:9999px;font-size:.78rem;font-weight:700;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);transition:background .2s,transform .2s}
-.adm-hero-chip:hover{background:rgba(255,255,255,.26);transform:translateY(-1px)}
-.adm-hero-chip b{display:inline-grid;place-items:center;min-width:1.35rem;height:1.35rem;padding:0 .35rem;border-radius:9999px;font-size:.68rem;background:#F3A044;color:#2b1a05}
+.adm[data-t="light"] .adm-bg .adm-blob{display:none}
+.adm[data-t="light"] .adm-title{background:none;animation:none}
+.adm[data-t="light"] .adm-glass{-webkit-backdrop-filter:none;backdrop-filter:none}
+.adm[data-t="light"] .adm-btn{background:#285640;box-shadow:none}
+.adm[data-t="light"] .adm-nav-group{color:#849188}
+.adm[data-t="light"] .adm-nav[data-active="true"]{background:#edf5ef;color:#285640;box-shadow:inset 0 0 0 1px rgba(40,86,64,.1)}
 `;
-
 function ThemeToggle({ theme, setTheme }) {
   return (
     <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="adm-btn-ghost" aria-label="Toggle admin theme">
@@ -1277,41 +1287,16 @@ function AdminBackdrop() {
   );
 }
 
-/* =====================================================================
-   SIGN-IN SCREENS  (visitor sign in, create account, admin sign in)
-   One shared, professional layout: brand panel on the left, form on the
-   right, social sign-in below the main form.
-   ===================================================================== */
-const SOCIAL_ICONS = {
-  google: (
-    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z" />
-      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
-      <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.07H2.18a11 11 0 0 0 0 9.86l3.66-2.83z" />
-      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" />
-    </svg>
-  ),
-  linkedin: (
-    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#0A66C2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z" /></svg>
-  ),
-  facebook: (
-    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#1877F2" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.88v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z" /></svg>
-  ),
-  github: (
-    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#24292f" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.83-.26.83-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.73.08-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12 12 0 0 0 12 .3z" /></svg>
-  ),
-};
-
 const SOCIAL_PROVIDERS = [
-  { id: 'google', label: 'Google' },
-  { id: 'linkedin', label: 'LinkedIn' },
-  { id: 'facebook', label: 'Facebook' },
-  { id: 'github', label: 'GitHub' },
+  { id: 'google', label: 'Google', icon: null },
+  { id: 'linkedin', label: 'LinkedIn', icon: Briefcase, color: '#0A66C2' },
+  { id: 'facebook', label: 'Facebook', icon: Users, color: '#1877F2' },
+  { id: 'github', label: 'GitHub', icon: Cpu, color: '#24292f' },
 ];
 
 function SocialAuthButtons({ intent }) {
   return (
-    <div className="r4d-social-grid">
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
       {SOCIAL_PROVIDERS.map((provider) => (
         <button
           key={provider.id}
@@ -1320,86 +1305,21 @@ function SocialAuthButtons({ intent }) {
             const query = intent === 'admin' ? '?intent=admin' : '';
             window.location.assign(`${API}/api/auth/${provider.id}${query}`);
           }}
-          className="r4d-social"
-          aria-label={`Continue with ${provider.label}`}
+          className="flex min-h-12 items-center justify-center gap-2.5 rounded-xl border border-[#d9dfdb] bg-white px-3 py-3 text-sm font-semibold text-[#24372c] shadow-sm transition hover:border-[#9eaaa2] hover:bg-[#f8faf8] hover:shadow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--g)]/20"
         >
-          {SOCIAL_ICONS[provider.id]}
-          <span>{provider.label}</span>
+          {provider.id === 'google' ? (
+            <svg aria-hidden="true" viewBox="0 0 48 48" className="h-[18px] w-[18px]">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z" />
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94a11.05 11.05 0 0 1-4.8 7.24l7.73 5.99c4.51-4.16 7.11-10.29 7.11-17.7Z" />
+              <path fill="#FBBC05" d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19Z" />
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.76l-7.73-5.99c-2.15 1.45-4.9 2.3-8.17 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" />
+            </svg>
+          ) : (
+            <provider.icon aria-hidden="true" size={18} color={provider.color} strokeWidth={2.2} />
+          )}
+          <span>Continue with {provider.label}</span>
         </button>
       ))}
-    </div>
-  );
-}
-
-/* Left brand panel (hidden on phones, where a slim brand bar is shown instead) */
-function AuthBrandPanel({ eyebrow, title, text, points, footer }) {
-  return (
-    <aside className="r4d-auth-side">
-      <div className="r4d-auth-brand">
-        <span className="r4d-auth-logo"><img src={logo} alt="REL4D" /></span>
-        <span><strong>REL4D<i>.</i></strong><small>{eyebrow}</small></span>
-      </div>
-      <div className="r4d-auth-copy">
-        <h2>{title}</h2>
-        <p>{text}</p>
-        <ul>
-          {points.map(({ icon: Icon, title: pointTitle, text: pointText }) => (
-            <li key={pointTitle}>
-              <span><Icon size={18} /></span>
-              <div><b>{pointTitle}</b><em>{pointText}</em></div>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <p className="r4d-auth-foot">{footer}</p>
-    </aside>
-  );
-}
-
-function AuthMobileBar({ label }) {
-  return (
-    <div className="r4d-auth-mobilebar">
-      <span className="r4d-auth-logo"><img src={logo} alt="REL4D" /></span>
-      <span><strong>REL4D<i>.</i></strong><small>{label}</small></span>
-    </div>
-  );
-}
-
-/* Text input with a leading icon and an optional element on the right */
-function AuthField({ icon: Icon, label, id, right, ...rest }) {
-  return (
-    <div>
-      <label className="r4d-label" htmlFor={id}>{label}</label>
-      <div className="r4d-field">
-        {Icon && <Icon size={17} className="lead" aria-hidden="true" />}
-        <input id={id} {...rest} className={`r4d-input${Icon ? '' : ' noicon'}${right ? ' has-right' : ''}`} />
-        {right}
-      </div>
-    </div>
-  );
-}
-
-function PasswordField({ id, label, value, onChange, autoComplete, placeholder, minLength }) {
-  const [show, setShow] = useState(false);
-  return (
-    <AuthField
-      id={id} icon={LockKeyhole} label={label} required minLength={minLength}
-      type={show ? 'text' : 'password'} autoComplete={autoComplete} placeholder={placeholder}
-      value={value} onChange={onChange}
-      right={<button type="button" className="r4d-eye" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? <EyeOff size={17} /> : <Eye size={17} />}</button>}
-    />
-  );
-}
-
-function PasswordStrength({ value }) {
-  if (!value) return null;
-  const score = [value.length >= 8, /[a-z]/.test(value) && /[A-Z]/.test(value), /\d/.test(value), /[^A-Za-z0-9]/.test(value)].filter(Boolean).length;
-  const labels = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'];
-  const colors = ['#ef4444', '#ef4444', '#f59e0b', '#84cc16', '#16a34a'];
-  return (
-    <div className="r4d-strength" aria-live="polite">
-      <div className="bars">{[1, 2, 3, 4].map((n) => <i key={n} style={{ background: n <= score ? colors[score] : '#e2e9e4' }} />)}</div>
-      <span style={{ color: colors[score] }}>{labels[score]}</span>
     </div>
   );
 }
@@ -1407,48 +1327,37 @@ function PasswordStrength({ value }) {
 /* ----- the pop-up that appears when you press the Admin button ----- */
 function AdminLogin({ onLoggedIn, onClose, notice }) {
   const [creds, setCreds] = useState({ email: '', password: '' });
+  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const submit = async (e) => {
-    e.preventDefault(); setError(''); setLoading(true);
-    try {
-      const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds });
-      onLoggedIn(data.token, data.user);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
+    e.preventDefault(); if (loading) return;
+    setError(''); setLoading(true);
+    try { const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds }); onLoggedIn(data.token, data.user); }
+    catch (err) { setError(err.message); setLoading(false); }
   };
   return (
-    <div className="r4d-auth-stage" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="r4d-auth-card adm-in">
-        <AuthMobileBar label="Admin console" />
-        <AuthBrandPanel
-          eyebrow="Admin console"
-          title="Run your website from one place."
-          text="Review enquiries, publish projects and manage applications securely."
-          points={[
-            { icon: MessageSquare, title: 'Messages inbox', text: 'Read, star and reply to enquiries from the contact form.' },
-            { icon: FolderKanban, title: 'Projects, team and careers', text: 'Add, edit, hide or remove anything shown on the site.' },
-            { icon: FileText, title: 'Applications', text: 'Track candidates from new to hired and download CVs.' },
-          ]}
-          footer="Authorised administrators only. Sessions expire after 12 hours."
-        />
-        <div className="r4d-auth-main">
-          <button type="button" onClick={onClose} aria-label="Close" className="r4d-auth-close"><X size={18} /></button>
-          <span className="r4d-auth-badge"><ShieldCheck size={14} />Secure area</span>
-          <h2 className="r4d-auth-title">Admin sign in</h2>
-          <p className="r4d-auth-sub">Enter your administrator details to open the console.</p>
-          {notice && <p role="alert" className="r4d-alert warn" style={{ marginTop: '1rem' }}><AlertCircle size={16} className="shrink-0" /><span>{notice}</span></p>}
-          <form onSubmit={submit} className="r4d-auth-form">
-            <AuthField id="adm-email" icon={Mail} label="Email address" required type="email" autoComplete="email" autoFocus placeholder="admin@rel4d.com" value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} />
-            <PasswordField id="adm-pass" label="Password" autoComplete="current-password" placeholder="Enter your password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} />
-            {error && <p role="alert" className="r4d-alert err"><AlertCircle size={16} className="shrink-0" /><span>{error}</span></p>}
-            <Btn type="submit" loading={loading} className="r4d-auth-btn">{!loading && <ShieldCheck size={17} />}{loading ? 'Signing in…' : 'Sign in to console'}</Btn>
+    <div className="absolute inset-0 grid place-items-center overflow-y-auto bg-[#eef3ef] p-4"
+      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="adm-in w-full max-w-md overflow-hidden rounded-3xl border border-black/[.07] bg-white shadow-[0_24px_70px_-24px_rgba(23,38,29,.45)]">
+        <div className="flex justify-end px-5 pt-5"><button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-black/55 transition hover:bg-[var(--gs)] hover:text-[var(--gd)]"><X size={18}/></button></div>
+        <div className="px-8 pb-8">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-black/[.06] bg-[var(--gs)] p-2"><img src={logo} alt="REL4D" className="h-full w-full object-contain"/></div>
+          <p className="mt-5 text-center text-[.68rem] font-extrabold uppercase tracking-[.22em] text-[var(--o)]">REL4D administration</p>
+          <h2 className="mt-1 text-center text-3xl font-extrabold text-[var(--gd)]">Welcome back</h2>
+          <p className="mt-2 text-center text-sm text-black/50">Sign in to manage your website.</p>
+          {notice && <p role="alert" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
+          <div className="mt-6">
+            <SocialAuthButtons intent="admin" />
+            <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10" />or sign in with administrator email<span className="h-px flex-1 bg-black/10" /></div>
+          </div>
+          <form onSubmit={submit} className="mt-7 space-y-4">
+            <div><label className="adm-label" htmlFor="adm-email">Email address</label><input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com"/></div>
+            <div><label className="adm-label" htmlFor="adm-pass">Password</label><div className="relative"><input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="Enter your password"/><button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-black/45 hover:bg-black/5">{show ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div></div>
+            {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            <Btn type="submit" loading={loading} className="adm-btn w-full !rounded-xl !bg-[var(--gd)] !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''}/>{loading ? 'Signing in…' : 'Sign in'}</Btn>
           </form>
-          <div className="r4d-divider">or continue with</div>
-          <SocialAuthButtons intent="admin" />
-          <button type="button" onClick={onClose} className="r4d-auth-back"><ArrowLeft size={15} />Back to website</button>
+          <button type="button" onClick={onClose} className="mx-auto mt-5 block text-sm font-semibold text-black/45 transition hover:text-[var(--gd)]">← Back to website</button>
         </div>
       </div>
     </div>
@@ -1479,79 +1388,44 @@ function Empty({ icon: Icon, text }) {
   );
 }
 
-/* ----- Visitor sign in / create account pop-up ----- */
 function AuthModal({ mode, setMode, onClose, onDone, notice }) {
   const [f, setF] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [show, setShow] = useState(false);
   const reg = mode === 'register';
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
   const submit = async (e) => {
     e.preventDefault();
-    if (loading) return;
     setError(''); setLoading(true);
     try {
       const data = await apiRequest(reg ? '/api/auth/register' : '/api/auth/login', { method: 'POST', body: reg ? f : { email: f.email, password: f.password } });
       onDone(data.token, data.user);
     } catch (err) { setError(err.message); setLoading(false); }
   };
-
   return createPortal(
-    <div className="r4d-auth-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }} role="dialog" aria-modal="true" aria-label={reg ? 'Create your account' : 'Sign in'}>
-      <div className="r4d-auth-card r4d-pop">
-        <AuthMobileBar label="Research & learning" />
-        <AuthBrandPanel
-          eyebrow="Research & learning"
-          title={reg ? 'Join the REL4D community.' : 'Good to see you again.'}
-          text={reg
-            ? 'Create a free account to stay close to our work and apply for opportunities with REL4D.'
-            : 'Sign in to pick up where you left off and keep in touch with the REL4D team.'}
-          points={[
-            { icon: Bell, title: 'Stay connected', text: 'Follow our projects and updates from Kigali.' },
-            { icon: Briefcase, title: 'Apply with your CV', text: 'Send applications for open roles or an open application.' },
-            { icon: ShieldCheck, title: 'Private and secure', text: 'Your details are only used to manage your account.' },
-          ]}
-          footer={`REL4D Ltd · Kigali, Rwanda · TIN ${CONTACT.tin}`}
-        />
-        <div className="r4d-auth-main">
-          <button type="button" onClick={onClose} aria-label="Close" className="r4d-auth-close"><X size={18} /></button>
-          <span className="r4d-auth-badge">{reg ? <UserPlus size={14} /> : <UserRound size={14} />}{reg ? 'New account' : 'Visitor account'}</span>
-          <h2 className="r4d-auth-title">{reg ? 'Create your account' : 'Welcome back'}</h2>
-          <p className="r4d-auth-sub">{reg ? 'It takes less than a minute. No payment needed.' : 'Sign in with your email or a social account.'}</p>
-
-          <div className="r4d-tabs" role="tablist" aria-label="Account">
-            {[['login', 'Sign in'], ['register', 'Create account']].map(([m, l]) => (
-              <button key={m} type="button" role="tab" aria-selected={mode === m} onClick={() => { setMode(m); setError(''); }}>{l}</button>
-            ))}
-          </div>
-
-          {notice && <p role="alert" className="r4d-alert warn" style={{ marginTop: '1rem' }}><AlertCircle size={16} className="shrink-0" /><span>{notice}</span></p>}
-
-          <form onSubmit={submit} className="r4d-auth-form">
-            {reg && <AuthField id="auth-name" icon={UserRound} label="Full name" required autoComplete="name" placeholder="Your full name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
-            <AuthField id="auth-email" icon={Mail} label="Email address" required type="email" autoComplete="email" placeholder="you@example.com" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
-            <div>
-              <PasswordField id="auth-pass" label="Password" minLength={reg ? 8 : 1} autoComplete={reg ? 'new-password' : 'current-password'} placeholder={reg ? 'At least 8 characters' : 'Enter your password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
-              {reg && <PasswordStrength value={f.password} />}
-            </div>
-            {error && <p role="alert" className="r4d-alert err"><AlertCircle size={16} className="shrink-0" /><span>{error}</span></p>}
-            <Btn type="submit" loading={loading} className="r4d-auth-btn">{!loading && (reg ? <UserPlus size={17} /> : <ArrowUpRight size={17} />)}{loading ? (reg ? 'Creating account…' : 'Signing in…') : (reg ? 'Create account' : 'Sign in')}</Btn>
-          </form>
-
-          <div className="r4d-divider">or continue with</div>
-          <SocialAuthButtons intent="user" />
-
-          <p className="r4d-auth-switch">
-            {reg ? 'Already have an account?' : 'New to REL4D?'}{' '}
-            <button type="button" className="r4d-auth-link" onClick={() => { setMode(reg ? 'login' : 'register'); setError(''); }}>{reg ? 'Sign in' : 'Create an account'}</button>
-          </p>
+    <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }} role="dialog" aria-modal="true">
+      <div className="r4d-pop max-h-[92vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
+        <div className="flex items-start justify-between">
+          <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{reg ? 'Create your account' : 'Welcome back'}</h2></div>
+          <button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5"><X size={18} /></button>
         </div>
+        <div className="mt-5 grid grid-cols-2 rounded-xl bg-[var(--gs)] p-1 text-sm font-semibold">
+          {[['login', 'Sign in'], ['register', 'Create account']].map(([m, l]) => <button key={m} type="button" onClick={() => { setMode(m); setError(''); }} className={`rounded-lg py-2 transition ${mode === m ? 'bg-white text-[var(--gd)] shadow' : 'text-black/55'}`}>{l}</button>)}
+        </div>
+        {reg && <p className="mt-4 text-sm leading-relaxed text-black/55">Create a REL4D account to stay connected. If you are interested in joining the team, you can then submit your CV through Careers.</p>}
+        <div className="mt-5"><SocialAuthButtons intent="user" /></div>
+        <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10"/>or continue with email<span className="h-px flex-1 bg-black/10"/></div>
+        {notice && <p role="alert" className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
+        <form onSubmit={submit} className="mt-5 space-y-3.5">
+          {reg && <input required className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Full name" autoComplete="name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
+          <input required type="email" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Email address" autoComplete="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
+          <div className="relative">
+            <input required minLength={reg ? 8 : 1} type={show ? 'text' : 'password'} className="w-full rounded-xl border border-black/15 px-4 py-3 pr-11 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder={reg ? 'Password (8+ characters)' : 'Password'} autoComplete={reg ? 'new-password' : 'current-password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
+            <button type="button" onClick={() => setShow((v) => !v)} aria-label="Toggle password" className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center text-black/50">{show ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+          </div>
+          {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
+          <Btn type="submit" loading={loading} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:opacity-70">{reg ? 'Create account' : 'Sign in'}</Btn>
+        </form>
       </div>
     </div>, document.body);
 }
@@ -1618,61 +1492,548 @@ const STAT_CARDS = [
   { key: 'openings', label: 'Open positions', icon: Briefcase, tone: 'from-rose-500 to-orange-400', tab: 'openings' },
 ];
 
-function AdminPortal({ onClose, notice }) {
-  const [token, setToken] = useState(readToken);
-  const [user, setUser] = useState(null);
+function Overview({ stats, messages, applications, users = [], goto, user }) {
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - i)); return d; });
+  const inDay = (list, key, d) => list.filter((m) => { const t = new Date(m[key]).getTime(); return t >= d.getTime() && t < d.getTime() + 86400000; }).length;
+  const counts = days.map((d) => inDay(messages, 'created_at', d));
+  const signups = days.map((d) => inDay(users, 'created_at', d));
+  const byStatus = APP_STATUSES.map((s) => ({ s, n: applications.filter((a) => a.status === s).length }));
+  const svc = Object.entries(messages.reduce((a, m) => { const k = m.service || 'General'; a[k] = (a[k] || 0) + 1; return a; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const svcMax = Math.max(1, ...svc.map(([, n]) => n));
+  return (
+    <Panel title={`${greeting}, ${(user?.name || 'Admin').split(' ')[0]}`} subtitle="Website activity at a glance.">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-7">
+        {STAT_CARDS.map((c, i) => (
+          <button key={c.key} type="button" onClick={() => goto(c.tab)} style={{ animationDelay: `${i * 40}ms` }} className="adm-glass adm-in flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition hover:-translate-y-0.5">
+            <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br ${c.tone} text-white`}><c.icon size={15} /></span>
+            <span className="min-w-0"><span className="block text-lg font-extrabold leading-none"><CountUp to={Number(stats?.[c.key] || 0)} /></span><span className="mt-1 block truncate text-[.62rem] font-bold uppercase tracking-wider opacity-55">{c.label}</span></span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-3 xl:grid-cols-[1.5fr_1fr]">
+        <div className="adm-glass rounded-xl p-4">
+          <div className="flex items-center justify-between"><h3 className="text-sm font-bold">Messages · 14 days</h3><span className="adm-chip bg-emerald-400/15 text-emerald-300">{counts.reduce((a, b) => a + b, 0)}</span></div>
+          <Sparkline values={counts} />
+          <div className="flex justify-between text-[.65rem] opacity-45"><span>{days[0].toLocaleDateString([], { month: 'short', day: 'numeric' })}</span><span>Today</span></div>
+        </div>
+        <div className="adm-glass rounded-xl p-4">
+          <h3 className="text-sm font-bold">Applications by status</h3>
+          <div className="mt-3 flex items-center gap-4">
+            <Donut data={byStatus} />
+            <ul className="flex-1 space-y-1.5 text-xs">{byStatus.map(({ s, n }) => <li key={s} className="flex items-center gap-2"><i className="h-2 w-2 rounded-full" style={{ background: STATUS_COLOR[s] }} /><span className="capitalize opacity-75">{s}</span><b className="ml-auto">{n}</b></li>)}</ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3 grid gap-3 lg:grid-cols-3">
+        <div className="adm-glass rounded-xl p-4">
+          <h3 className="text-sm font-bold">Enquiries by service</h3>
+          <div className="mt-3 space-y-2.5">
+            {svc.length === 0 ? <p className="text-xs opacity-50">No data yet.</p> : svc.map(([k, n]) => (
+              <div key={k}><div className="mb-1 flex justify-between text-xs"><span className="truncate opacity-75">{k}</span><b>{n}</b></div><div className="h-1.5 overflow-hidden rounded-full bg-current/10" style={{ background: 'rgba(127,127,127,.18)' }}><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300" style={{ width: `${(n / svcMax) * 100}%` }} /></div></div>
+            ))}
+          </div>
+        </div>
+        <div className="adm-glass rounded-xl p-4">
+          <div className="flex items-center justify-between"><h3 className="text-sm font-bold">New sign-ups · 14 days</h3><span className="adm-chip bg-violet-400/15 text-violet-300">{signups.reduce((a, b) => a + b, 0)}</span></div>
+          <div className="mt-3 flex h-24 items-end gap-1">{signups.map((n, i) => <div key={i} title={`${n}`} className="flex-1 rounded-t bg-gradient-to-t from-violet-500 to-indigo-300" style={{ height: `${Math.max(6, (n / Math.max(1, ...signups)) * 100)}%`, opacity: n ? 1 : 0.25 }} />)}</div>
+        </div>
+        <div className="adm-glass rounded-xl p-4">
+          <div className="mb-2 flex items-center justify-between"><h3 className="text-sm font-bold">Latest messages</h3><button type="button" onClick={() => goto('messages')} className="text-xs font-bold text-orange-400 hover:underline">All</button></div>
+          {messages.length === 0 ? <p className="text-xs opacity-50">No messages yet.</p> : messages.slice(0, 4).map((m) => (
+            <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left">
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xs font-bold text-white">{initials(m.name)}</span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-1.5 w-1.5 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Messages: inbox, read/unread, star, bulk actions, reply ----- */
+function MessagesPanel({ items, setItems, ctx, focusId }) {
+  const { call, run, busy, search } = ctx;
+  const [filter, setFilter] = useState('all');
+  const [selectedId, setSelectedId] = useState(focusId || null);
+  const [checked, setChecked] = useState([]);
+  const [reply, setReply] = useState(() => items.find((m) => m.id === focusId)?.reply_text || '');
+  const q = search.trim().toLowerCase();
+  const matches = (m) => !q || [m.name, m.email, m.organization, m.service, m.message].some((v) => (v || '').toLowerCase().includes(q));
+  const counts = { all: items.length, unread: items.filter((m) => !m.is_read).length, starred: items.filter((m) => m.starred).length };
+  const shown = items.filter((m) => matches(m) && (filter === 'all' || (filter === 'unread' && !m.is_read) || (filter === 'starred' && m.starred)));
+  const current = items.find((m) => m.id === selectedId) || null;
+  const patch = (id, changes) => setItems((list) => list.map((m) => (m.id === id ? { ...m, ...changes } : m)));
+
+  const setRead = (m, value, quiet) => run(`read-${m.id}`, async () => {
+    await call(`/api/admin/messages/${m.id}`, { method: 'PATCH', body: { is_read: value } });
+    patch(m.id, { is_read: value });
+  }, quiet ? null : value ? 'Marked as read' : 'Marked as unread');
+
+  const open = (m) => { setSelectedId(m.id); setReply(m.reply_text || ''); if (!m.is_read) setRead(m, true, true); };
+  const toggleStar = (m) => run(`star-${m.id}`, async () => {
+    await call(`/api/admin/messages/${m.id}`, { method: 'PATCH', body: { starred: !m.starred } });
+    patch(m.id, { starred: !m.starred });
+  });
+  const remove = (m) => {
+    if (!window.confirm(`Delete the message from ${m.name}?`)) return;
+    run(`del-${m.id}`, async () => {
+      await call(`/api/admin/messages/${m.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== m.id));
+      if (selectedId === m.id) setSelectedId(null);
+    }, 'Message deleted');
+  };
+  const sendReply = (m) => run(`reply-${m.id}`, async () => {
+    const r = await call(`/api/admin/messages/${m.id}/reply`, { method: 'POST', body: { reply } });
+    patch(m.id, { reply_text: reply, replied_at: new Date().toISOString(), is_read: true });
+    if (!r.emailed) { // server has no SMTP: open the admin's own mail app with the text filled in
+      window.location.href = `mailto:${m.email}?subject=${encodeURIComponent('Re: your message to REL4D Ltd')}&body=${encodeURIComponent(reply)}`;
+    }
+    return r;
+  }, 'Reply saved');
+  const bulk = (action) => run(`bulk-${action}`, async () => {
+    if (action === 'delete' && !window.confirm(`Delete ${checked.length} message(s)?`)) return;
+    await call('/api/admin/messages/bulk', { method: 'POST', body: { ids: checked, action } });
+    if (action === 'delete') setItems((l) => l.filter((m) => !checked.includes(m.id)));
+    else setItems((l) => l.map((m) => (checked.includes(m.id) ? { ...m, is_read: action === 'read' } : m)));
+    setChecked([]);
+  }, 'Done');
+
+  return (
+    <Panel title="Messages" subtitle="Everything visitors send through the contact form lands here."
+      actions={<button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-messages.csv', items, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'organization', label: 'Organization' }, { key: 'service', label: 'Service' }, { key: 'message', label: 'Message' }, { key: 'is_read', label: 'Read' }])}><Download size={15} />Export CSV</button>}>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {['all', 'unread', 'starred'].map((f) => (
+          <button key={f} type="button" onClick={() => setFilter(f)} className={`adm-chip capitalize transition ${filter === f ? 'bg-emerald-400/20 text-emerald-100 ring-1 ring-emerald-300/40' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}>{f} · {counts[f]}</button>
+        ))}
+        {checked.length > 0 && (
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            <span className="text-xs text-white/55">{checked.length} selected</span>
+            <Btn type="button" loading={busy === 'bulk-read'} onClick={() => bulk('read')} className="adm-btn-ghost !py-1.5"><Check size={14} />Mark read</Btn>
+            <Btn type="button" loading={busy === 'bulk-unread'} onClick={() => bulk('unread')} className="adm-btn-ghost !py-1.5">Unread</Btn>
+            <Btn type="button" loading={busy === 'bulk-delete'} onClick={() => bulk('delete')} className="adm-btn-danger !py-1.5"><Trash2 size={14} />Delete</Btn>
+          </div>
+        )}
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[390px_1fr]">
+        <div className="adm-glass max-h-[68vh] overflow-y-auto rounded-2xl">
+          {shown.length === 0 ? <Empty icon={Inbox} text="Nothing here." /> : (
+            <>
+              <label className="flex items-center gap-3 border-b border-white/10 px-4 py-2.5 text-xs font-semibold text-white/55">
+                <input type="checkbox" checked={checked.length === shown.length && shown.length > 0} onChange={(e) => setChecked(e.target.checked ? shown.map((m) => m.id) : [])} className="h-4 w-4 accent-emerald-400" />Select all
+              </label>
+              {shown.map((m) => (
+                <div key={m.id} onClick={() => open(m)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') open(m); }}
+                  className={`adm-row flex cursor-pointer items-start gap-3 border-b border-white/5 px-4 py-3.5 ${selectedId === m.id ? 'bg-white/[.07]' : ''}`}>
+                  <input type="checkbox" checked={checked.includes(m.id)} onClick={(e) => e.stopPropagation()} onChange={(e) => setChecked((c) => (e.target.checked ? [...c, m.id] : c.filter((id) => id !== m.id)))} className="mt-2 h-4 w-4 accent-emerald-400" aria-label={`Select ${m.name}`} />
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2"><span className={`truncate text-sm ${m.is_read ? 'font-medium text-white/80' : 'font-bold text-white'}`}>{m.name}</span>{!m.is_read && <i className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}{m.starred && <Star size={13} className="shrink-0 text-amber-300" fill="currentColor" />}{m.replied_at && <Reply size={13} className="shrink-0 text-emerald-300" />}</span>
+                    <span className="block truncate text-xs text-white/50">{m.service || 'General enquiry'} · {fmtDate(m.created_at)}</span>
+                    <span className="mt-1 block truncate text-xs text-white/60">{m.message}</span>
+                  </span>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+
+        <div className="adm-glass rounded-2xl p-6">
+          {!current ? <Empty icon={MessageSquare} text="Select a message to read it and reply." /> : (
+            <div key={current.id} className="adm-in">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-lg font-bold">{initials(current.name)}</span>
+                  <div><p className="text-lg font-bold">{current.name}</p><a href={`mailto:${current.email}`} className="text-sm text-emerald-300 hover:underline">{current.email}</a>{current.organization && <p className="text-xs text-white/50">{current.organization}</p>}</div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Btn type="button" loading={busy === `star-${current.id}`} onClick={() => toggleStar(current)} className="adm-btn-ghost !py-2"><Star size={15} fill={current.starred ? 'currentColor' : 'none'} className={current.starred ? 'text-amber-300' : ''} />{current.starred ? 'Starred' : 'Star'}</Btn>
+                  <Btn type="button" loading={busy === `read-${current.id}`} onClick={() => setRead(current, !current.is_read)} className="adm-btn-ghost !py-2">{current.is_read ? 'Mark unread' : 'Mark read'}</Btn>
+                  <Btn type="button" loading={busy === `del-${current.id}`} onClick={() => remove(current)} className="adm-btn-danger !py-2"><Trash2 size={15} />Delete</Btn>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {current.service && <span className="adm-chip bg-orange-400/15 text-orange-200">{current.service}</span>}
+                <span className="adm-chip bg-white/5 text-white/55">{fmtDate(current.created_at)}</span>
+                {current.replied_at && <span className="adm-chip bg-emerald-400/15 text-emerald-200"><Reply size={12} />Replied {fmtDate(current.replied_at)}</span>}
+              </div>
+              <p className="mt-5 whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/25 p-5 text-sm leading-relaxed text-white/85">{current.message}</p>
+
+              <div className="mt-6">
+                <label className="adm-label" htmlFor="adm-reply">Your reply</label>
+                <textarea id="adm-reply" rows={5} value={reply} onChange={(e) => setReply(e.target.value)} className="adm-input resize-y" placeholder={`Write a reply to ${current.name}…`} />
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-xs text-white/45">Sent by e-mail when SMTP is set up; otherwise your mail app opens with the text ready.</p>
+                  <Btn type="button" loading={busy === `reply-${current.id}`} disabled={reply.trim().length < 2} onClick={() => sendReply(current)} className="adm-btn"><Send size={15} className={busy === `reply-${current.id}` ? 'hidden' : ''} />Send reply</Btn>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Projects & Careers: one reusable create / edit / hide / delete manager ----- */
+function ContentManager({ kind, title, singular, subtitle, items, setItems, fields, meta, ctx }) {
+  const { call, run, busy, toast, search } = ctx;
+  const empty = Object.fromEntries(fields.map((f) => [f.name, '']));
+  const [form, setForm] = useState(empty);
+  const [published, setPublished] = useState(true);
+  const [order, setOrder] = useState('');
+  const [editing, setEditing] = useState(null); // null | 'new' | item id
+  const q = search.trim().toLowerCase();
+  const shown = items.filter((it) => !q || JSON.stringify(it.data).toLowerCase().includes(q));
+
+  const startNew = () => { setForm(empty); setPublished(true); setOrder(''); setEditing('new'); };
+  const startEdit = (it) => { setForm({ ...empty, ...it.data }); setPublished(it.published); setOrder(String(it.sort_order)); setEditing(it.id); };
+  const set = (name) => (e) => setForm((f) => ({ ...f, [name]: e.target.value }));
+
+  const pickImage = async (e, name) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try { setForm((f) => ({ ...f, [name]: '' })); const url = await fileToDataUrl(file); setForm((f) => ({ ...f, [name]: url })); }
+    catch (err) { toast(err.message, 'err'); }
+  };
+
+  const save = (e) => {
+    e.preventDefault();
+    run(`save-${kind}`, async () => {
+      const body = { data: form, published, sort_order: order === '' ? undefined : Number(order) };
+      if (editing === 'new') {
+        const r = await call('/api/admin/content', { method: 'POST', body: { kind, ...body } });
+        setItems((l) => [...l, r.item]);
+      } else {
+        const r = await call(`/api/admin/content/${editing}`, { method: 'PUT', body });
+        setItems((l) => l.map((x) => (x.id === editing ? r.item : x)));
+      }
+      setEditing(null);
+    }, `${singular} saved`);
+  };
+  const togglePublish = (it) => run(`pub-${it.id}`, async () => {
+    const r = await call(`/api/admin/content/${it.id}`, { method: 'PUT', body: { published: !it.published } });
+    setItems((l) => l.map((x) => (x.id === it.id ? r.item : x)));
+  }, it.published ? 'Hidden from the website' : 'Now visible on the website');
+  const remove = (it) => {
+    if (!window.confirm(`Delete "${it.data.title || singular}"? This cannot be undone.`)) return;
+    run(`del-${it.id}`, async () => {
+      await call(`/api/admin/content/${it.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== it.id));
+    }, `${singular} deleted`);
+  };
+
+  return (
+    <Panel title={title} subtitle={subtitle} actions={<button type="button" className="adm-btn" onClick={startNew}><Plus size={16} />Add {singular.toLowerCase()}</button>}>
+      {editing !== null && (
+        <form onSubmit={save} className="adm-glass adm-in mb-6 rounded-2xl p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-bold">{editing === 'new' ? `New ${singular.toLowerCase()}` : `Edit ${singular.toLowerCase()}`}</h3>
+            <button type="button" onClick={() => setEditing(null)} aria-label="Close form" className="grid h-9 w-9 place-items-center rounded-full text-white/60 hover:bg-white/10"><X size={18} /></button>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {fields.map((f) => (
+              <div key={f.name} className={f.type === 'textarea' || f.type === 'image' ? 'md:col-span-2' : ''}>
+                <label className="adm-label" htmlFor={`f-${kind}-${f.name}`}>{f.label}{f.required && ' *'}</label>
+                {f.type === 'textarea' ? (
+                  <textarea id={`f-${kind}-${f.name}`} rows={4} required={f.required} value={form[f.name] || ''} onChange={set(f.name)} className="adm-input resize-y" />
+                ) : f.type === 'image' ? (
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="grid h-24 w-40 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/10 bg-black/30">
+                      {form[f.name] ? <img src={form[f.name]} alt="" className="h-full w-full object-cover" /> : <ImagePlus size={24} className="text-white/30" />}
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <input id={`f-${kind}-${f.name}`} type="text" value={form[f.name]?.startsWith('data:') ? '(uploaded image)' : form[f.name] || ''} onChange={set(f.name)} readOnly={form[f.name]?.startsWith('data:')} placeholder="Paste an image URL…" className="adm-input" />
+                      <div className="flex gap-2">
+                        <label className="adm-btn-ghost cursor-pointer"><ImagePlus size={15} />Upload image<input type="file" accept="image/*" className="sr-only" onChange={(e) => pickImage(e, f.name)} /></label>
+                        {form[f.name] && <button type="button" className="adm-btn-ghost" onClick={() => setForm((x) => ({ ...x, [f.name]: '' }))}>Remove</button>}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <input id={`f-${kind}-${f.name}`} type="text" required={f.required} value={form[f.name] || ''} onChange={set(f.name)} list={f.type === 'combo' ? `dl-${kind}-${f.name}` : undefined} className="adm-input" />
+                    {f.type === 'combo' && <datalist id={`dl-${kind}-${f.name}`}>{f.options.map((o) => <option key={o} value={o} />)}</datalist>}
+                  </>
+                )}
+              </div>
+            ))}
+            <div>
+              <label className="adm-label" htmlFor={`f-${kind}-order`}>Display order</label>
+              <input id={`f-${kind}-order`} type="number" value={order} onChange={(e) => setOrder(e.target.value)} placeholder="Auto" className="adm-input" />
+            </div>
+            <label className="flex items-center gap-3 self-end rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm font-semibold">
+              <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} className="h-4 w-4 accent-emerald-400" />Visible on the website
+            </label>
+          </div>
+          <div className="mt-5 flex flex-wrap justify-end gap-2">
+            <button type="button" className="adm-btn-ghost" onClick={() => setEditing(null)}>Cancel</button>
+            <Btn type="submit" loading={busy === `save-${kind}`} className="adm-btn"><Check size={16} className={busy === `save-${kind}` ? 'hidden' : ''} />Save {singular.toLowerCase()}</Btn>
+          </div>
+        </form>
+      )}
+
+      {shown.length === 0 ? <div className="adm-glass rounded-2xl"><Empty icon={FolderKanban} text={`No ${title.toLowerCase()} yet. Press “Add ${singular.toLowerCase()}”.`} /></div> : (
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {shown.map((it, i) => (
+            <article key={it.id} style={{ animationDelay: `${i * 55}ms` }} className={`adm-glass adm-in group overflow-hidden rounded-2xl transition hover:-translate-y-1 ${it.published ? '' : 'opacity-60'}`}>
+              {it.data.image !== undefined && (
+                <div className="relative h-40 overflow-hidden bg-gradient-to-br from-emerald-700 to-emerald-950">
+                  {it.data.image && <img src={it.data.image} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />}
+                  <span className={`adm-chip absolute left-3 top-3 ${it.published ? 'bg-emerald-500/90 text-white' : 'bg-black/70 text-white/80'}`}>{it.published ? 'Live' : 'Hidden'}</span>
+                </div>
+              )}
+              <div className="p-5">
+                {it.data.image === undefined && <span className={`adm-chip mb-2 ${it.published ? 'bg-emerald-400/15 text-emerald-200' : 'bg-white/10 text-white/60'}`}>{it.published ? 'Live' : 'Hidden'}</span>}
+                <h3 className="font-bold leading-snug">{it.data.title || 'Untitled'}</h3>
+                <div className="mt-2 flex flex-wrap gap-1.5">{meta.map((k) => it.data[k] && <span key={k} className="adm-chip bg-white/8 text-white/65" style={{ background: 'rgba(255,255,255,.07)' }}>{it.data[k]}</span>)}</div>
+                <p className="mt-3 line-clamp-3 text-sm text-white/60">{it.data.description}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button type="button" onClick={() => startEdit(it)} className="adm-btn-ghost !px-3 !py-1.5"><Pencil size={14} />Edit</button>
+                  <Btn type="button" loading={busy === `pub-${it.id}`} onClick={() => togglePublish(it)} className="adm-btn-ghost !px-3 !py-1.5">{it.published ? <EyeOff size={14} /> : <Eye size={14} />}{it.published ? 'Hide' : 'Publish'}</Btn>
+                  <Btn type="button" loading={busy === `del-${it.id}`} onClick={() => remove(it)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} />Delete</Btn>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+/* ----- Applications ----- */
+function ApplicationsPanel({ items, setItems, ctx, token }) {
+  const { call, run, busy, search } = ctx;
+  const [openId, setOpenId] = useState(null);
+  const q = search.trim().toLowerCase();
+  const shown = items.filter((a) => !q || [a.name, a.email, a.position, a.phone, a.message].some((v) => (v || '').toLowerCase().includes(q)));
+
+  const setStatus = (a, status) => run(`st-${a.id}`, async () => {
+    await call(`/api/admin/applications/${a.id}`, { method: 'PATCH', body: { status } });
+    setItems((l) => l.map((x) => (x.id === a.id ? { ...x, status } : x)));
+  }, `Marked as ${status}`);
+  const remove = (a) => {
+    if (!window.confirm(`Delete the application from ${a.name}?`)) return;
+    run(`del-${a.id}`, async () => {
+      await call(`/api/admin/applications/${a.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== a.id));
+    }, 'Application deleted');
+  };
+  const downloadCv = (a) => run(`cv-${a.id}`, async () => {
+    const res = await apiRequest(`/api/admin/applications/${a.id}/cv`, { token, raw: true });
+    const url = URL.createObjectURL(await res.blob());
+    const link = document.createElement('a');
+    link.href = url; link.download = a.cv_filename || 'cv.pdf'; link.click();
+    URL.revokeObjectURL(url);
+  });
+
+  return (
+    <Panel title="Applications" subtitle="Candidates who applied for a role or sent an open application."
+      actions={<button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-applications.csv', items, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }, { key: 'position', label: 'Position' }, { key: 'status', label: 'Status' }])}><Download size={15} />Export CSV</button>}>
+      <div className="adm-glass overflow-x-auto rounded-2xl">
+        {shown.length === 0 ? <Empty icon={FileText} text="No applications yet." /> : (
+          <table className="w-full min-w-[760px] text-left text-sm">
+            <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">Candidate</th><th className="px-3 py-3">Position</th><th className="px-3 py-3">Applied</th><th className="px-3 py-3">Status</th><th className="px-5 py-3 text-right">Actions</th></tr></thead>
+            <tbody>
+              {shown.map((a) => (
+                <>
+                  <tr key={a.id} className="adm-row border-b border-white/5">
+                    <td className="px-5 py-3.5"><p className="font-bold">{a.name}</p><p className="text-xs text-white/50">{a.email}{a.phone ? ` · ${a.phone}` : ''}</p></td>
+                    <td className="px-3 py-3.5 text-white/75">{a.position}</td>
+                    <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(a.created_at)}</td>
+                    <td className="px-3 py-3.5">
+                      <div className="flex items-center gap-2">
+                        {busy === `st-${a.id}` ? <Spinner size={16} className="text-orange-300" /> : <span className={`adm-chip capitalize ring-1 ${APP_STATUS_STYLE[a.status]}`}>{a.status}</span>}
+                        <select value={a.status} onChange={(e) => setStatus(a, e.target.value)} className="adm-input !w-auto !py-1.5 !text-xs" aria-label={`Status for ${a.name}`}>{APP_STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex justify-end gap-2">
+                        {a.message && <button type="button" onClick={() => setOpenId(openId === a.id ? null : a.id)} className="adm-btn-ghost !px-3 !py-1.5"><Eye size={14} />Note</button>}
+                        {a.has_cv && <Btn type="button" loading={busy === `cv-${a.id}`} onClick={() => downloadCv(a)} className="adm-btn-ghost !px-3 !py-1.5"><Download size={14} />CV</Btn>}
+                        {a.cv_url && <a href={a.cv_url} target="_blank" rel="noreferrer" className="adm-btn-ghost !px-3 !py-1.5"><ArrowUpRight size={14} />Link</a>}
+                        <Btn type="button" loading={busy === `del-${a.id}`} onClick={() => remove(a)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} /></Btn>
+                      </div>
+                    </td>
+                  </tr>
+                  {openId === a.id && <tr key={`${a.id}-n`} className="border-b border-white/5 bg-black/20"><td colSpan={5} className="whitespace-pre-wrap px-5 py-4 text-sm text-white/75">{a.message}</td></tr>}
+                </>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Users ----- */
+function UsersPanel({ items, setItems, ctx }) {
+  const { call, run, busy, search } = ctx;
+  const q = search.trim().toLowerCase();
+  const shown = items.filter((u) => !q || [u.name, u.email, u.provider].some((v) => (v || '').toLowerCase().includes(q)));
+  const remove = (u) => {
+    if (!window.confirm(`Delete the account of ${u.name}?`)) return;
+    run(`del-${u.id}`, async () => {
+      await call(`/api/admin/users/${u.id}`, { method: 'DELETE' });
+      setItems((l) => l.filter((x) => x.id !== u.id));
+    }, 'User deleted');
+  };
+  return (
+    <Panel title="Users" subtitle="People who created an account on the website.">
+      <div className="adm-glass overflow-x-auto rounded-2xl">
+        {shown.length === 0 ? <Empty icon={Users} text="No users found." /> : (
+          <table className="w-full min-w-[680px] text-left text-sm">
+            <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">User</th><th className="px-3 py-3">Role</th><th className="px-3 py-3">Sign-in</th><th className="px-3 py-3">Joined</th><th className="px-3 py-3">Last login</th><th className="px-5 py-3" /></tr></thead>
+            <tbody>
+              {shown.map((u) => (
+                <tr key={u.id} className="adm-row border-b border-white/5">
+                  <td className="px-5 py-3.5"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(u.name)}</span><span><span className="block font-bold">{u.name}</span><span className="text-xs text-white/50">{u.email}</span></span></div></td>
+                  <td className="px-3 py-3.5"><span className={`adm-chip ${u.role === 'admin' ? 'bg-orange-400/20 text-orange-200' : 'bg-white/8 text-white/65'}`}>{u.role}</span></td>
+                  <td className="px-3 py-3.5 capitalize text-white/65">{u.provider}</td>
+                  <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.created_at)}</td>
+                  <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.last_login)}</td>
+                  <td className="px-5 py-3.5 text-right">{u.role !== 'admin' && <Btn type="button" loading={busy === `del-${u.id}`} onClick={() => remove(u)} className="adm-btn-danger !px-3 !py-1.5"><Trash2 size={14} /></Btn>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- Settings: password, exports, sign out ----- */
+function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
+  const { call, run, busy, toast } = ctx;
+  const [pw, setPw] = useState({ current: '', next: '', confirm: '' });
+  const [show, setShow] = useState(false);
+  const change = (e) => {
+    e.preventDefault();
+    if (pw.next !== pw.confirm) return toast('The new passwords do not match.', 'err');
+    run('pwd', async () => {
+      await call('/api/admin/password', { method: 'POST', body: { current: pw.current, next: pw.next } });
+      setPw({ current: '', next: '', confirm: '' });
+    }, 'Password updated');
+  };
+  return (
+    <Panel title="Settings" subtitle="Your account, security and data exports.">
+      <div className="grid gap-5 lg:grid-cols-2">
+        <form onSubmit={change} className="adm-glass rounded-2xl p-6">
+          <h3 className="flex items-center gap-2 text-lg font-bold"><KeyRound size={18} className="text-orange-300" />Change password</h3>
+          <div className="mt-4 space-y-4">
+            {[['current', 'Current password', 'current-password'], ['next', 'New password (10+ characters)', 'new-password'], ['confirm', 'Repeat new password', 'new-password']].map(([k, label, ac]) => (
+              <div key={k}><label className="adm-label" htmlFor={`pw-${k}`}>{label}</label><input id={`pw-${k}`} required type={show ? 'text' : 'password'} autoComplete={ac} minLength={k === 'current' ? 1 : 10} value={pw[k]} onChange={(e) => setPw((p) => ({ ...p, [k]: e.target.value }))} className="adm-input" /></div>
+            ))}
+            <label className="flex items-center gap-2 text-xs text-white/60"><input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} className="accent-emerald-400" />Show passwords</label>
+            <Btn type="submit" loading={busy === 'pwd'} className="adm-btn w-full">Update password</Btn>
+          </div>
+        </form>
+        <div className="space-y-5">
+          <div className="adm-glass rounded-2xl p-6">
+            <h3 className="flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-emerald-300" />Signed in as</h3>
+            <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold">{initials(user?.name)}</span><div><p className="font-bold">{user?.name}</p><p className="text-sm text-white/55">{user?.email}</p></div></div>
+            <p className="mt-4 text-xs text-white/45">Admin sessions expire automatically after 12 hours.</p>
+            <button type="button" onClick={onLogout} className="adm-btn-danger mt-4"><LogOut size={15} />Sign out</button>
+          </div>
+          <div className="adm-glass rounded-2xl p-6">
+            <h3 className="flex items-center gap-2 text-lg font-bold"><Download size={18} className="text-sky-300" />Export data</h3>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-messages.csv', messages, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'organization', label: 'Organization' }, { key: 'service', label: 'Service' }, { key: 'message', label: 'Message' }])}>Messages (CSV)</button>
+              <button type="button" className="adm-btn-ghost" onClick={() => downloadCsv('rel4d-applications.csv', applications, [{ key: 'created_at', label: 'Date' }, { key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }, { key: 'position', label: 'Position' }, { key: 'status', label: 'Status' }])}>Applications (CSV)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+/* ----- The dashboard shell ----- */
+function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setTheme }) {
   const [tab, setTab] = useState('overview');
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [toasts, setToasts] = useState([]);
-  const [theme, setTheme] = useState('dark');
-  const [liveStats, setLiveStats] = useState({});
+  const [focusMessage, setFocusMessage] = useState(null);
+  const [stats, setStats] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [applications, setApplications] = useState([]);
-  const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
   const [openings, setOpenings] = useState([]);
-  const [focusMessage] = useState(null);
+  const [applications, setApplications] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [busy, setBusy] = useState('');
+  const [toasts, setToasts] = useState([]);
+  const [search, setSearch] = useState('');
+
+  const call = (path, opts = {}) => apiRequest(path, { token, ...opts });
   const toast = (text, type = 'ok') => {
     const id = Date.now() + Math.random();
-    setToasts((items) => [...items, { id, text, type }]);
-    setTimeout(() => setToasts((items) => items.filter((item) => item.id !== id)), 4000);
+    setToasts((t) => [...t, { id, text, type }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4200);
   };
-  const call = (path, options = {}) => apiRequest(path, { ...options, token });
-  const run = async (fn) => {
-    setBusy(true);
-    try { return await fn(); } catch (error) { toast(error.message, 'err'); return null; } finally { setBusy(false); }
+  const handleError = (e) => {
+    if (e.status === 401 || e.status === 403) { onLogout(); return; }
+    toast(e.message, 'err');
   };
-  const goto = (next) => { setTab(next); setSearch(''); };
-  const onLogout = () => { saveToken(''); setToken(''); setUser(null); };
-  const refresh = async (showFeedback = false) => {
-    if (!token) return;
-    setRefreshing(true);
+  // Runs one action with a spinner on the button whose key matches `busy`.
+  const run = async (key, fn, okMessage) => {
+    setBusy(key);
     try {
-      const [me, stats, msg, content, apps, accountUsers] = await Promise.all([
-        call('/api/admin/me'), call('/api/admin/stats'), call('/api/admin/messages'),
-        call('/api/admin/content'), call('/api/admin/applications'), call('/api/admin/users'),
-      ]);
-      setUser(me.user || me); setLiveStats(stats || {});
-      setMessages(Array.isArray(msg) ? msg : (msg.messages || []));
-      setProjects(content.projects || []); setTeamMembers(content.team || []); setOpenings(content.openings || []);
-      setApplications(Array.isArray(apps) ? apps : (apps.applications || []));
-      setUsers(Array.isArray(accountUsers) ? accountUsers : (accountUsers.users || []));
-      if (showFeedback) toast('Dashboard refreshed.');
-    } catch (error) {
-      if (error.status === 401 || error.status === 403) onLogout();
-      else toast(error.message, 'err');
-    } finally { setLoading(false); setRefreshing(false); }
+      const result = await fn();
+      if (okMessage) toast(okMessage);
+      return result;
+    } catch (e) {
+      handleError(e);
+      return undefined;
+    } finally {
+      setBusy('');
+    }
   };
-  useEffect(() => { if (token) refresh(); else setLoading(false); }, [token]);
-  if (!token) return <AdminLogin onLoggedIn={(value, account) => { saveToken(value); setUser(account); setToken(value); }} onClose={onClose} notice={notice} />;
-  const stats = liveStats;
-  const unreadCount = Number(stats?.unread_messages || 0);
-  const newAppCount = Number(stats?.new_applications || 0);
-  const badge = { messages: unreadCount, applications: newAppCount };
+
+  const refresh = async (manual = false) => {
+    if (manual) setRefreshing(true);
+    try {
+      const [me, st, ms, pr, tm, op, ap, us] = await Promise.all([
+        call('/api/auth/me'), call('/api/admin/stats'), call('/api/admin/messages'),
+        call('/api/admin/content?kind=project'), call('/api/admin/content?kind=team'), call('/api/admin/content?kind=opening'),
+        call('/api/admin/applications'), call('/api/admin/users'),
+      ]);
+      setUser(me.user); setStats(st); setMessages(ms.items); setProjects(pr.items); setTeamMembers(tm.items); setOpenings(op.items); setApplications(ap.items); setUsers(us.items);
+      if (manual) toast('Dashboard refreshed');
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setLoading(false); setRefreshing(false);
+    }
+  };
+  // This effect starts the initial API load; state updates happen after the request resolves.
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
+  useEffect(() => { refresh(); }, [token]);
+
+  // Keep the badge numbers live without another request.
+  const liveStats = stats && {
+    ...stats,
+    unread_messages: messages.filter((m) => !m.is_read).length,
+    messages: messages.length,
+    applications: applications.length,
+    new_applications: applications.filter((a) => a.status === 'new').length,
+    users: users.filter((u) => u.role === 'user').length,
+    projects: projects.length,
+    openings: openings.length,
+  };
+  const unread = messages.filter((m) => !m.is_read).length;
+  const newApps = applications.filter((a) => a.status === 'new').length;
+  const badge = { messages: unread, applications: newApps };
+  const goto = (id, messageId = null) => { setTab(id); setFocusMessage(messageId); setSearch(''); };
   const ctx = { call, run, busy, toast, search };
 
   let content = null;
@@ -1685,12 +2046,21 @@ function AdminPortal({ onClose, notice }) {
   if (tab === 'users') content = <UsersPanel items={users} setItems={setUsers} ctx={ctx} />;
   if (tab === 'settings') content = <SettingsPanel user={user} ctx={ctx} messages={messages} applications={applications} onLogout={onLogout} />;
 
-  const navButtons = (horizontal = false) => ADMIN_TABS.map((tb) => (
-    <button key={tb.id} type="button" data-active={tab === tb.id} onClick={() => goto(tb.id)} className={`adm-nav ${horizontal ? '!w-auto shrink-0 !px-4' : ''}`}>
-      <tb.icon size={18} />{tb.label}
-      {badge[tb.id] > 0 && <span className="ml-auto rounded-full bg-orange-500 px-2 py-0.5 text-[.65rem] font-extrabold text-white">{badge[tb.id]}</span>}
-    </button>
-  ));
+  const navButtons = (horizontal = false) => (
+    <div className={horizontal ? 'flex gap-1' : 'space-y-5'}>
+      {['Workspace', 'Website', 'People & account'].map((group) => (
+        <div key={group} className={horizontal ? 'contents' : 'space-y-1'}>
+          {!horizontal && <p className="adm-nav-group">{group}</p>}
+          {ADMIN_TABS.filter((tb) => tb.group === group).map((tb) => (
+            <button key={tb.id} type="button" data-active={tab === tb.id} onClick={() => goto(tb.id)} className={`adm-nav ${horizontal ? '!w-auto shrink-0 !px-4' : ''}`}>
+              <tb.icon size={18} strokeWidth={1.8} />{tb.label}
+              {badge[tb.id] > 0 && <span className="ml-auto rounded-full bg-orange-500 px-2 py-0.5 text-[.65rem] font-extrabold text-white">{badge[tb.id]}</span>}
+            </button>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="relative flex h-full">
@@ -1738,29 +2108,60 @@ function AdminPortal({ onClose, notice }) {
   );
 }
 
+/* ----- Portal: renders the console above the whole website ----- */
+function AdminPortal({ onClose, notice }) {
+  const [token, setToken] = useState(readToken);
+  const [user, setUser] = useState(null);
+  const [admTheme, setAdmTheme] = useState(() => { try { return localStorage.getItem('rel4d-admin-theme') || 'light'; } catch { return 'light'; } });
+  const changeTheme = (v) => { setAdmTheme(v); try { localStorage.setItem('rel4d-admin-theme', v); } catch { /* storage unavailable */ } };
+  const logout = () => { saveToken(''); setToken(''); setUser(null); };
+  const loggedIn = (newToken, newUser) => { saveToken(newToken); setToken(newToken); setUser(newUser); };
+
+  useEffect(() => {
+    if (token) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [token, onClose]);
+
+  return createPortal(
+    <div className="adm fixed inset-0 z-[200] overflow-hidden" data-t={admTheme} role="dialog" aria-modal="true" aria-label="Admin console">
+      <style>{ADMIN_CSS + ADMIN_CSS_EXTRA}</style>
+      <AdminBackdrop />
+      {token
+        ? <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} theme={admTheme} setTheme={changeTheme} />
+        : <AdminLogin onLoggedIn={loggedIn} onClose={onClose} notice={notice} />}
+    </div>,
+    document.body,
+  );
+}
+
 /* ------------------------- Theme + animations ------------------------- */
 const CSS = `
 :root{
   --g:#4D8A6C; --gd:#285640; --gs:#F1F6F0;
   --o:#F3A044; --od:#D9822E; --os:#FFF4E7;
-  --earth:#65513B; --paper:#FFFFFF;
+  --earth:#65513B; --paper:#fff;
 }
 html{scroll-behavior:smooth}
-body{background:#FFFFFF}
-.r4d-app{min-height:100vh;background:#FFFFFF;color:#24372c;transition:background-color .25s ease,color .25s ease}
-.r4d-app[data-theme="light"]{--paper:#FFFFFF;--gs:#F1F6F0;background:#FFFFFF}
-.r4d-app[data-theme="light"] #home{background-color:#FFFFFF!important;background-image:none!important;color:#24372c!important}
-.r4d-app[data-theme="light"] header nav{background:rgba(255,255,255,.98)!important}
-.r4d-app[data-theme="light"] #home [aria-hidden="true"]{opacity:.12}
-.r4d-app[data-theme="light"] #home h1,
-.r4d-app[data-theme="light"] #home p,
-.r4d-app[data-theme="light"] #home .text-white,
-.r4d-app[data-theme="light"] #home [class*="text-white/"]{color:#24372c!important}
-.r4d-app[data-theme="light"] #home [class*="border-white/"]{border-color:rgba(40,86,64,.18)!important}
-.r4d-app[data-theme="light"] #home [class*="bg-white/"]{background-color:rgba(241,246,240,.9)!important}
-.r4d-app[data-theme="light"] #home [class*="text-[var(--gd)]"]{color:var(--gd)!important}
+body{background:var(--paper)}
+.r4d-app{min-height:100vh;background:var(--paper);color:#24372c;transition:background-color .25s ease,color .25s ease}
 .r4d-app[data-theme="dark"]{--paper:#14231c;--gs:#20362a;--os:#3a3123;--g:#75ad83;--gd:#285640;--o:#f3a044;--od:#f3a044;color:#e6eee7;color-scheme:dark}
 .r4d-app[data-theme="dark"] #home{background-color:#14231c!important;color:#edf4ee}
+.r4d-hero-grid{background-image:linear-gradient(rgba(40,86,64,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(40,86,64,.045) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse at 60% 40%,#000 20%,transparent 75%)}
+.r4d-app[data-theme="dark"] nav[aria-label="Main"]{background:rgba(20,35,28,.94);border-color:rgba(255,255,255,.1)}
+.r4d-app[data-theme="dark"] nav[aria-label="Main"] a,
+.r4d-app[data-theme="dark"] nav[aria-label="Main"] button{color:#e6eee7}
+.r4d-app[data-theme="dark"] .r4d-hero{background:#14231c;color:#edf4ee}
+.r4d-app[data-theme="dark"] .r4d-hero-grid{background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)}
+.r4d-app[data-theme="dark"] .r4d-hero-kicker{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#e6eee7}
+.r4d-app[data-theme="dark"] .r4d-hero-title{color:#edf4ee}
+.r4d-app[data-theme="dark"] .r4d-hero-description{color:rgba(237,244,238,.74)}
+.r4d-app[data-theme="dark"] .r4d-hero-secondary{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.24);color:#edf4ee}
+.r4d-app[data-theme="dark"] .r4d-hero-stat{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.13)}
+.r4d-app[data-theme="dark"] .r4d-hero-stat-value{color:#e6eee7}
+.r4d-app[data-theme="dark"] .r4d-hero-stat-label{color:rgba(237,244,238,.62)}
+.r4d-app[data-theme="dark"] .r4d-portrait-ring>div:first-child{border-color:rgba(255,255,255,.35)}
 .r4d-app[data-theme="dark"] #home .bg-white,
 .r4d-app[data-theme="dark"] #home [class*="bg-white/"]{background-color:#20362a!important}
 .r4d-app[data-theme="dark"] #home [class*="border-emerald-800"]{border-color:rgba(167,208,177,.35)!important}
@@ -1793,6 +2194,35 @@ body{background:#FFFFFF}
 .r4d-app[data-theme="dark"] input::placeholder,
 .r4d-app[data-theme="dark"] textarea::placeholder{color:#9eafa2}
 section[id]{scroll-margin-top:90px}
+@keyframes r4d-spin{to{transform:rotate(360deg)}}
+@keyframes r4d-blob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.15)}}
+@keyframes r4d-shine{to{background-position:200% center}}
+@keyframes r4d-spinner{to{transform:rotate(360deg)}}
+@keyframes r4d-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes r4d-fill{from{width:0}to{width:100%}}
+@keyframes r4d-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes r4d-pop{from{opacity:0;transform:scale(.97) translateY(6px)}to{opacity:1;transform:none}}
+@keyframes r4d-marquee{to{transform:translateX(-50%)}}
+@keyframes r4d-letter-bounce{0%,75%,100%{transform:translateY(0)}8%{transform:translateY(-6px)}16%{transform:translateY(0)}}
+.r4d-portrait-ring{isolation:isolate;position:relative;background:rgba(255,255,255,.08);box-shadow:0 16px 48px -24px rgba(0,0,0,.7)}
+.r4d-portrait-ring::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:conic-gradient(from 0deg,#4ade80,#f3a044,#a7f3d0,#f3a044,#4ade80);animation:r4d-ring-spin 8s linear infinite}
+.r4d-orbit{animation:r4d-orbit-spin 30s linear infinite}
+.r4d-orbit-dot{animation:r4d-dot-pulse 2.4s ease-in-out infinite alternate}
+@keyframes r4d-ring-spin{to{rotate:360deg}}
+@keyframes r4d-orbit-spin{to{rotate:360deg}}
+@keyframes r4d-dot-pulse{to{scale:1.55;opacity:.65}}
+.r4d-spin{animation:r4d-spin 6s linear infinite}
+.r4d-blob{animation:r4d-blob 16s ease-in-out infinite}
+.r4d-shine{background-size:200% auto;animation:r4d-shine 6s linear infinite}
+.r4d-spinner{animation:r4d-spinner .7s linear infinite}
+.r4d-float{animation:r4d-float 4s ease-in-out infinite}
+.r4d-fill{animation:r4d-fill 1.8s ease forwards}
+.r4d-rise{opacity:0;animation:r4d-rise .8s ease forwards}
+.r4d-pop{animation:r4d-pop .35s ease both}
+.r4d-marquee-track{animation:r4d-marquee 44s linear infinite;will-change:transform}
+.r4d-marquee-viewport:hover .r4d-marquee-track,.r4d-marquee-viewport:focus-within .r4d-marquee-track{animation-play-state:paused}
+.r4d-letter-bounce{animation:r4d-letter-bounce 10s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.r4d-spin,.r4d-float,.r4d-marquee-track,.r4d-letter-bounce,.r4d-rise,.r4d-blob,.r4d-shine,.r4d-portrait-ring::before,.r4d-orbit,.r4d-orbit-dot{animation:none;opacity:1}.r4d-fill{animation:none;width:100%}}
 `;
 
 /* ------------------------------- Page --------------------------------- */
@@ -1853,7 +2283,6 @@ export default function Home() {
     setAuthNotice('');
     try { window.history.replaceState(null, '', window.location.pathname + window.location.search); } catch { /* ignore */ }
   };
-  const closeAuth = () => { setAuthMode(null); setAuthNotice(''); };
 
   useEffect(() => { const timer = setTimeout(() => setLoading(false), 1900); return () => clearTimeout(timer); }, []);
   useEffect(() => { // typing /#admin in the address bar also opens the pop-up
@@ -1862,9 +2291,9 @@ export default function Home() {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
   useEffect(() => { // page behind the pop-up must not scroll
-    document.body.style.overflow = adminOpen || authMode ? 'hidden' : '';
+    document.body.style.overflow = adminOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [adminOpen, authMode]);
+  }, [adminOpen]);
   useEffect(() => {
     document.documentElement.lang = language;
     document.title = language === 'rw' ? 'REL4D Ltd | Ubushakashatsi no kwigira ku iterambere' : language === 'fr' ? 'REL4D Ltd | Recherche et apprentissage au service du développement' : 'REL4D Ltd | Research and Learning for Development';
@@ -1881,8 +2310,9 @@ export default function Home() {
       <div className="r4d-app" data-theme={theme} lang={language}>
         <style>{CSS}</style>
         <Loader done={!loading} />
-        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} onAuth={setAuthMode} account={account} onLogout={accountOut} language={language} setLanguage={setLanguage} />
-        {authMode && <AuthModal mode={authMode} setMode={(mode) => { setAuthNotice(''); setAuthMode(mode); }} onClose={closeAuth} onDone={accountDone} notice={authNotice} />}
+        <LangTab language={language} setLanguage={setLanguage} t={t} />
+        <Navbar theme={theme} setTheme={setTheme} t={t} onAdmin={openAdmin} onAuth={setAuthMode} account={account} onLogout={accountOut} />
+        {authMode && <AuthModal mode={authMode} setMode={(mode) => { setAuthNotice(''); setAuthMode(mode); }} onClose={() => { setAuthMode(null); setAuthNotice(''); }} onDone={accountDone} notice={authNotice} />}
         <main>
           <Hero />
           <Stats />
