@@ -17,9 +17,9 @@ import {
    The ADMIN console now lives in this file (search for "ADMIN CONSOLE").
    It opens as a pop-up: click the "Admin" button beside the logo.
    ===================================================================== */
-// Set VITE_API_URL to the deployed Express server URL in production. The
-// localhost fallback keeps the frontend connected to the bundled API locally.
-const API = (import.meta.env.VITE_API_URL || 'http://localhost:5000').trim().replace(/\/$/, '');
+// Set VITE_API_URL when the API is hosted separately. In production, default
+// to the same origin; localhost is only appropriate for local development.
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000' : '')).trim().replace(/\/$/, '');
 const LOGO = logo;
 const LanguageContext = createContext('en');
 
