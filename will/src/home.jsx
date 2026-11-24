@@ -478,9 +478,9 @@ function Hero() {
             <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--o)] opacity-75" /><span className="relative h-2 w-2 rounded-full bg-[var(--o)]" /></span>
             {tr('Evidence drives change and transformation')}
           </p>
-          <h1 className="r4d-hero-title r4d-rise mt-6 max-w-[15ch] text-4xl font-extrabold leading-[1.08] tracking-[-.035em] sm:text-5xl lg:text-[3.75rem]" style={{ animationDelay: '2s' }}>
+          <h1 className="r4d-hero-title r4d-rise mt-6 max-w-[22ch] text-3xl font-extrabold leading-[1.12] tracking-[-.035em] sm:text-4xl lg:text-[3.1rem]" style={{ animationDelay: '2s' }}>
             <span className="block">{tr('Research & learning for')}</span>{' '}
-            <span className="r4d-hero-accent text-[#df4c2b]" aria-label={accent}>
+            <span className="r4d-hero-accent text-[#FF4500]" aria-label={accent}>
               {accent.split(' ').map((word, wordIndex) => (
                 <span key={`${word}-${wordIndex}`} className="inline-block whitespace-nowrap">
                   {Array.from(word).map((c, i) => <span key={`${c}-${i}`} aria-hidden="true" className="r4d-letter-bounce inline-block" style={{ animationDelay: `${(wordIndex * 7 + i) * 70}ms` }}>{c}</span>)}
@@ -1416,11 +1416,11 @@ function AuthModal({ mode, setMode, onClose, onDone, notice }) {
         <div className="mt-5"><SocialAuthButtons intent="user" /></div>
         <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10"/>or continue with email<span className="h-px flex-1 bg-black/10"/></div>
         {notice && <p role="alert" className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{notice}</p>}
-        <form onSubmit={submit} className="mt-5 space-y-3.5">
-          {reg && <input required className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Full name" autoComplete="name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
-          <input required type="email" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Email address" autoComplete="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
+        <form onSubmit={submit} className="mt-5 space-y-3">
+          {reg && <input required className="w-full rounded-lg border border-black/15 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Full name" autoComplete="name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
+          <input required type="email" className="w-full rounded-lg border border-black/15 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder="Email address" autoComplete="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
           <div className="relative">
-            <input required minLength={reg ? 8 : 1} type={show ? 'text' : 'password'} className="w-full rounded-xl border border-black/15 px-4 py-3 pr-11 text-sm outline-none focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder={reg ? 'Password (8+ characters)' : 'Password'} autoComplete={reg ? 'new-password' : 'current-password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
+            <input required minLength={reg ? 8 : 1} type={show ? 'text' : 'password'} className="w-full rounded-lg border border-black/15 bg-white px-3.5 py-2.5 pr-11 text-sm outline-none transition focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder={reg ? 'Password (8+ characters)' : 'Password'} autoComplete={reg ? 'new-password' : 'current-password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
             <button type="button" onClick={() => setShow((v) => !v)} aria-label="Toggle password" className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center text-black/50">{show ? <EyeOff size={16} /> : <Eye size={16} />}</button>
           </div>
           {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
