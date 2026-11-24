@@ -626,6 +626,33 @@ function About() {
   );
 }
 
+function Mission() {
+  const tr = useTranslate();
+  return (
+    <section id="mission" className="relative bg-white py-24">
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <Heading title="Mission &" accent="vision" text="Evidence, learning and practical systems for stronger development outcomes." />
+        <div className="grid gap-6 md:grid-cols-2">
+          <Reveal>
+            <article className="h-full rounded-[2rem] rounded-tr-[2.5rem] bg-[var(--gs)] p-8 shadow-sm">
+              <span className="grid h-12 w-12 place-items-center rounded-full bg-[var(--gd)] text-white"><Star size={22} /></span>
+              <h3 className="mt-5 text-2xl font-bold text-[var(--gd)]">{tr('Our mission')}</h3>
+              <p className="mt-3 leading-relaxed text-black/65">{tr('To help organisations improve development outcomes through rigorous research, practical monitoring and evaluation systems, data analysis and evidence-based learning.')}</p>
+            </article>
+          </Reveal>
+          <Reveal delay={100}>
+            <article className="h-full rounded-[2rem] rounded-tr-[2.5rem] bg-[var(--gs)] p-8 shadow-sm">
+              <span className="grid h-12 w-12 place-items-center rounded-full bg-[var(--o)] text-white"><Leaf size={22} /></span>
+              <h3 className="mt-5 text-2xl font-bold text-[var(--gd)]">{tr('Our vision')}</h3>
+              <p className="mt-3 leading-relaxed text-black/65">{tr('A future where development decisions are informed by credible evidence, continuous learning and strong local capacity.')}</p>
+            </article>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Services() {
   const tr = useTranslate();
   const [active, setActive] = useState(SERVICES[0].id);
@@ -840,14 +867,26 @@ function Careers() {
       </div>
 
       {applicationOpen || status === 'sent' ? createPortal(
-        <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) { setApplicationOpen(false); setSelected(null); } }}>
+        <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) { setApplicationOpen(false); setSelected(null); } }} role="dialog" aria-modal="true">
           <div className="r4d-pop w-full max-w-lg rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
-            <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D Careers</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); }} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5"><X size={18} /></button></div>
-            {status === 'sent' ? <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]"/><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); setStatus('idle'); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold textwhite">Close</button></div> : (
-              <form onSubmit={apply} className="mt-5 space-y-3"><input required placeholder="Full name" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}/><input required type="email" placeholder="Email address" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}/><input placeholder="Phone number" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}/><textarea placeholder="Short cover note" rows="4" className="w-full resize-y rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}/><input type="url" placeholder="CV link (Google Drive, Dropbox, LinkedIn…)" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.cvUrl} onChange={(e) => setForm({ ...form, cvUrl: e.target.value })}/><div><label className="block text-xs font-bold text-black/55">Or attach CV (PDF or Word, max 2.5 MB)</label><input type="file" accept=".pdf,.doc,.docx" className="mt-2 block w-full text-sm" onChange={(e) => setCv(e.target.files?.[0] || null)}/></div>{error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}<Btn type="submit" loading={status === 'sending'} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3.5 font-bold text-white transition hover:bg-[var(--o)]">Submit application <Send size={16}/></Btn></form>
+            <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D Careers</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); }} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label="Close application"><X size={18} /></button></div>
+            {status === 'sent' ? (
+              <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]"/><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); setStatus('idle'); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white">Close</button></div>
+            ) : (
+              <form onSubmit={apply} className="mt-5 space-y-3">
+                <input required placeholder="Full name" autoComplete="name" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                <input required type="email" placeholder="Email address" autoComplete="email" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                <input type="tel" placeholder="Phone number" autoComplete="tel" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                <textarea placeholder="Short cover note" rows={4} className="w-full resize-y rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
+                <input type="url" placeholder="CV link (Google Drive, Dropbox, LinkedIn…)" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.cvUrl} onChange={(e) => setForm({ ...form, cvUrl: e.target.value })} />
+                <div><label className="block text-xs font-bold text-black/55">Or attach CV (PDF or Word, max 2.5 MB)</label><input type="file" accept=".pdf,.doc,.docx" className="mt-2 block w-full text-sm" onChange={(e) => setCv(e.target.files?.[0] || null)} /></div>
+                {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
+                <button type="submit" disabled={status === 'sending'} className="w-full rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white transition hover:bg-[var(--o)] disabled:cursor-wait disabled:opacity-60">{status === 'sending' ? 'Submitting…' : 'Submit application'}</button>
+              </form>
             )}
           </div>
-        </div>, document.body) : null}
+        </div>, document.body
+      ) : null}
     </section>
   );
 }
@@ -1225,18 +1264,7 @@ const ADMIN_CSS_EXTRA = `
 .adm[data-t="light"] .adm-btn-danger{color:#b91c1c;background:rgba(239,68,68,.08)}
 .adm[data-t="light"] .adm-nav{color:rgba(23,38,29,.7)}
 .adm[data-t="light"] .adm-nav:hover{background:rgba(20,40,28,.06);color:#000}
-.adm[data-t="light"] .adm-nav[data-active="true"]{color:#0b2616;background:linear-gradient(120deg,rgba(74,222,128,.3),rgba(243,160,68,.28))}
-.adm[data-t="light"] .adm-title{background-image:linear-gradient(90deg,#14532d,#15803d,#d9822e,#14532d);background-size:200% auto;-webkit-background-clip:text;background-clip:text}
-.adm[data-t="light"] .adm-row:hover{background:rgba(20,40,28,.05)}
-.adm[data-t="light"] [class*="text-white"]{color:rgba(23,38,29,.72)!important}
-.adm[data-t="light"] [class*="bg-black/"]{background-color:rgba(20,40,28,.05)!important}
-.adm[data-t="light"] [class*="border-white/"]{border-color:rgba(20,40,28,.1)!important}
-.adm[data-t="light"] .text-emerald-200,.adm[data-t="light"] .text-emerald-300{color:#15803d!important}
-.adm[data-t="light"] .text-orange-200,.adm[data-t="light"] .text-orange-300{color:#c2410c!important}
-.adm[data-t="light"] .text-red-200,.adm[data-t="light"] .text-red-100{color:#b91c1c!important}
-.adm[data-t="light"] .adm-btn,.adm[data-t="light"] .adm-btn *,.adm[data-t="light"] .bg-gradient-to-br *{color:#fff!important}
-.adm[data-t="light"]{background:#f5f7f5!important}
-.adm[data-t="light"] .adm-bg{background:linear-gradient(145deg,#f8faf8,#eef3ef)}
+.adm[data-t="light"] .adm-nav[data-active="true"]{background:#edf5ef;color:#285640;box-shadow:inset 0 0 0 1px rgba(40,86,64,.1)}
 .adm[data-t="light"] .adm-title{color:#285640!important}
 .adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09)!important}
 .adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)!important}
@@ -1402,7 +1430,7 @@ function AuthModal({ mode, setMode, onClose, onDone, notice }) {
             <input required minLength={reg ? 8 : 1} type={show ? 'text' : 'password'} className="w-full rounded-lg border border-black/15 bg-white px-3.5 py-2.5 pr-11 text-sm outline-none transition focus:border-[var(--g)] focus:ring-4 focus:ring-[var(--g)]/15" placeholder={reg ? 'Password (8+ characters)' : 'Password'} autoComplete={reg ? 'new-password' : 'current-password'} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} />
             <button type="button" onClick={() => setShow((v) => !v)} aria-label="Toggle password" className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center text-black/50">{show ? <EyeOff size={16} /> : <Eye size={16} />}</button>
           </div>
-          {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
+          {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
           <Btn type="submit" loading={loading} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--gd)] py-3.5 font-semibold text-white transition hover:bg-[var(--o)] disabled:opacity-70">{reg ? 'Create account' : 'Sign in'}</Btn>
         </form>
       </div>
@@ -1525,7 +1553,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
           {messages.length === 0 ? <p className="text-xs opacity-50">No messages yet.</p> : messages.slice(0, 4).map((m) => (
             <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left">
               <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-1.5 w-1.5 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-2 w-2 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
             </button>
           ))}
         </div>
@@ -1922,7 +1950,7 @@ function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
             <h3 className="flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-emerald-300" />Signed in as</h3>
             <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
             <p className="mt-4 text-xs text-white/45">Admin sessions expire automatically after 12 hours.</p>
-            <button type="button" onClick={onLogout} className="adm-btn-danger mt-4"><LogOut size={15} />Sign out</button>
+            <button type="button" onClick={onLogout} className="adm-btn-danger mt-4 w-full !py-2"><LogOut size={14} />Sign out</button>
           </div>
           <div className="adm-glass rounded-2xl p-6">
             <h3 className="flex items-center gap-2 text-lg font-bold"><Download size={18} className="text-sky-300" />Export data</h3>
