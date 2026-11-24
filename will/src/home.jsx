@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import logo from './assets/logo.PNG';
 import { translate } from './translations.js';
@@ -176,6 +176,9 @@ const UI_COPY = {
 };
 
 /* ---------------------------- Small helpers --------------------------- */
+// Token of a signed-in (non-admin) visitor, so their messages / applications are linked to their account.
+const userToken = () => { try { return localStorage.getItem('rel4d-user-token') || ''; } catch { return ''; } };
+
 function useInView(threshold = 0.2) {
   const ref = useRef(null);
   const [seen, setSeen] = useState(false);
@@ -452,8 +455,14 @@ function Navbar({ theme, setTheme, t, onAdmin, onAuth, account, onLogout }) {
             </div>
           ))}
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <button type="button" onClick={() => { close(); onAuth('login'); }} className="rounded-xl border border-[var(--gd)]/20 py-3 font-semibold text-[var(--gd)]">Sign in</button>
-            <button type="button" onClick={() => { close(); onAuth('register'); }} className="rounded-xl bg-[var(--o)] py-3 font-semibold text-white">Create account</button>
+            {account ? (
+              <button type="button" onClick={() => { close(); onLogout(); }} className="col-span-2 rounded-xl border border-[var(--gd)]/20 py-3 font-semibold text-[var(--gd)]">Sign out ({account.name})</button>
+            ) : (
+              <>
+                <button type="button" onClick={() => { close(); onAuth('login'); }} className="rounded-xl border border-[var(--gd)]/20 py-3 font-semibold text-[var(--gd)]">Sign in</button>
+                <button type="button" onClick={() => { close(); onAuth('register'); }} className="rounded-xl bg-[var(--o)] py-3 font-semibold text-white">Create account</button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -684,7 +693,7 @@ function Services() {
               <p className="mt-3 max-w-xl text-black/70">{tr(s.text)}</p>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                 {s.points.map((pt) => (
-                    <li key={pt} className="flex items-center gap-3 rounded-xl rounded-tr-2xl bg-[var(--gs)] px-4 py-3 text-sm font-medium"><Star size={14} className="shrink-0 text-[var(--o)]" fill="currentColor" />{tr(pt)}</li>
+                  <li key={pt} className="flex items-center gap-3 rounded-xl rounded-tr-2xl bg-[var(--gs)] px-4 py-3 text-sm font-medium"><Star size={14} className="shrink-0 text-[var(--o)]" fill="currentColor" />{tr(pt)}</li>
                 ))}
               </ul>
             </div>
@@ -714,8 +723,8 @@ function Expertise() {
           ))}
         </div>
         <Reveal className="mt-10 flex flex-wrap justify-center gap-2">
-          {TOOLS.map((t) => (
-            <span key={t} className="rounded-full border border-[var(--g)]/30 bg-[var(--gs)] px-4 py-1.5 text-sm font-medium text-[var(--gd)]">{t}</span>
+          {TOOLS.map((tool) => (
+            <span key={tool} className="rounded-full border border-[var(--g)]/30 bg-[var(--gs)] px-4 py-1.5 text-sm font-medium text-[var(--gd)]">{tool}</span>
           ))}
         </Reveal>
       </div>
@@ -836,8 +845,10 @@ function Careers() {
         });
         cvData = { name: cv.name, data: base64 };
       }
+      const token = userToken();
       const res = await fetch(`${API}/api/applications`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
         body: JSON.stringify({ opening_id: selected?.id || null, name: form.name, email: form.email, phone: form.phone, message: form.message, cv_url: form.cvUrl, cv: cvData }),
       });
       const data = await res.json().catch(() => ({}));
@@ -845,6 +856,9 @@ function Careers() {
       setStatus('sent'); setForm({ name: '', email: '', phone: '', message: '', cvUrl: '' }); setCv(null);
     } catch (err) { setError(err.message); setStatus('idle'); }
   };
+
+  const openApplication = (opening) => { setSelected(opening); setApplicationOpen(true); setStatus('idle'); setError(''); };
+  const closeApplication = () => { setApplicationOpen(false); setSelected(null); setStatus('idle'); };
 
   return (
     <section id="careers" className="bg-[var(--gs)] py-24">
@@ -855,25 +869,38 @@ function Careers() {
             <div className="grid gap-5 md:grid-cols-2">
               {openings.map((opening, i) => {
                 const data = opening.data || opening;
-                return <Reveal key={opening.id || i} delay={i * 80} className="h-full"><article className="flex h-full flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm"><div className="flex flex-wrap gap-2 text-xs font-bold"><span className="rounded-full bg-[var(--os)] px-3 py-1 text-[var(--od)]">{tr(data.type || 'Consultancy')}</span><span className="rounded-full bg-[var(--gs)] px-3 py-1 text-[var(--gd)]">{tr(data.location || 'Kigali, Rwanda')}</span></div><h3 className="mt-5 text-xl font-bold text-[var(--gd)]">{data.title}</h3><p className="mt-3 flex-1 text-sm leading-relaxed text-black/65">{tr(data.description)}</p>{data.deadline && <p className="mt-4 text-xs font-semibold text-black/50">Deadline: {data.deadline}</p>}<button type="button" onClick={() => { setSelected(opening); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--o)]">Apply for this role <ArrowUpRight size={16} /></button></article></Reveal>;
+                return (
+                  <Reveal key={opening.id || i} delay={i * 80} className="h-full">
+                    <article className="flex h-full flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm">
+                      <div className="flex flex-wrap gap-2 text-xs font-bold">
+                        <span className="rounded-full bg-[var(--os)] px-3 py-1 text-[var(--od)]">{tr(data.type || 'Consultancy')}</span>
+                        <span className="rounded-full bg-[var(--gs)] px-3 py-1 text-[var(--gd)]">{tr(data.location || 'Kigali, Rwanda')}</span>
+                      </div>
+                      <h3 className="mt-5 text-xl font-bold text-[var(--gd)]">{data.title}</h3>
+                      <p className="mt-3 flex-1 text-sm leading-relaxed text-black/65">{tr(data.description)}</p>
+                      {data.deadline && <p className="mt-4 text-xs font-semibold text-black/50">Deadline: {data.deadline}</p>}
+                      <button type="button" onClick={() => openApplication(opening)} className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--gd)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--o)]">Apply for this role <ArrowUpRight size={16} /></button>
+                    </article>
+                  </Reveal>
+                );
               })}
             </div>
             <div className="mt-8 text-center">
               <p className="text-sm text-black/60">Don't see a role that fits? Send us an open application.</p>
-              <button type="button" onClick={() => { setSelected(null); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-3 rounded-xl border border-[var(--gd)]/20 bg-white px-5 py-3 text-sm font-bold text-[var(--gd)] transition hover:border-[var(--o)] hover:text-[var(--od)]">Apply to join REL4D</button>
+              <button type="button" onClick={() => openApplication(null)} className="mt-3 rounded-xl border border-[var(--gd)]/20 bg-white px-5 py-3 text-sm font-bold text-[var(--gd)] transition hover:border-[var(--o)] hover:text-[var(--od)]">Apply to join REL4D</button>
             </div>
           </>
         ) : (
-          <Reveal><div className="rounded-3xl border border-black/10 bg-white p-8 text-center"><Briefcase className="mx-auto text-[var(--o)]" /><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">No public vacancies right now</h3><p className="mt-2 text-sm text-black/60">You can still send an open application and tell us how you can contribute.</p><button type="button" onClick={() => { setSelected(null); setApplicationOpen(true); setStatus('idle'); setError(''); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white transition hover:bg-[var(--o)]">Send an open application</button></div></Reveal>
+          <Reveal><div className="rounded-3xl border border-black/10 bg-white p-8 text-center"><Briefcase className="mx-auto text-[var(--o)]" /><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">No public vacancies right now</h3><p className="mt-2 text-sm text-black/60">You can still send an open application and tell us how you can contribute.</p><button type="button" onClick={() => openApplication(null)} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white transition hover:bg-[var(--o)]">Send an open application</button></div></Reveal>
         )}
       </div>
 
-      {applicationOpen || status === 'sent' ? createPortal(
-        <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) { setApplicationOpen(false); setSelected(null); } }} role="dialog" aria-modal="true">
+      {applicationOpen ? createPortal(
+        <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) closeApplication(); }} role="dialog" aria-modal="true">
           <div className="r4d-pop w-full max-w-lg rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
-            <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D Careers</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); }} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label="Close application"><X size={18} /></button></div>
+            <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D Careers</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={closeApplication} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label="Close application"><X size={18} /></button></div>
             {status === 'sent' ? (
-              <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]"/><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={() => { setApplicationOpen(false); setSelected(null); setStatus('idle'); }} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white">Close</button></div>
+              <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]" /><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={closeApplication} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white">Close</button></div>
             ) : (
               <form onSubmit={apply} className="mt-5 space-y-3">
                 <input required placeholder="Full name" autoComplete="name" className="w-full rounded-xl border border-black/15 px-4 py-3 text-sm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -913,8 +940,8 @@ function Credentials() {
         <Reveal className="mx-auto mt-10 max-w-3xl rounded-3xl bg-[var(--gs)] p-8">
           <h3 className="text-lg font-bold text-[var(--gd)]">{tr('Essential training')}</h3>
           <ul className="mt-4 space-y-2.5">
-            {TRAINING.map((t) => (
-              <li key={t} className="flex items-start gap-3 text-sm text-black/75"><Star size={14} className="mt-1 shrink-0 text-[var(--o)]" fill="currentColor" />{tr(t)}</li>
+            {TRAINING.map((item) => (
+              <li key={item} className="flex items-start gap-3 text-sm text-black/75"><Star size={14} className="mt-1 shrink-0 text-[var(--o)]" fill="currentColor" />{tr(item)}</li>
             ))}
           </ul>
         </Reveal>
@@ -999,9 +1026,10 @@ function Contact({ t }) {
     setStatus('sending');
     try {
       // The server saves it; the admin console shows it under "Messages".
+      const token = userToken();
       const response = await fetch(`${API}/api/messages`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
@@ -1050,10 +1078,10 @@ function Contact({ t }) {
 
           <Reveal delay={120}>
             <form onSubmit={submit} className="space-y-5 rounded-2xl border border-[var(--gd)]/10 bg-[var(--gs)] p-6 shadow-sm sm:p-8 lg:p-9">
-                <div className="mb-1 border-b border-[var(--gd)]/10 pb-4">
-                  <p className="text-xs font-bold uppercase tracking-[.14em] text-[var(--o)]">REL4D Ltd</p>
-                  <h3 className="mt-1 text-xl font-bold text-[var(--gd)]">{t.contactTitle}</h3>
-                </div>
+              <div className="mb-1 border-b border-[var(--gd)]/10 pb-4">
+                <p className="text-xs font-bold uppercase tracking-[.14em] text-[var(--o)]">REL4D Ltd</p>
+                <h3 className="mt-1 text-xl font-bold text-[var(--gd)]">{t.contactTitle}</h3>
+              </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="block space-y-1.5 text-sm font-medium text-[var(--gd)]"><span>{t.name} *</span><input className={input} autoComplete="name" placeholder={t.name} value={form.name} onChange={set('name')} required /></label>
                 <label className="block space-y-1.5 text-sm font-medium text-[var(--gd)]"><span>{t.email} *</span><input className={input} type="email" autoComplete="email" placeholder={t.email} value={form.email} onChange={set('email')} required /></label>
@@ -1105,6 +1133,7 @@ function Footer({ onAdmin }) {
    /content, /applications, /users, /password
    ===================================================================== */
 const TOKEN_KEY = 'rel4d-admin-token';
+const ADMIN_THEME_KEY = 'rel4d-admin-theme';
 const readToken = () => { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } };
 const saveToken = (value) => {
   try { if (value) localStorage.setItem(TOKEN_KEY, value); else localStorage.removeItem(TOKEN_KEY); } catch { /* storage unavailable */ }
@@ -1267,16 +1296,23 @@ const ADMIN_CSS_EXTRA = `
 .adm[data-t="light"] .adm-nav{color:rgba(23,38,29,.7)}
 .adm[data-t="light"] .adm-nav:hover{background:rgba(20,40,28,.06);color:#000}
 .adm[data-t="light"] .adm-nav[data-active="true"]{background:#edf5ef;color:#285640;box-shadow:inset 0 0 0 1px rgba(40,86,64,.1)}
-.adm[data-t="light"] .adm-title{color:#285640!important}
-.adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09)!important}
-.adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)!important}
+.adm[data-t="light"] .adm-title{background:none;animation:none;color:#285640}
+.adm[data-t="light"] .adm-glass{border-color:rgba(40,86,64,.09);-webkit-backdrop-filter:none;backdrop-filter:none}
+.adm[data-t="light"] .adm-label{color:rgba(23,38,29,.65)}
 .adm[data-t="light"] .adm-bg .adm-blob{display:none}
-.adm[data-t="light"] .adm-title{background:none;animation:none}
-.adm[data-t="light"] .adm-glass{-webkit-backdrop-filter:none;backdrop-filter:none}
 .adm[data-t="light"] .adm-btn{background:#285640;box-shadow:none}
 .adm[data-t="light"] .adm-nav-group{color:#849188}
-.adm[data-t="light"] .adm-nav[data-active="true"]{background:#edf5ef;color:#285640;box-shadow:inset 0 0 0 1px rgba(40,86,64,.1)}
+.adm[data-t="light"] [class*="text-white/"]{color:rgba(23,38,29,.68)}
+.adm[data-t="light"] [class*="bg-black/"]{background-color:rgba(20,40,28,.05)}
+.adm[data-t="light"] [class*="border-white/"]{border-color:rgba(20,40,28,.12)}
+.adm[data-t="light"] .adm-row:hover{background:rgba(20,40,28,.05)}
+.adm[data-t="light"] .adm-chip[class*="text-emerald-"]{color:#166534}
+.adm[data-t="light"] .adm-chip[class*="text-orange-"]{color:#9a3412}
+.adm[data-t="light"] .adm-chip[class*="text-violet-"]{color:#5b21b6}
+.adm[data-t="light"] .adm-chip[class*="text-sky-"]{color:#075985}
+.adm[data-t="light"] .adm-chip[class*="text-red-"]{color:#991b1b}
 `;
+
 function ThemeToggle({ theme, setTheme }) {
   return (
     <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="adm-btn-ghost" aria-label="Toggle admin theme">
@@ -1349,9 +1385,9 @@ function AdminLogin({ onLoggedIn, onClose, notice }) {
     <div className="absolute inset-0 grid place-items-center overflow-y-auto bg-[#eef3ef] p-4"
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="adm-in w-full max-w-md overflow-hidden rounded-3xl border border-black/[.07] bg-[var(--paper)] shadow-[0_24px_70px_-24px_rgba(23,38,29,.45)]">
-        <div className="flex justify-end px-5 pt-5"><button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-black/55 transition hover:bg-black/5"><X size={18}/></button></div>
+        <div className="flex justify-end px-5 pt-5"><button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-full border border-black/10 text-black/55 transition hover:bg-black/5"><X size={18} /></button></div>
         <div className="px-8 pb-8">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-black/[.06] bg-[var(--gs)] p-2"><img src={logo} alt="REL4D" className="h-full w-full object-contain"/></div>
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-black/[.06] bg-[var(--gs)] p-2"><img src={logo} alt="REL4D" className="h-full w-full object-contain" /></div>
           <p className="mt-5 text-center text-[.68rem] font-extrabold uppercase tracking-[.22em] text-[var(--o)]">REL4D administration</p>
           <h2 className="mt-1 text-center text-3xl font-extrabold text-[var(--gd)]">Welcome back</h2>
           <p className="mt-2 text-center text-sm text-black/50">Sign in to manage your website.</p>
@@ -1361,10 +1397,10 @@ function AdminLogin({ onLoggedIn, onClose, notice }) {
             <div className="my-4 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10" />or sign in with administrator email<span className="h-px flex-1 bg-black/10" /></div>
           </div>
           <form onSubmit={submit} className="mt-7 space-y-4">
-            <div><label className="adm-label" htmlFor="adm-email">Email address</label><input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com"/></div>
-            <div><label className="adm-label" htmlFor="adm-pass">Password</label><div className="relative"><input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="Enter your password"/><button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-black/45 hover:bg-black/5">{show ? <EyeOff size={17} /> : <Eye size={17} />}</button></div></div>
+            <div><label className="adm-label" htmlFor="adm-email">Email address</label><input id="adm-email" required type="email" autoComplete="email" autoFocus value={creds.email} onChange={(e) => setCreds((c) => ({ ...c, email: e.target.value }))} className="adm-input" placeholder="admin@rel4d.com" /></div>
+            <div><label className="adm-label" htmlFor="adm-pass">Password</label><div className="relative"><input id="adm-pass" required type={show ? 'text' : 'password'} autoComplete="current-password" value={creds.password} onChange={(e) => setCreds((c) => ({ ...c, password: e.target.value }))} className="adm-input pr-12" placeholder="Enter your password" /><button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-black/45 hover:bg-black/5">{show ? <EyeOff size={17} /> : <Eye size={17} />}</button></div></div>
             {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">{error}</p>}
-            <Btn type="submit" loading={loading} className="adm-btn w-full !rounded-xl !bg-[var(--gd)] !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''}/>{loading ? 'Signing in…' : 'Sign in'}</Btn>
+            <Btn type="submit" loading={loading} className="adm-btn w-full !rounded-xl !bg-[var(--gd)] !py-3.5 !text-sm"><ShieldCheck size={17} className={loading ? 'hidden' : ''} />{loading ? 'Signing in…' : 'Sign in'}</Btn>
           </form>
           <button type="button" onClick={onClose} className="mx-auto mt-5 block text-sm font-semibold text-black/45 transition hover:text-[var(--gd)]">← Back to website</button>
         </div>
@@ -1542,7 +1578,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
           <h3 className="text-sm font-bold">Enquiries by service</h3>
           <div className="mt-3 space-y-2.5">
             {svc.length === 0 ? <p className="text-xs opacity-50">No data yet.</p> : svc.map(([k, n]) => (
-              <div key={k}><div className="mb-1 flex justify-between text-xs"><span className="truncate opacity-75">{k}</span><b>{n}</b></div><div className="h-1.5 overflow-hidden rounded-full bg-current/10" style={{ background: 'rgba(127,127,127,.18)' }}><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300" style={{ width: `${(n / svcMax) * 100}%` }} /></div></div>
+              <div key={k}><div className="mb-1 flex justify-between text-xs"><span className="truncate opacity-75">{k}</span><b>{n}</b></div><div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'rgba(127,127,127,.18)' }}><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300" style={{ width: `${(n / svcMax) * 100}%` }} /></div></div>
             ))}
           </div>
         </div>
@@ -1554,7 +1590,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
           <div className="mb-2 flex items-center justify-between"><h3 className="text-sm font-bold">Latest messages</h3><button type="button" onClick={() => goto('messages')} className="text-xs font-bold text-orange-400 hover:underline">All</button></div>
           {messages.length === 0 ? <p className="text-xs opacity-50">No messages yet.</p> : messages.slice(0, 4).map((m) => (
             <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
+              <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold text-white">{initials(m.name)}</span>
               <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-2 w-2 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
             </button>
           ))}
@@ -1640,7 +1676,7 @@ function MessagesPanel({ items, setItems, ctx, focusId }) {
                 <div key={m.id} onClick={() => open(m)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') open(m); }}
                   className={`adm-row flex cursor-pointer items-start gap-3 border-b border-white/5 px-4 py-3.5 ${selectedId === m.id ? 'bg-white/[.07]' : ''}`}>
                   <input type="checkbox" checked={checked.includes(m.id)} onClick={(e) => e.stopPropagation()} onChange={(e) => setChecked((c) => (e.target.checked ? [...c, m.id] : c.filter((id) => id !== m.id)))} className="mt-2 h-4 w-4 accent-emerald-400" aria-label={`Select ${m.name}`} />
-                  <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(m.name)}</span>
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold text-white">{initials(m.name)}</span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-2"><span className={`truncate text-sm ${m.is_read ? 'font-medium text-white/80' : 'font-bold text-white'}`}>{m.name}</span>{!m.is_read && <i className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}{m.starred && <Star size={13} className="shrink-0 text-amber-300" fill="currentColor" />}{m.replied_at && <Reply size={13} className="shrink-0 text-emerald-300" />}</span>
                     <span className="block truncate text-xs text-white/50">{m.service || 'General enquiry'} · {fmtDate(m.created_at)}</span>
@@ -1802,7 +1838,7 @@ function ContentManager({ kind, title, singular, subtitle, items, setItems, fiel
               <div className="p-5">
                 {it.data.image === undefined && <span className={`adm-chip mb-2 ${it.published ? 'bg-emerald-400/15 text-emerald-200' : 'bg-white/10 text-white/60'}`}>{it.published ? 'Live' : 'Hidden'}</span>}
                 <h3 className="font-bold leading-snug">{it.data.title || 'Untitled'}</h3>
-                <div className="mt-2 flex flex-wrap gap-1.5">{meta.map((k) => it.data[k] && <span key={k} className="adm-chip bg-white/8 text-white/65" style={{ background: 'rgba(255,255,255,.07)' }}>{it.data[k]}</span>)}</div>
+                <div className="mt-2 flex flex-wrap gap-1.5">{meta.map((k) => it.data[k] && <span key={k} className="adm-chip text-white/65" style={{ background: 'rgba(255,255,255,.07)' }}>{it.data[k]}</span>)}</div>
                 <p className="mt-3 line-clamp-3 text-sm text-white/60">{it.data.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button type="button" onClick={() => startEdit(it)} className="adm-btn-ghost !px-3 !py-1.5"><Pencil size={14} />Edit</button>
@@ -1853,8 +1889,8 @@ function ApplicationsPanel({ items, setItems, ctx, token }) {
             <thead><tr className="border-b border-white/10 text-[.7rem] uppercase tracking-wider text-white/45"><th className="px-5 py-3">Candidate</th><th className="px-3 py-3">Position</th><th className="px-3 py-3">Applied</th><th className="px-3 py-3">Status</th><th className="px-5 py-3 text-right">Actions</th></tr></thead>
             <tbody>
               {shown.map((a) => (
-                <>
-                  <tr key={a.id} className="adm-row border-b border-white/5">
+                <Fragment key={a.id}>
+                  <tr className="adm-row border-b border-white/5">
                     <td className="px-5 py-3.5"><p className="font-bold">{a.name}</p><p className="text-xs text-white/50">{a.email}{a.phone ? ` · ${a.phone}` : ''}</p></td>
                     <td className="px-3 py-3.5 text-white/75">{a.position}</td>
                     <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(a.created_at)}</td>
@@ -1873,8 +1909,8 @@ function ApplicationsPanel({ items, setItems, ctx, token }) {
                       </div>
                     </td>
                   </tr>
-                  {openId === a.id && <tr key={`${a.id}-n`} className="border-b border-white/5 bg-black/20"><td colSpan={5} className="whitespace-pre-wrap px-5 py-4 text-sm text-white/75">{a.message}</td></tr>}
-                </>
+                  {openId === a.id && <tr className="border-b border-white/5 bg-black/20"><td colSpan={5} className="whitespace-pre-wrap px-5 py-4 text-sm text-white/75">{a.message}</td></tr>}
+                </Fragment>
               ))}
             </tbody>
           </table>
@@ -1905,8 +1941,8 @@ function UsersPanel({ items, setItems, ctx }) {
             <tbody>
               {shown.map((u) => (
                 <tr key={u.id} className="adm-row border-b border-white/5">
-                  <td className="px-5 py-3.5"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold">{initials(u.name)}</span><span><span className="block font-bold">{u.name}</span><span className="text-xs text-white/45">{u.email}</span></span></div></td>
-                  <td className="px-3 py-3.5"><span className={`adm-chip ${u.role === 'admin' ? 'bg-orange-400/20 text-orange-200' : 'bg-white/8 text-white/65'}`}>{u.role}</span></td>
+                  <td className="px-5 py-3.5"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold text-white">{initials(u.name)}</span><span><span className="block font-bold">{u.name}</span><span className="text-xs text-white/45">{u.email}</span></span></div></td>
+                  <td className="px-3 py-3.5"><span className={`adm-chip ${u.role === 'admin' ? 'bg-orange-400/20 text-orange-200' : 'bg-white/10 text-white/65'}`}>{u.role}</span></td>
                   <td className="px-3 py-3.5 capitalize text-white/65">{u.provider}</td>
                   <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.created_at)}</td>
                   <td className="px-3 py-3.5 text-xs text-white/55">{fmtDate(u.last_login)}</td>
@@ -1950,7 +1986,7 @@ function SettingsPanel({ user, ctx, messages, applications, onLogout }) {
         <div className="space-y-5">
           <div className="adm-glass rounded-2xl p-6">
             <h3 className="flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-emerald-300" />Signed in as</h3>
-            <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
+            <div className="mt-4 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-xl font-bold text-white">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
             <p className="mt-4 text-xs text-white/45">Admin sessions expire automatically after 12 hours.</p>
             <button type="button" onClick={onLogout} className="adm-btn-danger mt-4 w-full !py-2"><LogOut size={14} />Sign out</button>
           </div>
@@ -2025,8 +2061,7 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
       setLoading(false); setRefreshing(false);
     }
   };
-  // This effect starts the initial API load; state updates happen after the request resolves.
-  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { refresh(); }, [token]);
 
   // Keep the badge numbers live without another request.
@@ -2081,7 +2116,7 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
         </div>
         {navButtons()}
         <div className="mt-auto rounded-2xl border border-white/10 bg-black/25 p-3">
-          <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 font-bold">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
+          <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 font-bold text-white">{initials(user?.name)}</span><div className="min-w-0"><p className="truncate text-sm font-bold">{user?.name || 'Admin'}</p><p className="truncate text-xs text-white/45">{user?.email}</p></div></div>
           <button type="button" onClick={onLogout} className="adm-btn-danger mt-3 w-full !py-2"><LogOut size={14} />Sign out</button>
         </div>
       </aside>
@@ -2115,6 +2150,66 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
         ))}
       </div>
     </div>
+  );
+}
+
+/* ----- The full-screen admin pop-up: checks the saved token, then shows login or dashboard ----- */
+function AdminPortal({ onClose, notice }) {
+  const [token, setToken] = useState(readToken);
+  const [user, setUser] = useState(null);
+  const [checking, setChecking] = useState(() => Boolean(readToken()));
+  const [theme, setTheme] = useState(() => {
+    try { return localStorage.getItem(ADMIN_THEME_KEY) === 'light' ? 'light' : 'dark'; } catch { return 'dark'; }
+  });
+
+  const changeTheme = (value) => {
+    setTheme(value);
+    try { localStorage.setItem(ADMIN_THEME_KEY, value); } catch { /* storage unavailable */ }
+  };
+  const logout = () => { saveToken(''); setToken(''); setUser(null); };
+  const loggedIn = (newToken, newUser) => { saveToken(newToken); setToken(newToken); setUser(newUser); setChecking(false); };
+
+  // A saved token must still be valid and belong to an admin.
+  useEffect(() => {
+    const saved = readToken();
+    if (!saved) { setChecking(false); return undefined; }
+    let cancelled = false;
+    apiRequest('/api/auth/me', { token: saved })
+      .then((data) => {
+        if (cancelled) return;
+        if (data.user?.role === 'admin') { setToken(saved); setUser(data.user); }
+        else logout();
+      })
+      .catch((err) => { if (!cancelled && err.status) logout(); })
+      .finally(() => { if (!cancelled) setChecking(false); });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Escape closes the pop-up.
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  const authed = Boolean(token && user);
+  return createPortal(
+    <div className="adm fixed inset-0 z-[200]" data-t={authed ? theme : 'light'} role="dialog" aria-modal="true" aria-label="Admin console">
+      <style>{ADMIN_CSS + ADMIN_CSS_EXTRA}</style>
+      {checking ? (
+        <div className="grid h-full place-items-center bg-[#eef3ef] text-[#285640]"><Spinner size={42} /></div>
+      ) : authed ? (
+        <>
+          <AdminBackdrop />
+          <div className="relative h-full">
+            <AdminDashboard token={token} user={user} setUser={setUser} onLogout={logout} onClose={onClose} theme={theme} setTheme={changeTheme} />
+          </div>
+        </>
+      ) : (
+        <AdminLogin onLoggedIn={loggedIn} onClose={onClose} notice={notice} />
+      )}
+    </div>,
+    document.body,
   );
 }
 
@@ -2244,7 +2339,7 @@ export default function Home() {
     const socialError = hash.get('auth_error');
     if (adminToken) {
       saveToken(adminToken);
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      window.history.replaceState(null, '', window.location.pathname + window.location.search + '#admin');
     } else if (socialToken) {
       try { localStorage.setItem('rel4d-user-token', socialToken); } catch { /* storage unavailable */ }
       apiRequest('/api/auth/me', { token: socialToken })
@@ -2252,7 +2347,7 @@ export default function Home() {
         .catch(() => { /* A failed profile lookup should not prevent callback cleanup. */ })
         .finally(() => { window.history.replaceState(null, '', window.location.pathname + window.location.search); });
     } else if (socialError) {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      window.history.replaceState(null, '', window.location.pathname + window.location.search + (hash.get('auth_intent') === 'admin' ? '#admin' : ''));
     }
   }, []);
 
