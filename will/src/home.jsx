@@ -898,7 +898,7 @@ function Careers() {
       {applicationOpen ? createPortal(
         <div className="fixed inset-0 z-[150] grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm" onMouseDown={(e) => { if (e.target === e.currentTarget) closeApplication(); }} role="dialog" aria-modal="true">
           <div className="r4d-pop w-full max-w-lg rounded-3xl bg-white p-7 text-[#24372c] shadow-2xl">
-            <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D Careers</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={closeApplication} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label="Close application"><X size={18} /></button></div>
+            <div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--o)]">REL4D</p><h2 className="mt-1 text-2xl font-extrabold text-[var(--gd)]">{selected ? (selected.data || selected).title : 'Open application'}</h2></div><button type="button" onClick={closeApplication} className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label="Close application"><X size={18} /></button></div>
             {status === 'sent' ? (
               <div className="py-10 text-center"><CheckCircle2 className="mx-auto h-12 w-12 text-[var(--g)]" /><h3 className="mt-4 text-xl font-bold text-[var(--gd)]">Application received</h3><p className="mt-2 text-sm text-black/60">Our team will review your details and get in touch if there is a match.</p><button type="button" onClick={closeApplication} className="mt-5 rounded-xl bg-[var(--gd)] px-6 py-3 font-bold text-white">Close</button></div>
             ) : (
@@ -1004,6 +1004,17 @@ function Team() {
               </div>
             </Reveal>
           ))}
+
+          <Reveal delay={100} className="md:col-span-3">
+            <div className="flex flex-wrap justify-center gap-2">
+              <a href="https://www.linkedin.com/company/rel4d/mycompany/" target="_blank" rel="noreferrer" className="adm-btn-ghost flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                <Linkedin size={16} className="text-[var(--g)]" />{tr('Connect on LinkedIn')}
+              </a>
+              <a href="https://github.com/rel4d" target="_blank" rel="noreferrer" className="adm-btn-ghost flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                <GitHub size={16} className="text-[var(--g)]" />{tr('View GitHub profile')}
+              </a>
+            </div>
+          </Reveal>
         </div>
       </div>
       <Curve />
@@ -1365,6 +1376,7 @@ function SocialAuthButtons({ intent }) {
           <span>Continue with {provider.label}</span>
         </button>
       ))}
+
     </div>
   );
 }
@@ -1376,8 +1388,7 @@ function AdminLogin({ onLoggedIn, onClose, notice }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const submit = async (e) => {
-    e.preventDefault(); if (loading) return;
-    setError(''); setLoading(true);
+    e.preventDefault(); setError(''); setLoading(true);
     try { const data = await apiRequest('/api/admin/login', { method: 'POST', body: creds }); onLoggedIn(data.token, data.user); }
     catch (err) { setError(err.message); setLoading(false); }
   };
@@ -1553,7 +1564,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
         {STAT_CARDS.map((c, i) => (
           <button key={c.key} type="button" onClick={() => goto(c.tab)} style={{ animationDelay: `${i * 40}ms` }} className="adm-glass adm-in flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition hover:-translate-y-0.5">
             <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br ${c.tone} text-white`}><c.icon size={15} /></span>
-            <span className="min-w-0"><span className="block text-lg font-extrabold leading-none"><CountUp to={Number(stats?.[c.key] || 0)} /></span><span className="mt-1 block truncate text-[.62rem] font-bold uppercase tracking-wider opacity-55">{c.label}</span></span>
+            <span className="min-w-0"><span className="block text-lg font-extrabold leading-none"><CountUp to={Number(stats?.[c.key] || 0)} /></span><span className="mt-1 block truncate text-[.7rem] font-bold uppercase tracking-wider opacity-55">{c.label}</span></span>
           </button>
         ))}
       </div>
@@ -1580,6 +1591,7 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
             {svc.length === 0 ? <p className="text-xs opacity-50">No data yet.</p> : svc.map(([k, n]) => (
               <div key={k}><div className="mb-1 flex justify-between text-xs"><span className="truncate opacity-75">{k}</span><b>{n}</b></div><div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'rgba(127,127,127,.18)' }}><div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-orange-300" style={{ width: `${(n / svcMax) * 100}%` }} /></div></div>
             ))}
+
           </div>
         </div>
         <div className="adm-glass rounded-xl p-4">
@@ -1591,7 +1603,10 @@ function Overview({ stats, messages, applications, users = [], goto, user }) {
           {messages.length === 0 ? <p className="text-xs opacity-50">No messages yet.</p> : messages.slice(0, 4).map((m) => (
             <button key={m.id} type="button" onClick={() => goto('messages', m.id)} className="adm-row flex w-full items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left">
               <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold text-white">{initials(m.name)}</span>
-              <span className="min-w-0 flex-1"><span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-2 w-2 rounded-full bg-orange-400" />}</span><span className="block truncate text-[.7rem] opacity-50">{m.message}</span></span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-2 w-2 rounded-full bg-orange-400" />}</span>
+                <span className="block truncate text-[.7rem] opacity-50">{m.message}</span>
+              </span>
             </button>
           ))}
         </div>
@@ -1678,7 +1693,7 @@ function MessagesPanel({ items, setItems, ctx, focusId }) {
                   <input type="checkbox" checked={checked.includes(m.id)} onClick={(e) => e.stopPropagation()} onChange={(e) => setChecked((c) => (e.target.checked ? [...c, m.id] : c.filter((id) => id !== m.id)))} className="mt-2 h-4 w-4 accent-emerald-400" aria-label={`Select ${m.name}`} />
                   <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-orange-400 text-sm font-bold text-white">{initials(m.name)}</span>
                   <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-2"><span className={`truncate text-sm ${m.is_read ? 'font-medium text-white/80' : 'font-bold text-white'}`}>{m.name}</span>{!m.is_read && <i className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}{m.starred && <Star size={13} className="shrink-0 text-amber-300" fill="currentColor" />}{m.replied_at && <Reply size={13} className="shrink-0 text-emerald-300" />}</span>
+                    <span className="flex items-center gap-1.5 text-xs font-semibold">{m.name}{!m.is_read && <i className="h-2 w-2 shrink-0 rounded-full bg-orange-400" />}</span>
                     <span className="block truncate text-xs text-white/50">{m.service || 'General enquiry'} · {fmtDate(m.created_at)}</span>
                     <span className="mt-1 block truncate text-xs text-white/60">{m.message}</span>
                   </span>
@@ -1848,6 +1863,12 @@ function ContentManager({ kind, title, singular, subtitle, items, setItems, fiel
               </div>
             </article>
           ))}
+
+          <div className="mt-4 flex justify-center">
+            <button type="button" onClick={startNew} className="adm-btn-ghost flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+              <Plus size={16} className="text-[var(--g)]" />Add {singular.toLowerCase()}
+            </button>
+          </div>
         </div>
       )}
     </Panel>
@@ -1897,7 +1918,6 @@ function ApplicationsPanel({ items, setItems, ctx, token }) {
                     <td className="px-3 py-3.5">
                       <div className="flex items-center gap-2">
                         {busy === `st-${a.id}` ? <Spinner size={16} className="text-orange-300" /> : <span className={`adm-chip capitalize ring-1 ${APP_STATUS_STYLE[a.status]}`}>{a.status}</span>}
-                        <select value={a.status} onChange={(e) => setStatus(a, e.target.value)} className="adm-input !w-auto !py-1.5 !text-xs" aria-label={`Status for ${a.name}`}>{APP_STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
                       </div>
                     </td>
                     <td className="px-5 py-3.5 text-right">
@@ -2135,7 +2155,7 @@ function AdminDashboard({ token, user, setUser, onLogout, onClose, theme, setThe
           </div>
         </header>
         <nav className="flex gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 lg:hidden" aria-label="Admin sections">{navButtons(true)}</nav>
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main>
           {loading ? (
             <div className="grid h-full min-h-[50vh] place-items-center"><div className="flex flex-col items-center gap-4 text-white/70"><Spinner size={46} className="text-orange-300" /><p className="text-sm font-semibold">Loading your dashboard…</p></div></div>
           ) : content}
